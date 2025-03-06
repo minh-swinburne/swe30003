@@ -7,9 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\" />
-    <Folder Include="Repositories\" />
-    <Folder Include="Persistence\" />
+    <PackageReference Include="Humanizer" Version="3.0.0-beta.54" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SmartRide.Common\SmartRide.Common.csproj" />
+    <ProjectReference Include="..\SmartRide.Domain\SmartRide.Domain.csproj" />
   </ItemGroup>
 
 </Project>

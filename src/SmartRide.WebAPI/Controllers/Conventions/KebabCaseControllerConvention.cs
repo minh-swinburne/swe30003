@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.ApplicationModels;
+﻿using Humanizer;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
 namespace SmartRide.WebAPI.Controllers.Conventions;
 
@@ -12,18 +13,8 @@ public class KebabCaseControllerConvention : IControllerModelConvention
             {
                 // Convert the route template to kebab-case
                 selector.AttributeRouteModel.Template = selector.AttributeRouteModel?.Template?
-                    .Replace("[controller]", PascalToKebabCase(controller.ControllerName));
+                    .Replace("[controller]", controller.ControllerName.Kebaberize());
             }
         }
-    }
-
-    private static string PascalToKebabCase(string input)
-    {
-        return System.Text.RegularExpressions.Regex.Replace(
-            input,
-            "([a-z])([A-Z])",
-            "$1-$2",
-            System.Text.RegularExpressions.RegexOptions.CultureInvariant
-        ).ToLower();
     }
 }

@@ -9,6 +9,6 @@ public class ListResponseDTO<T>
     public string? Code { get; set; }
     public string? Module { get; set; }
     public string? Message { get; set; }
-    public Dictionary<string, object>? Metadata { get; set; }
-    public List<ResponseInfo>? Warnings { get; set; }
+    public List<ResponseInfo>? Warnings { get; set; } = [];
+    public Dictionary<string, object>? Metadata { get; set; } = new Dictionary<string, object> { { "timestamp", DateTime.UtcNow } };
 }
