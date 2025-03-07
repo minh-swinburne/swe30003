@@ -1,5 +1,5 @@
 using SmartRide.Application;
-using SmartRide.Common.Configuration;
+using SmartRide.Common.Extensions;
 using SmartRide.Infrastructure;
 using SmartRide.WebAPI.Controllers.Conventions;
 
@@ -11,15 +11,11 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Register ConfigurationService as Singleton
-        builder.Services.AddSingleton<IConfigurationService>(sp =>
-        {
-            var env = sp.GetRequiredService<IHostEnvironment>();
-            return new ConfigurationService(env);
-        });
+        // Clear default sources and manually load configuration
+        builder.Configuration.ApplyAppSettings(builder.Environment);
 
         // Add services to the container.
-        builder.Services.AddInfrastructure();
+        builder.Services.AddInfrastructure(builder.Configuration);
         builder.Services.AddApplication();
 
         // Add custom controller conventions

@@ -3,8 +3,8 @@
 public abstract class Entity
 {
     public required string Id { get; set; }
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime CreatedTime { get; set; } = DateTime.UtcNow;
+    public DateTime UpdatedTime { get; set; } = DateTime.UtcNow;
 
     public Entity()
     {
@@ -18,6 +18,6 @@ public abstract class Entity
 
     public void UpdateTimestamp()
     {
-        UpdatedAt = DateTime.UtcNow;
+        UpdatedTime = DateTime.UtcNow;
     }
 }
