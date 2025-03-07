@@ -1,7 +1,7 @@
 ﻿using SmartRide.Domain.Entities.Base;
 using System.Linq.Expressions;
 
-namespace SmartRide.Infrastructure.Repositories;
+namespace SmartRide.Domain.Interfaces;
 
 public interface IRepository<T> where T : Entity
 {
@@ -13,8 +13,8 @@ public interface IRepository<T> where T : Entity
     Task<T> DeleteAsync(string id, CancellationToken cancellationToken = default);
     Task<T?> GetByIdAsync(string id, CancellationToken cancellationToken = default);
     Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default);
-    Task<IEnumerable<T>> GetByFilterAsync<TDto>(
-        Expression<Func<T, bool>> filter,
+    Task<IEnumerable<T>> GetWithFilterAsync<TDto>(
+        Expression<Func<T, bool>>? filter,
         Expression<Func<T, TDto>>? select = null,
         Expression<Func<T, object>>? orderBy = null,
         bool ascending = true,

@@ -1,40 +1,37 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using SmartRide.WebAPI.Controllers.Attributes;
 using SmartRide.WebAPI.Controllers.Base;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace SmartRide.WebAPI.Controllers.V1;
 
 [Area("v1")]
-public class AuthController : BaseController
+[Pluralize] // person -> people
+public class PersonController : BaseController
 {
-    // GET: api/<AuthController>
+    // GET: api/v1/person
     [HttpGet]
     public IEnumerable<string> Get()
     {
         return new string[] { "value1", "value2" };
     }
-
-    // GET api/<AuthController>/5
+    // GET api/v1/person/<id>
     [HttpGet("{id}")]
     public string Get(int id)
     {
         return "value";
     }
-
-    // POST api/<AuthController>
+    // POST api/v1/person
     [HttpPost]
     public void Post([FromBody] string value)
     {
     }
-
-    // PUT api/<AuthController>/5
+    // PUT api/v1/person/<id>
     [HttpPut("{id}")]
     public void Put(int id, [FromBody] string value)
     {
     }
-
-    // DELETE api/<AuthController>/5
+    // DELETE api/v1/person/<id>
     [HttpDelete("{id}")]
     public void Delete(int id)
     {

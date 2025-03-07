@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SmartRide.Application.DTOs;
+using SmartRide.WebAPI.Controllers.Attributes;
 
 namespace SmartRide.WebAPI.Controllers.Base;
 
+[Route("api/[area]/[controller]")]
+[ApiController]
 public class BaseController : ControllerBase
 {
     internal IActionResult Respond<T>(

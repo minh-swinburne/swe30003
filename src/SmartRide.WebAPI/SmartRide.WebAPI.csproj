@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SmartRide.Application\SmartRide.Application.csproj" />
+    <ProjectReference Include="..\SmartRide.Infrastructure\SmartRide.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

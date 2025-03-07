@@ -1,21 +1,22 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SmartRide.Application.DTOs.User;
 using SmartRide.Application.Interfaces;
+using SmartRide.WebAPI.Controllers.Attributes;
 using SmartRide.WebAPI.Controllers.Base;
 
 namespace SmartRide.WebAPI.Controllers.V1;
 
-[Route("api/v1/[controller]")]
-[ApiController]
+[Area("v1")]
+[Pluralize]
 public class UserController(IUserService userService) : BaseController
 {
     private readonly IUserService _userService = userService;
 
     // GET: api/v1/user
     [HttpGet]
-    public async Task<IActionResult> GetAllUsers()
+    public async Task<IActionResult> GetAllUsers([FromQuery] ListUserRequestDTO request)
     {
-        var result = await _userService.GetAllUsersAsync();
+        var result = await _userService.GetAllUsersAsync(request);
         return Respond(result);
     }
 

@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using SmartRide.Application.Behaviors;
-using SmartRide.Infrastructure.Repositories;
 using System.Reflection;
+using SmartRide.Application.Behaviors;
+using SmartRide.Common.Configuration;
 
 namespace SmartRide.Application
 {
@@ -11,16 +11,17 @@ namespace SmartRide.Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
-            // 🔹 Register MediatR (Scan all handlers)
+            // Register MediatR (Scan all handlers)
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
-            // 🔹 Register FluentValidation (Scan all validators)
+            // Register FluentValidation (Scan all validators)
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
-            // 🔹 Add Validation Pipeline to MediatR
+            // Add Validation Pipeline to MediatR
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
-            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            // Register AutoMapper
+            //services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
             return services;
         }

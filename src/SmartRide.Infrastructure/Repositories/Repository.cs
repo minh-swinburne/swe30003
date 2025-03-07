@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SmartRide.Domain.Entities.Base;
 using System.Linq.Expressions;
+using SmartRide.Domain.Interfaces;
+using SmartRide.Domain.Entities.Base;
+using SmartRide.Common.Extensions;
 
 namespace SmartRide.Infrastructure.Repositories;
 
@@ -58,8 +60,8 @@ public class Repository<T>(DbContext dbContext) : IRepository<T> where T : Entit
         return await _dbSet.ToListAsync(cancellationToken);
     }
 
-    public async Task<IEnumerable<T>> GetByFilterAsync<TDto>(
-        Expression<Func<T, bool>> filter,
+    public async Task<IEnumerable<T>> GetWithFilterAsync<TDto>(
+        Expression<Func<T, bool>>? filter,
         Expression<Func<T, TDto>>? select = null,
         Expression<Func<T, object>>? orderBy = null,
         bool ascending = true,
@@ -68,7 +70,10 @@ public class Repository<T>(DbContext dbContext) : IRepository<T> where T : Entit
         CancellationToken cancellationToken = default
         )
     {
-        var query = _dbSet.Where(filter);
+        var query = _dbSet.AsQueryable();
+
+        if (filter != null)
+            query = query.Where(filter);
 
         if (select != null)
             query = (IQueryable<T>)query.Select(select);
@@ -76,10 +81,11 @@ public class Repository<T>(DbContext dbContext) : IRepository<T> where T : Entit
         if (orderBy != null)
             query = ascending ? query.OrderBy(orderBy) : query.OrderByDescending(orderBy);
 
-        if (skip > 0)
+        if (skip != 0 && limit != 0)
+            query = query.Paginate(skip, limit);
+        else if (skip != 0)
             query = query.Skip(skip);
-
-        if (limit > 0)
+        else if (limit != 0)
             query = query.Take(limit);
 
         return await query.ToListAsync(cancellationToken);

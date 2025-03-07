@@ -277,3 +277,120 @@ public static class ErrorMessages
 -**Each layer has a single responsibility** ✅
 
 -**Web API & .NET MAUI are fully independent** ✅
+
+---
+
+Your dependency structure **partially follows Clean Architecture**, but there's a critical **violation of the Dependency Rule**:  
+
+### **🚨 Issue: Application Layer Should NOT Depend on Infrastructure**
+Your dependency list shows **Application -> Infrastructure**, which is incorrect in Clean Architecture.  
+
+📌 **Correct dependency flow should be:**  
+- **Presentation** → Application  
+- **Application** → Domain  
+- **Infrastructure** → Domain  
+- **Infrastructure** (Repositories) → Application (**Only via Dependency Injection, not direct reference!**)  
+- **Common (Shared Code)** → Used by all layers (but should not introduce dependencies between layers).  
+
+---
+## **✅ How to Fix: Invert the Repository Dependency**
+Currently, **IRepository** is defined inside `Infrastructure`. This forces `Application` to reference `Infrastructure`, which is **wrong**.
+
+### **Fix: Move `IRepository<T>` to the Domain Layer**  
+✅ In **Clean Architecture**, repository interfaces are defined in the **Domain Layer**, while their concrete implementations stay in **Infrastructure**.
+
+📌 **Move `IRepository<T>` to `SmartRide.Domain.Interfaces.Repositories`:**  
+```csharp
+namespace SmartRide.Domain.Interfaces.Repositories;
+
+public interface IRepository<T> where T : Entity
+{
+    IQueryable<T> Query(CancellationToken cancellationToken = default);
+    Task<int> CountAsync(CancellationToken cancellationToken = default);
+    Task<bool> ExistsAsync(string id, CancellationToken cancellationToken = default);
+    Task<T> CreateAsync(T entity, CancellationToken cancellationToken = default);
+    Task<T> UpdateAsync(T entity, CancellationToken cancellationToken = default);
+    Task<T> DeleteAsync(string id, CancellationToken cancellationToken = default);
+    Task<T?> GetByIdAsync(string id, CancellationToken cancellationToken = default);
+    Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default);
+    Task<IEnumerable<T>> GetByFilterAsync<TDto>(
+        Expression<Func<T, bool>> filter,
+        Expression<Func<T, TDto>>? select = null,
+        Expression<Func<T, object>>? orderBy = null,
+        bool ascending = true,
+        int skip = 0,
+        int limit = 0,
+        CancellationToken cancellationToken = default
+    );
+}
+```
+
+### **Then, Implement the Repository in Infrastructure:**
+```csharp
+using SmartRide.Domain.Interfaces.Repositories;
+using SmartRide.Domain.Entities;
+
+namespace SmartRide.Infrastructure.Repositories;
+
+public class Repository<T> : IRepository<T> where T : Entity
+{
+    private readonly SmartRideDbContext _context;
+
+    public Repository(SmartRideDbContext context)
+    {
+        _context = context;
+    }
+
+    public async Task<T> CreateAsync(T entity, CancellationToken cancellationToken = default)
+    {
+        _context.Set<T>().Add(entity);
+        await _context.SaveChangesAsync(cancellationToken);
+        return entity;
+    }
+
+    // Implement other methods...
+}
+```
+
+### **🚀 Now, in the Application Layer, you depend only on `IRepository<T>`**
+This way:
+- **Application Layer does NOT reference Infrastructure**.
+- **Infrastructure depends on Application only at runtime (via Dependency Injection)**.
+
+---
+## **✅ Final Dependency Flow (Correct)**
+✅ **Your fixed dependencies follow Clean Architecture:**
+
+```
++---------------------+
+|  Presentation/UI    |  (ASP.NET API, MAUI, Console)
++---------------------+
+        ↓ 
++---------------------+
+|  Application Layer  |  (Use Cases, Services, MediatR Handlers)
++---------------------+
+        ↓ 
++---------------------+
+|  Domain Layer       |  (Entities, Enums, IRepository)
++---------------------+
+        ↓ 
++---------------------+
+|  Infrastructure     |  (EF Core, Repositories, DB, APIs)
++---------------------+
+```
+
+### **Dependency List (Fixed)**
+- ✅ **Presentation** → Application  
+- ✅ **Application** → Domain  
+- ✅ **Infrastructure** → Domain  
+- ✅ **Infrastructure (Repositories)** → Application (only via Dependency Injection, NOT direct reference!)  
+
+---
+## **🎯 Is This Still N-Tier Architecture?**
+Yes! **N-Tier Architecture** and **Clean Architecture** overlap, but Clean Architecture introduces stricter separation of concerns.  
+- In **N-Tier**, Infrastructure (Data Access) is **always referenced by Application**, which is why your original structure allowed `Application -> Infrastructure`.  
+- In **Clean Architecture**, Infrastructure is **ONLY injected at runtime** to avoid tight coupling.  
+
+🚀 **By fixing this dependency issue, your project now follows both N-Tier and Clean Architecture correctly.**  
+
+Would you like an example of **Dependency Injection setup in `Program.cs` to wire everything properly?** 💡

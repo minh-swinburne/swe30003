@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
 namespace SmartRide.WebAPI.Controllers.Conventions;
 
-public class KebabCaseControllerConvention : IControllerModelConvention
+public class KebaberizeConvention : IControllerModelConvention
 {
     public void Apply(ControllerModel controller)
     {
@@ -11,9 +11,8 @@ public class KebabCaseControllerConvention : IControllerModelConvention
         {
             if (selector.AttributeRouteModel != null)
             {
-                // Convert the route template to kebab-case
-                selector.AttributeRouteModel.Template = selector.AttributeRouteModel?.Template?
-                    .Replace("[controller]", controller.ControllerName.Kebaberize());
+                // Convert the controller name to kebab-case
+                controller.ControllerName = controller.ControllerName.Kebaberize();
             }
         }
     }
