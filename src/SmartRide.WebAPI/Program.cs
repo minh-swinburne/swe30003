@@ -16,7 +16,7 @@ public class Program
 
         // Add services to the container.
         builder.Services.AddInfrastructure(builder.Configuration);
-        builder.Services.AddApplication();
+        builder.Services.AddApplication(builder.Configuration);
 
         // Add custom controller conventions
         builder.Services.AddControllers(options =>
