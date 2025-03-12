@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "SmartRide.ConsoleApp": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

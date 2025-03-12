@@ -1,14 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
-using SmartRide.Domain.Interfaces;
-using SmartRide.Domain.Entities.Base;
 using SmartRide.Common.Extensions;
+using SmartRide.Domain.Entities.Base;
+using SmartRide.Domain.Interfaces;
+using SmartRide.Infrastructure.Persistence;
+using System.Linq.Expressions;
 
 namespace SmartRide.Infrastructure.Repositories;
 
-public class Repository<T>(DbContext dbContext) : IRepository<T> where T : Entity
+public class Repository<T>(SmartRideDbContext dbContext) : IRepository<T> where T : Entity
 {
-    private readonly DbContext _dbContext = dbContext;
+    private readonly SmartRideDbContext _dbContext = dbContext;
     private readonly DbSet<T> _dbSet = dbContext.Set<T>();
 
     public IQueryable<T> Query(CancellationToken cancellationToken = default)

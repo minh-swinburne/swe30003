@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
 using MediatR;
-using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SmartRide.Application.Behaviors;
+using System.Reflection;
 
 namespace SmartRide.Application
 {
@@ -21,7 +21,7 @@ namespace SmartRide.Application
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
             // Register AutoMapper
-            //services.AddAutoMapper(Assembly.GetExecutingAssembly());
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
             return services;
         }
