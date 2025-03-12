@@ -1,18 +1,18 @@
-﻿using MediatR;
+﻿using AutoMapper;
 using Humanizer;
-using AutoMapper;
-using System.Linq.Expressions;
-using System.Reflection;
+using MediatR;
 using SmartRide.Application.DTOs;
-using SmartRide.Application.DTOs.User;
+using SmartRide.Application.DTOs.Users;
+using SmartRide.Application.Interfaces;
 using SmartRide.Common.Extensions;
 using SmartRide.Domain.Entities;
 using SmartRide.Domain.Interfaces;
-using SmartRide.Application.Interfaces;
+using System.Linq.Expressions;
+using System.Reflection;
 
-namespace SmartRide.Application.Queries.UserQueries.Handlers;
+namespace SmartRide.Application.Queries.Users.Handlers;
 
-public class ListUserQueryHandler(IRepository<User> userRepository, IMapper mapper) 
+public class ListUserQueryHandler(IRepository<User> userRepository, IMapper mapper)
     : IRequestHandler<ListUserQuery, ListResponseDTO<ListUserResponseDTO>>, IFilterableHandler<ListUserQuery, User>
 {
     private readonly IRepository<User> _userRepository = userRepository;
@@ -39,7 +39,7 @@ public class ListUserQueryHandler(IRepository<User> userRepository, IMapper mapp
 
             var parameter = Expression.Parameter(typeof(User), "u");
             var propertyAccess = Expression.Property(parameter, propertyInfo);
-            orderBy = (Expression<Func<User, object>>) Expression.Lambda(propertyAccess, parameter);
+            orderBy = (Expression<Func<User, object>>)Expression.Lambda(propertyAccess, parameter);
         }
 
         var result = await _userRepository.GetWithFilterAsync<ListUserResponseDTO>(

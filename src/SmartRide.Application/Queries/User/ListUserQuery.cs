@@ -1,9 +1,9 @@
 ﻿using MediatR;
 using SmartRide.Application.DTOs;
-using SmartRide.Application.DTOs.User;
+using SmartRide.Application.DTOs.Users;
 using SmartRide.Common.Interfaces;
 
-namespace SmartRide.Application.Queries.UserQueries;
+namespace SmartRide.Application.Queries.Users;
 
 public class ListUserQuery : IRequest<ListResponseDTO<ListUserResponseDTO>>, IPageable, ISortable
 {

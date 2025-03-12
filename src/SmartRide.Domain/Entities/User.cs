@@ -1,5 +1,4 @@
-﻿
-using SmartRide.Domain.Entities.Base;
+﻿using SmartRide.Domain.Entities.Base;
 
 namespace SmartRide.Domain.Entities;
 

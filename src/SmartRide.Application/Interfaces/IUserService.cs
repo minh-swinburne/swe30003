@@ -1,7 +1,5 @@
 ﻿using SmartRide.Application.DTOs;
-using SmartRide.Application.DTOs.User;
-using SmartRide.Domain.Entities;
-using SmartRide.Domain.Interfaces;
+using SmartRide.Application.DTOs.Users;
 
 namespace SmartRide.Application.Interfaces;
 

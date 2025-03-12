@@ -1,6 +1,6 @@
 ﻿using SmartRide.Common.Interfaces;
 
-namespace SmartRide.Application.DTOs.User;
+namespace SmartRide.Application.DTOs.Users;
 
 public class ListUserRequestDTO : ISortable, IPageable
 {
