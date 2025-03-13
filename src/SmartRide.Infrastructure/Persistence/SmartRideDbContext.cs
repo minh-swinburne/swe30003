@@ -18,10 +18,7 @@ public class SmartRideDbContext(DbContextOptions<SmartRideDbContext> options, IO
         modelBuilder.Entity<User>()
             .HasMany(u => u.Roles)
             .WithMany(r => r.Users)
-            .UsingEntity<UserRole>(
-                l => l.HasOne<Role>().WithMany().HasForeignKey(ur => ur.RoleId),
-                r => r.HasOne<User>().WithMany().HasForeignKey(ur => ur.UserId)
-            );
+            .UsingEntity<UserRole>();
 
         // Apply custom table name mapping
         if (_dbSettings.UseSnakeCaseNaming)

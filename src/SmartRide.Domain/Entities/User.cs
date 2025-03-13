@@ -1,4 +1,5 @@
 ﻿using SmartRide.Domain.Entities.Base;
+using SmartRide.Domain.Entities.Join;
 
 namespace SmartRide.Domain.Entities;
 
@@ -12,4 +13,5 @@ public class User : Entity
     public string? Picture { get; set; }
 
     public ICollection<Role> Roles { get; set; } = [];
+    public ICollection<UserRole> UserRoles { get; set; } = [];
 }
