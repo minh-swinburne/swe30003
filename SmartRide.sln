@@ -15,7 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartRide.Infrastructure", "src\SmartRide.Infrastructure\SmartRide.Infrastructure.csproj", "{CC9FEAA9-F07E-4C3C-8417-6BD12E93E2E6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartRide.ConsoleApp", "src\SmartRide.Console\SmartRide.ConsoleApp.csproj", "{E82F5BC6-909D-6A8F-889B-36EA75F5F310}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartRide.ConsoleApp", "src\SmartRide.ConsoleApp\SmartRide.ConsoleApp.csproj", "{E82F5BC6-909D-6A8F-889B-36EA75F5F310}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartRide.WebAPI", "src\SmartRide.WebAPI\SmartRide.WebAPI.csproj", "{6F0810F6-2913-E22E-46E4-A9E41DC837D5}"
 EndProject

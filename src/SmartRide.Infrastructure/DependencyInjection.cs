@@ -22,7 +22,7 @@ public static class DependencyInjection
             // Extract registered settings
             var dbSettings = provider.GetRequiredService<IOptions<DbSettings>>().Value;
 
-            options.UseSqlServer(dbSettings.ConnectionString, sqlOptions =>
+            options.UseMySql(dbSettings.ConnectionString, ServerVersion.AutoDetect(dbSettings.ConnectionString), sqlOptions =>
             {
                 // Migrations assembly is required for EF Core 5
                 sqlOptions.MigrationsAssembly(typeof(SmartRideDbContext).Assembly.FullName);
