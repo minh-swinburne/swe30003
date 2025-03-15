@@ -11,6 +11,7 @@ public class SmartRideDbContextTests
     {
         return new DbSettings
         {
+            Provider = DbProvider.InMemory,
             ConnectionString = "DataSource=:memory:",
             UseSnakeCaseNaming = true
         };

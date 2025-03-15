@@ -2,10 +2,9 @@
 using SmartRide.Common.Extensions;
 using SmartRide.Domain.Entities.Base;
 using SmartRide.Domain.Interfaces;
-using SmartRide.Infrastructure.Persistence;
 using System.Linq.Expressions;
 
-namespace SmartRide.Infrastructure.Repositories;
+namespace SmartRide.Infrastructure.Persistence;
 
 public class Repository<T>(SmartRideDbContext dbContext) : IRepository<T> where T : Entity
 {

@@ -1,11 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using SmartRide.Domain.Interfaces;
 using SmartRide.Infrastructure.Persistence;
-using SmartRide.Infrastructure.Repositories;
 using SmartRide.Infrastructure.Settings;
+using SmartRide.Infrastructure.Strategies;
 
 namespace SmartRide.Infrastructure;
 
@@ -22,16 +21,10 @@ public static class DependencyInjection
             // Extract registered settings
             var dbSettings = provider.GetRequiredService<IOptions<DbSettings>>().Value;
 
-            options.UseMySql(dbSettings.ConnectionString, ServerVersion.AutoDetect(dbSettings.ConnectionString), sqlOptions =>
-            {
-                // Migrations assembly is required for EF Core 5
-                sqlOptions.MigrationsAssembly(typeof(SmartRideDbContext).Assembly.FullName);
-                // Enable retry on failure
-                sqlOptions.EnableRetryOnFailure(
-                    maxRetryCount: 5,
-                    maxRetryDelay: TimeSpan.FromSeconds(30),
-                    errorNumbersToAdd: null);
-            });
+            // Use the appropriate strategy based on database provider
+            DbStrategyContext<SmartRideDbContext> dbStrategyContext = new();
+            dbStrategyContext.SetStrategy(dbSettings.Provider);
+            dbStrategyContext.Configure(options, dbSettings.ConnectionString);
         });
 
         // Register repositories of all entity types
