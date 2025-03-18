@@ -1,5 +1,5 @@
 ﻿namespace SmartRide.Application.DTOs.Users;
 
-public class CreateUserRequestDTO
+public class CreateUserRequestDTO : BaseDTO
 {
 }

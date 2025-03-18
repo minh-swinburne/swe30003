@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace SmartRide.Domain.Entities.Base;
+namespace SmartRide.Domain.Entities;
 
-public abstract class Entity
+public abstract class BaseEntity
 {
     [Key]
     [Column(TypeName = "char")]
@@ -18,7 +18,7 @@ public abstract class Entity
     [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
     public DateTime UpdatedTime { get; set; } = DateTime.UtcNow;
 
-    public Entity()
+    public BaseEntity()
     {
         Id = Guid.NewGuid().ToString();
     }

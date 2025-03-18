@@ -24,7 +24,7 @@ public class UserController(IUserService userService) : BaseController
     [HttpGet("{id}")]
     public async Task<IActionResult> GetUserById([FromRoute] int id)
     {
-        var result = await _userService.GetUserByIdAsync(new GetUserRequestDTO { Id = id });
+        var result = await _userService.GetUserByIdAsync(new GetUserByIdRequestDTO { Id = id });
         return Respond(result);
     }
 

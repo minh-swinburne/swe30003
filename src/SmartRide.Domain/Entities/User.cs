@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SmartRide.Domain.Entities.Base;
 using SmartRide.Domain.Entities.Join;
+using SmartRide.Domain.Entities.Lookup;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -8,7 +8,7 @@ namespace SmartRide.Domain.Entities;
 
 [Index(nameof(Email), IsUnique = true)]
 [Index(nameof(Phone), IsUnique = true)]
-public class User : Entity
+public class User : BaseEntity
 {
     [Required]
     [Column(TypeName = "varchar")]

@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SmartRide.Common.Extensions;
-using SmartRide.Domain.Entities.Base;
+using SmartRide.Domain.Entities;
 using SmartRide.Domain.Interfaces;
 using System.Linq.Expressions;
 
 namespace SmartRide.Infrastructure.Persistence;
 
-public class Repository<T>(SmartRideDbContext dbContext) : IRepository<T> where T : Entity
+public class Repository<T>(SmartRideDbContext dbContext) : IRepository<T> where T : BaseEntity
 {
     private readonly SmartRideDbContext _dbContext = dbContext;
     private readonly DbSet<T> _dbSet = dbContext.Set<T>();
@@ -55,12 +55,12 @@ public class Repository<T>(SmartRideDbContext dbContext) : IRepository<T> where 
         return await _dbSet.FindAsync([id], cancellationToken: cancellationToken);
     }
 
-    public async Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default)
+    public async Task<List<T>> GetAllAsync(CancellationToken cancellationToken = default)
     {
         return await _dbSet.ToListAsync(cancellationToken);
     }
 
-    public async Task<IEnumerable<T>> GetWithFilterAsync<TDto>(
+    public async Task<List<T>> GetWithFilterAsync<TDto>(
         Expression<Func<T, bool>>? filter,
         Expression<Func<T, TDto>>? select = null,
         Expression<Func<T, object>>? orderBy = null,

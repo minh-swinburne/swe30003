@@ -4,7 +4,7 @@ namespace SmartRide.Application.DTOs;
 
 public class ListResponseDTO<T>
 {
-    public required IEnumerable<T> Data { get; set; }
+    public required List<T> Data { get; set; }
     public int Count { get; set; }
     public string? Code { get; set; }
     public string? Module { get; set; }

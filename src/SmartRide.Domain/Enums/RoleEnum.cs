@@ -1,6 +1,6 @@
 ﻿namespace SmartRide.Domain.Enums;
 
-public enum UserRoleEnum
+public enum RoleEnum
 {
     Passenger = 1,
     Driver = 2,

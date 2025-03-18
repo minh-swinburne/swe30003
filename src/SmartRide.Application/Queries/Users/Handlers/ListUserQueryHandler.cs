@@ -22,15 +22,16 @@ public class ListUserQueryHandler(IRepository<User> userRepository, IMapper mapp
     {
         Expression<Func<User, object>>? orderBy = null;
         Expression<Func<User, bool>>? filter = BuildFilter(request);
-        Expression<Func<User, ListUserResponseDTO>>? select = u => new ListUserResponseDTO
-        {
-            Id = u.Id,
-            FirstName = u.FirstName,
-            LastName = u.LastName,
-            Email = u.Email,
-            Phone = u.Phone,
-            Picture = u.Picture,
-        };
+        //Expression<Func<User, ListUserResponseDTO>>? select = u => new ListUserResponseDTO
+        //{
+        //    Id = u.Id,
+        //    FirstName = u.FirstName,
+        //    LastName = u.LastName,
+        //    Email = u.Email,
+        //    Phone = u.Phone,
+        //    Picture = u.Picture,
+        //    Roles = u.Roles.Select(r => r.Id).ToList(),
+        //};
 
         if (!string.IsNullOrEmpty(request.OrderBy))
         {
@@ -42,7 +43,7 @@ public class ListUserQueryHandler(IRepository<User> userRepository, IMapper mapp
             orderBy = (Expression<Func<User, object>>)Expression.Lambda(propertyAccess, parameter);
         }
 
-        var result = await _userRepository.GetWithFilterAsync<ListUserResponseDTO>(
+        List<User> result = await _userRepository.GetWithFilterAsync<ListUserResponseDTO>(
             filter,
             //select,
             orderBy: orderBy,
@@ -52,11 +53,7 @@ public class ListUserQueryHandler(IRepository<User> userRepository, IMapper mapp
             cancellationToken: cancellationToken
         );
 
-        return new ListResponseDTO<ListUserResponseDTO>
-        {
-            Data = [],
-            Count = 0
-        };
+        return _mapper.Map<ListResponseDTO<ListUserResponseDTO>>(result);
     }
 
     public Expression<Func<User, bool>>? BuildFilter(ListUserQuery query)
@@ -74,6 +71,16 @@ public class ListUserQueryHandler(IRepository<User> userRepository, IMapper mapp
 
         if (!string.IsNullOrWhiteSpace(query.Phone))
             filter = filter.AddFilter(user => user.Phone != null && user.Phone.Contains(query.Phone, StringComparison.CurrentCultureIgnoreCase));
+
+        if (query.Roles is { Count: > 0 })
+        {
+            if (query.MatchAllRoles)
+                // Ensure the user has *all* the requested roles
+                filter = filter.AddFilter(user => query.Roles.All(role => user.UserRoles.Any(ur => ur.RoleId == role)));
+            else
+                // Ensure the user has *at least one* of the requested roles
+                filter = filter.AddFilter(user => user.UserRoles.Any(ur => query.Roles.Contains(ur.RoleId)));
+        }
 
         return filter;
     }

@@ -1,16 +1,19 @@
-﻿using MediatR;
-using SmartRide.Application.DTOs;
+﻿using SmartRide.Application.DTOs;
 using SmartRide.Application.DTOs.Users;
 using SmartRide.Common.Interfaces;
+using SmartRide.Domain.Enums;
 
 namespace SmartRide.Application.Queries.Users;
 
-public class ListUserQuery : IRequest<ListResponseDTO<ListUserResponseDTO>>, IPageable, ISortable
+public class ListUserQuery : BaseQuery<ListResponseDTO<ListUserResponseDTO>>, IPageable, ISortable
 {
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
     public string? Email { get; set; }
     public string? Phone { get; set; }
+
+    public List<RoleEnum>? Roles { get; set; }
+    public bool MatchAllRoles { get; set; } = false;
 
     public int PageSize { get; set; }
     public int PageNo { get; set; }
