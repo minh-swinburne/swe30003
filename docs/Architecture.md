@@ -396,13 +396,13 @@ Yes! **N-Tier Architecture** and **Clean Architecture** overlap, but Clean Archi
 Would you like an example of **Dependency Injection setup in `Program.cs` to wire everything properly?** 💡
 
 
-## Question
+# Question
 
 Now I'm a bit uncertain about the Presentation Layer, like it currently has 2 different executable programs: Console app and Web API. while the console app does provide the user with a UI, it doesn't have something like a controller to forward requests yet (should this be implemented or just call directly the services?) and also needs numbered menus (perhaps using Template design pattern). Whereas, the Web API has the controllers but doesn't really provide a UI (it's gotta be a web ui project or some or FE project pointing requests to it). So are they considered Presentation Layer? Or the controllers actually belong to Application layer?
 
 ---
 
-## Generated Answer
+# Generated Answer
 
 Your **Console App and Web API** are both part of the **Presentation Layer**, but they serve different purposes within that layer. Let’s break this down:  
 
