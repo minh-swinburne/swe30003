@@ -6,9 +6,9 @@ namespace SmartRide.Domain.Entities;
 public abstract class BaseEntity
 {
     [Key]
-    [Column(TypeName = "char")]
+    [Column(TypeName = "binary")]
     [StringLength(36)]
-    public required string Id { get; set; }
+    public required Guid Id { get; set; }
 
     [Column(TypeName = "timestamp")]
     [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
@@ -20,10 +20,10 @@ public abstract class BaseEntity
 
     public BaseEntity()
     {
-        Id = Guid.NewGuid().ToString();
+        Id = Guid.NewGuid();
     }
 
-    public virtual string GetId()
+    public virtual Guid GetId()
     {
         return Id;
     }

@@ -21,7 +21,7 @@ public class Repository<T>(SmartRideDbContext dbContext) : IRepository<T> where 
         return await _dbSet.CountAsync(cancellationToken);
     }
 
-    public async Task<bool> ExistsAsync(string id, CancellationToken cancellationToken = default)
+    public async Task<bool> ExistsAsync(Guid id, CancellationToken cancellationToken = default)
     {
         return await _dbSet.AnyAsync(e => e.Id == id, cancellationToken);
     }
@@ -40,7 +40,7 @@ public class Repository<T>(SmartRideDbContext dbContext) : IRepository<T> where 
         return entity;
     }
 
-    public async Task<T> DeleteAsync(string id, CancellationToken cancellationToken = default)
+    public async Task<T> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var entity = await _dbSet.FindAsync([id], cancellationToken: cancellationToken)
             ?? throw new KeyNotFoundException($"Entity of type {typeof(T)} with id {id} not found.");
@@ -50,7 +50,7 @@ public class Repository<T>(SmartRideDbContext dbContext) : IRepository<T> where 
         return entity;
     }
 
-    public async Task<T?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
+    public async Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         return await _dbSet.FindAsync([id], cancellationToken: cancellationToken);
     }

@@ -11,7 +11,7 @@ public class UserRole : JoinEntity
 {
     [Column(TypeName = "char", Order = 0)]
     [StringLength(36)]
-    public required string UserId { get; set; }
+    public required Guid UserId { get; set; }
 
     [Column(TypeName = "int", Order = 1)]
     public required RoleEnum RoleId { get; set; }
