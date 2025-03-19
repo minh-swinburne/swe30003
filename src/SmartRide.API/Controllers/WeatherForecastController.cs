@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace SmartRide.WebAPI.Controllers;
+namespace SmartRide.API.Controllers;
 
 [ApiController]
 [Route("[controller]")]

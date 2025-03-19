@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SmartRide.Domain.Entities.Lookup;
 using SmartRide.Domain.Enums;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SmartRide.Domain.Entities.Join;
@@ -9,11 +8,10 @@ namespace SmartRide.Domain.Entities.Join;
 [PrimaryKey(nameof(UserId), nameof(RoleId))]
 public class UserRole : JoinEntity
 {
-    [Column(TypeName = "char", Order = 0)]
-    [StringLength(36)]
+    [Column(TypeName = "BINARY(16)", Order = 0)]
     public required Guid UserId { get; set; }
 
-    [Column(TypeName = "int", Order = 1)]
+    [Column(TypeName = "INT", Order = 1)]
     public required RoleEnum RoleId { get; set; }
 
     [ForeignKey(nameof(UserId))]

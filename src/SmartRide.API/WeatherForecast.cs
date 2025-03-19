@@ -1,4 +1,4 @@
-namespace SmartRide.WebAPI
+namespace SmartRide.API
 {
     public class WeatherForecast
     {

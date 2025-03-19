@@ -10,5 +10,8 @@ public class UserMappingProfile : Profile
     {
         CreateMap<User, ListUserResponseDTO>()
             .ForMember(dest => dest.Roles, opt => opt.MapFrom(src => src.Roles.Select(r => r.Id).ToList()));
+
+        CreateMap<User, GetUserByIdResponseDTO>()
+            .ForMember(dest => dest.Roles, opt => opt.MapFrom(src => src.Roles.Select(r => r.Id).ToList()));
     }
 }

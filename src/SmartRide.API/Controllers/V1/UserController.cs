@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SmartRide.API.Controllers.Attributes;
+using SmartRide.API.Controllers.Base;
 using SmartRide.Application.DTOs.Users;
 using SmartRide.Application.Interfaces;
-using SmartRide.WebAPI.Controllers.Attributes;
-using SmartRide.WebAPI.Controllers.Base;
 
-namespace SmartRide.WebAPI.Controllers.V1;
+namespace SmartRide.API.Controllers.V1;
 
 [Area("v1")]
 [Pluralize]
@@ -22,7 +22,7 @@ public class UserController(IUserService userService) : BaseController
 
     // GET api/v1/user/<userId>
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetUserById([FromRoute] int id)
+    public async Task<IActionResult> GetUserById([FromRoute] Guid id)
     {
         var result = await _userService.GetUserByIdAsync(new GetUserByIdRequestDTO { Id = id });
         return Respond(result);

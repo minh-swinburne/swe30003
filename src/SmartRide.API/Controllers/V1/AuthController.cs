@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SmartRide.WebAPI.Controllers.Base;
+using SmartRide.API.Controllers.Base;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace SmartRide.WebAPI.Controllers.V1;
+namespace SmartRide.API.Controllers.V1;
 
 [Area("v1")]
 public class AuthController : BaseController

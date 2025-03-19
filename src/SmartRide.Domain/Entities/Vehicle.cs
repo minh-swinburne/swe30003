@@ -11,41 +11,40 @@ namespace SmartRide.Domain.Entities;
 public class Vehicle : BaseEntity
 {
     [Required]
-    [Column(TypeName = "char", Order = 0)]
-    [StringLength(36)]
+    [Column(TypeName = "BINARY(16)", Order = 0)]
     public required string UserId { get; set; }
 
     [Required]
-    [Column(TypeName = "int", Order = 1)]
+    [Column(TypeName = "INT", Order = 1)]
     public required VehicleTypeEnum VehicleTypeId { get; set; }
 
 
     [Required]
-    [Column(TypeName = "char")]
+    [Column(TypeName = "CHAR")]
     [StringLength(17)]
     public required string Vin { get; set; }
 
     [Required]
-    [Column(TypeName = "varchar")]
+    [Column(TypeName = "VARCHAR")]
     [StringLength(10)]
     public required string Plate { get; set; }
 
     [Required]
-    [Column(TypeName = "varchar")]
+    [Column(TypeName = "VARCHAR")]
     [StringLength(50)]
     public required string Make { get; set; }
 
     [Required]
-    [Column(TypeName = "varchar")]
+    [Column(TypeName = "VARCHAR")]
     [StringLength(50)]
     public required string Model { get; set; }
 
     [Required]
-    [Column(TypeName = "int")]
+    [Column(TypeName = "INT")]
     public required int Year { get; set; }
 
     [Required]
-    [Column(TypeName = "date")]
+    [Column(TypeName = "DATE")]
     public required DateTime RegisteredDate { get; set; }
 
     [Required]

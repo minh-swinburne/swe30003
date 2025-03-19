@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -18,10 +19,10 @@ namespace SmartRide.Infrastructure.Migrations
                 name: "roles",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "int", nullable: false),
-                    name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    id = table.Column<int>(type: "INT", nullable: false),
+                    name = table.Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    description = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: true)
+                    description = table.Column<string>(type: "VARCHAR(255)", maxLength: 255, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
@@ -34,22 +35,23 @@ namespace SmartRide.Infrastructure.Migrations
                 name: "users",
                 columns: table => new
                 {
-                    id = table.Column<string>(type: "char(36)", maxLength: 36, nullable: false)
+                    id = table.Column<byte[]>(type: "BINARY(16)", nullable: false),
+                    first_name = table.Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    first_name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    last_name = table.Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    last_name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
+                    email = table.Column<string>(type: "VARCHAR(255)", maxLength: 255, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    email = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false)
+                    phone = table.Column<string>(type: "VARCHAR(45)", maxLength: 45, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    phone = table.Column<string>(type: "varchar(45)", maxLength: 45, nullable: false)
+                    password = table.Column<string>(type: "CHAR(60)", maxLength: 60, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    password = table.Column<string>(type: "char(60)", maxLength: 60, nullable: true)
+                    picture = table.Column<string>(type: "TEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    picture = table.Column<string>(type: "text", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    created_time = table.Column<DateTime>(type: "timestamp", nullable: false),
-                    updated_time = table.Column<DateTime>(type: "timestamp", nullable: false)
+                    created_time = table.Column<DateTime>(type: "TIMESTAMP", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
+                    updated_time = table.Column<DateTime>(type: "TIMESTAMP", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn)
                 },
                 constraints: table =>
                 {
@@ -61,9 +63,8 @@ namespace SmartRide.Infrastructure.Migrations
                 name: "user_roles",
                 columns: table => new
                 {
-                    user_id = table.Column<string>(type: "char(36)", maxLength: 36, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    role_id = table.Column<int>(type: "int", nullable: false)
+                    user_id = table.Column<byte[]>(type: "BINARY(16)", nullable: false),
+                    role_id = table.Column<int>(type: "INT", nullable: false)
                 },
                 constraints: table =>
                 {

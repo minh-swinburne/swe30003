@@ -1,10 +1,10 @@
 ﻿using MediatR;
-using SmartRide.Application.Interfaces;
+using SmartRide.Application.Commands;
 using SmartRide.Application.DTOs;
 using SmartRide.Application.DTOs.Users;
-using SmartRide.Application.Queries.Users;
 using SmartRide.Application.Factories;
-using SmartRide.Application.Commands;
+using SmartRide.Application.Interfaces;
+using SmartRide.Application.Queries.Users;
 
 namespace SmartRide.Application.Services;
 
@@ -21,7 +21,8 @@ public class UserService(IMediator mediator) : IUserService
     public async Task<ResponseDTO<GetUserByIdResponseDTO>> GetUserByIdAsync(GetUserByIdRequestDTO request)
     {
         var query = MediatRFactory.CreateQuery<GetUserByIdQuery>(request);
-        return await _mediator.Send(query);
+        var result = await _mediator.Send(query);
+        return new ResponseDTO<GetUserByIdResponseDTO> { Data = result };
     }
 
     public async Task<ResponseDTO<CreateUserResponseDTO>> CreateUserAsync(CreateUserRequestDTO request)

@@ -1,7 +1,7 @@
 ﻿using Humanizer;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
-namespace SmartRide.WebAPI.Controllers.Conventions;
+namespace SmartRide.API.Controllers.Conventions;
 
 public class KebaberizeConvention : IControllerModelConvention
 {

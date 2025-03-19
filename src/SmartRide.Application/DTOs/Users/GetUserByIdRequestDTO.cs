@@ -2,5 +2,5 @@
 
 public class GetUserByIdRequestDTO : BaseDTO
 {
-    public int Id { get; init; }
+    public required Guid Id { get; init; }
 }

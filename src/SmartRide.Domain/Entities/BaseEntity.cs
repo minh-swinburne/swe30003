@@ -6,15 +6,14 @@ namespace SmartRide.Domain.Entities;
 public abstract class BaseEntity
 {
     [Key]
-    [Column(TypeName = "binary")]
-    [StringLength(36)]
+    [Column(TypeName = "BINARY(16)")]
     public required Guid Id { get; set; }
 
-    [Column(TypeName = "timestamp")]
+    [Column(TypeName = "TIMESTAMP")]
     [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
     public DateTime CreatedTime { get; set; } = DateTime.UtcNow;
 
-    [Column(TypeName = "timestamp")]
+    [Column(TypeName = "TIMESTAMP")]
     [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
     public DateTime UpdatedTime { get; set; } = DateTime.UtcNow;
 

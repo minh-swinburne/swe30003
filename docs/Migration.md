@@ -1,7 +1,20 @@
 # Terminal Command
 
+## Add New Migration
+
 ```
 dotnet ef migrations add InitialCreate --project SmartRide.Infrastructure --startup-project SmartRide.ConsoleApp
+```
+
+## Remove Migration
+
+```
+dotnet ef migrations remove --project SmartRide.Infrastructure --startup-project SmartRide.ConsoleApp
+```
+
+## Apply Migrations into Database
+
+```
 dotnet ef database update --project SmartRide.Infrastructure --startup-project SmartRide.ConsoleApp
 ```
 

@@ -11,29 +11,29 @@ namespace SmartRide.Domain.Entities;
 public class User : BaseEntity
 {
     [Required]
-    [Column(TypeName = "varchar")]
+    [Column(TypeName = "VARCHAR")]
     [StringLength(50)]
     public required string FirstName { get; set; }
 
-    [Column(TypeName = "varchar")]
+    [Column(TypeName = "VARCHAR")]
     [StringLength(50)]
     public string? LastName { get; set; }
 
     [Required]
-    [Column(TypeName = "varchar")]
+    [Column(TypeName = "VARCHAR")]
     [StringLength(255)]
     public required string Email { get; set; }
 
     [Required]
-    [Column(TypeName = "varchar")]
+    [Column(TypeName = "VARCHAR")]
     [StringLength(45)]
     public required string Phone { get; set; }
 
-    [Column(TypeName = "char")]
+    [Column(TypeName = "CHAR")]
     [StringLength(60)]
     public string? Password { get; set; }
 
-    [Column(TypeName = "text")]
+    [Column(TypeName = "TEXT")]
     public string? Picture { get; set; }
 
     public ICollection<Role> Roles { get; set; } = [];

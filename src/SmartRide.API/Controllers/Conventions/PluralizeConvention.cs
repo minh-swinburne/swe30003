@@ -1,8 +1,8 @@
 ﻿using Humanizer;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
-using SmartRide.WebAPI.Controllers.Attributes;
+using SmartRide.API.Controllers.Attributes;
 
-namespace SmartRide.WebAPI.Controllers.Conventions;
+namespace SmartRide.API.Controllers.Conventions;
 
 public class PluralizeConvention : IControllerModelConvention
 {

@@ -24,14 +24,13 @@ namespace SmartRide.Infrastructure.Migrations
 
             modelBuilder.Entity("SmartRide.Domain.Entities.Join.UserRole", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasMaxLength(36)
-                        .HasColumnType("char")
+                    b.Property<byte[]>("UserId")
+                        .HasColumnType("BINARY(16)")
                         .HasColumnName("user_id")
                         .HasColumnOrder(0);
 
                     b.Property<int>("RoleId")
-                        .HasColumnType("int")
+                        .HasColumnType("INT")
                         .HasColumnName("role_id")
                         .HasColumnOrder(1);
 
@@ -42,21 +41,21 @@ namespace SmartRide.Infrastructure.Migrations
                     b.ToTable("user_roles", (string)null);
                 });
 
-            modelBuilder.Entity("SmartRide.Domain.Entities.Role", b =>
+            modelBuilder.Entity("SmartRide.Domain.Entities.Lookup.Role", b =>
                 {
                     b.Property<int>("Id")
-                        .HasColumnType("int")
+                        .HasColumnType("INT")
                         .HasColumnName("id");
 
                     b.Property<string>("Description")
                         .HasMaxLength(255)
-                        .HasColumnType("varchar")
+                        .HasColumnType("VARCHAR")
                         .HasColumnName("description");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("varchar")
+                        .HasColumnType("VARCHAR")
                         .HasColumnName("name");
 
                     b.HasKey("Id");
@@ -66,14 +65,14 @@ namespace SmartRide.Infrastructure.Migrations
 
             modelBuilder.Entity("SmartRide.Domain.Entities.User", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasMaxLength(36)
-                        .HasColumnType("char")
+                    b.Property<byte[]>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("BINARY(16)")
                         .HasColumnName("id");
 
                     b.Property<DateTime>("CreatedTime")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp")
+                        .HasColumnType("TIMESTAMP")
                         .HasColumnName("created_time");
 
                     MySqlPropertyBuilderExtensions.UseMySqlComputedColumn(b.Property<DateTime>("CreatedTime"));
@@ -81,38 +80,38 @@ namespace SmartRide.Infrastructure.Migrations
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("varchar")
+                        .HasColumnType("VARCHAR")
                         .HasColumnName("email");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("varchar")
+                        .HasColumnType("VARCHAR")
                         .HasColumnName("first_name");
 
                     b.Property<string>("LastName")
                         .HasMaxLength(50)
-                        .HasColumnType("varchar")
+                        .HasColumnType("VARCHAR")
                         .HasColumnName("last_name");
 
                     b.Property<string>("Password")
                         .HasMaxLength(60)
-                        .HasColumnType("char")
+                        .HasColumnType("CHAR")
                         .HasColumnName("password");
 
                     b.Property<string>("Phone")
                         .IsRequired()
                         .HasMaxLength(45)
-                        .HasColumnType("varchar")
+                        .HasColumnType("VARCHAR")
                         .HasColumnName("phone");
 
                     b.Property<string>("Picture")
-                        .HasColumnType("text")
+                        .HasColumnType("TEXT")
                         .HasColumnName("picture");
 
                     b.Property<DateTime>("UpdatedTime")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp")
+                        .HasColumnType("TIMESTAMP")
                         .HasColumnName("updated_time");
 
                     MySqlPropertyBuilderExtensions.UseMySqlComputedColumn(b.Property<DateTime>("UpdatedTime"));
@@ -130,7 +129,7 @@ namespace SmartRide.Infrastructure.Migrations
 
             modelBuilder.Entity("SmartRide.Domain.Entities.Join.UserRole", b =>
                 {
-                    b.HasOne("SmartRide.Domain.Entities.Role", "Role")
+                    b.HasOne("SmartRide.Domain.Entities.Lookup.Role", "Role")
                         .WithMany("UserRoles")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -147,7 +146,7 @@ namespace SmartRide.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("SmartRide.Domain.Entities.Role", b =>
+            modelBuilder.Entity("SmartRide.Domain.Entities.Lookup.Role", b =>
                 {
                     b.Navigation("UserRoles");
                 });
