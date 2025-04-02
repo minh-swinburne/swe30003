@@ -1,7 +1,7 @@
+using SmartRide.API.Controllers.Conventions;
 using SmartRide.Application;
 using SmartRide.Common.Extensions;
 using SmartRide.Infrastructure;
-using SmartRide.API.Controllers.Conventions;
 
 namespace SmartRide.API;
 

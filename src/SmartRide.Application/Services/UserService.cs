@@ -15,7 +15,12 @@ public class UserService(IMediator mediator) : IUserService
     public async Task<ListResponseDTO<ListUserResponseDTO>> GetAllUsersAsync(ListUserRequestDTO request)
     {
         var query = MediatRFactory.CreateQuery<ListUserQuery>(request);
-        return await _mediator.Send(query);
+        var result = await _mediator.Send(query);
+        return new ListResponseDTO<ListUserResponseDTO>
+        {
+            Data = result,
+            Count = result.Count
+        };
     }
 
     public async Task<ResponseDTO<GetUserByIdResponseDTO>> GetUserByIdAsync(GetUserByIdRequestDTO request)
@@ -28,6 +33,7 @@ public class UserService(IMediator mediator) : IUserService
     public async Task<ResponseDTO<CreateUserResponseDTO>> CreateUserAsync(CreateUserRequestDTO request)
     {
         var command = MediatRFactory.CreateCommand<CreateUserCommand>(request);
-        return await _mediator.Send(command);
+        var result = await _mediator.Send(command);
+        return new ResponseDTO<CreateUserResponseDTO> { Data = result };
     }
 }

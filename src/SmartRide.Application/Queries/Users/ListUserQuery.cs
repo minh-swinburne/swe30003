@@ -1,11 +1,10 @@
-﻿using SmartRide.Application.DTOs;
-using SmartRide.Application.DTOs.Users;
+﻿using SmartRide.Application.DTOs.Users;
 using SmartRide.Common.Interfaces;
 using SmartRide.Domain.Enums;
 
 namespace SmartRide.Application.Queries.Users;
 
-public class ListUserQuery : BaseQuery<ListResponseDTO<ListUserResponseDTO>>, IPageable, ISortable
+public class ListUserQuery : BaseQuery<List<ListUserResponseDTO>>, IPageable, ISortable
 {
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
