@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SmartRide.Application.Behaviors;
-using SmartRide.Application.Interfaces;
-using SmartRide.Application.Services;
+using SmartRide.Application.Hashers;
 using System.Reflection;
 
 namespace SmartRide.Application
@@ -25,7 +25,9 @@ namespace SmartRide.Application
             // Register AutoMapper
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
-            // Register all services in the Application layer
+            // Register BCrypt Password Hasher
+            services.AddScoped(typeof(IPasswordHasher<>), typeof(BCryptPasswordHasher<>));
+
             //services.AddScoped<IUserService, UserService>();
             services.Scan(scan => scan
                 .FromAssemblies(Assembly.GetExecutingAssembly())
