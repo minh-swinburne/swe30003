@@ -12,7 +12,7 @@ using SmartRide.Infrastructure.Persistence;
 namespace SmartRide.Infrastructure.Migrations
 {
     [DbContext(typeof(SmartRideDbContext))]
-    [Migration("20250319080910_InitialCreate")]
+    [Migration("20250325122854_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

@@ -1,0 +1,105 @@
+{
+  "id": "2UM853579S688805M",
+  "status": "COMPLETED",
+  "payment_source": {
+    "paypal": {
+      "email_address": "dvmh2k3@gmail.com",
+      "account_id": "SUV3UUYUU7HGS",
+      "account_status": "UNVERIFIED",
+      "name": {
+        "given_name": "Dương Viết Minh",
+        "surname": "Hoàng"
+      },
+      "address": {
+        "country_code": "VN"
+      }
+    }
+  },
+  "purchase_units": [
+    {
+      "reference_id": "default",
+      "shipping": {
+        "name": {
+          "full_name": "Dương Viết Minh Hoàng"
+        },
+        "address": {
+          "address_line_1": "41 Nguyễn Xuân Ôn",
+          "admin_area_2": "Da Nang",
+          "admin_area_1": "ĐÀ NẴNG",
+          "country_code": "VN"
+        }
+      },
+      "payments": {
+        "captures": [
+          {
+            "id": "06T853988A092350J",
+            "status": "COMPLETED",
+            "amount": {
+              "currency_code": "USD",
+              "value": "10.00"
+            },
+            "final_capture": true,
+            "seller_protection": {
+              "status": "ELIGIBLE",
+              "dispute_categories": [
+                "ITEM_NOT_RECEIVED",
+                "UNAUTHORIZED_TRANSACTION"
+              ]
+            },
+            "seller_receivable_breakdown": {
+              "gross_amount": {
+                "currency_code": "USD",
+                "value": "10.00"
+              },
+              "paypal_fee": {
+                "currency_code": "USD",
+                "value": "0.99"
+              },
+              "net_amount": {
+                "currency_code": "USD",
+                "value": "9.01"
+              }
+            },
+            "links": [
+              {
+                "href": "https://api.sandbox.paypal.com/v2/payments/captures/06T853988A092350J",
+                "rel": "self",
+                "method": "GET"
+              },
+              {
+                "href": "https://api.sandbox.paypal.com/v2/payments/captures/06T853988A092350J/refund",
+                "rel": "refund",
+                "method": "POST"
+              },
+              {
+                "href": "https://api.sandbox.paypal.com/v2/checkout/orders/2UM853579S688805M",
+                "rel": "up",
+                "method": "GET"
+              }
+            ],
+            "create_time": "2025-04-02T09:46:31Z",
+            "update_time": "2025-04-02T09:46:31Z"
+          }
+        ]
+      }
+    }
+  ],
+  "payer": {
+    "name": {
+      "given_name": "Dương Viết Minh",
+      "surname": "Hoàng"
+    },
+    "email_address": "dvmh2k3@gmail.com",
+    "payer_id": "SUV3UUYUU7HGS",
+    "address": {
+      "country_code": "VN"
+    }
+  },
+  "links": [
+    {
+      "href": "https://api.sandbox.paypal.com/v2/checkout/orders/2UM853579S688805M",
+      "rel": "self",
+      "method": "GET"
+    }
+  ]
+}

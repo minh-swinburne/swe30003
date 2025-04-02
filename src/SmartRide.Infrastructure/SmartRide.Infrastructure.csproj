@@ -28,8 +28,4 @@
     <ProjectReference Include="..\SmartRide.Domain\SmartRide.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
-
 </Project>

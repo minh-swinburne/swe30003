@@ -26,7 +26,6 @@ namespace SmartRide.Application
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
             // Register all services in the Application layer
-            //services.AddScoped<IUserService, UserService>();
             services.Scan(scan => scan
                 .FromAssemblies(Assembly.GetExecutingAssembly())
                 .AddClasses(classes => classes.InNamespaces("SmartRide.Application.Services"))
