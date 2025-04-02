@@ -28,7 +28,7 @@ public static class DependencyInjection
         });
 
         // Register repositories of all entity types
-        services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+        services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
 
         return services;
     }

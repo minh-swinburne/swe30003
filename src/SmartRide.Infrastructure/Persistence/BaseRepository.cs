@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace SmartRide.Infrastructure.Persistence;
 
-public class Repository<T>(SmartRideDbContext dbContext) : IRepository<T> where T : BaseEntity
+public class BaseRepository<T>(SmartRideDbContext dbContext) : IRepository<T> where T : BaseEntity
 {
     private readonly SmartRideDbContext _dbContext = dbContext;
     private readonly DbSet<T> _dbSet = dbContext.Set<T>();
