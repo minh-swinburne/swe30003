@@ -7,8 +7,12 @@ namespace SmartRide.Domain.Entities.Lookup;
 public class VehicleType : LookupEntity
 {
     [Key]
-    [Column(TypeName = "INT")]
+    [Column(TypeName = "TINYINT")]
     public new VehicleTypeEnum Id { get; set; }
+
+    [Required]
+    [Column(TypeName = "TINYINT")]
+    public int Capacity { get; set; }
 
     public ICollection<Vehicle> Vehicles { get; set; } = [];
 }

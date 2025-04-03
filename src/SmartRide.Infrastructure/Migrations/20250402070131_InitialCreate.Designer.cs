@@ -12,7 +12,7 @@ using SmartRide.Infrastructure.Persistence;
 namespace SmartRide.Infrastructure.Migrations
 {
     [DbContext(typeof(SmartRideDbContext))]
-    [Migration("20250319080910_InitialCreate")]
+    [Migration("20250402070131_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -32,8 +32,8 @@ namespace SmartRide.Infrastructure.Migrations
                         .HasColumnName("user_id")
                         .HasColumnOrder(0);
 
-                    b.Property<int>("RoleId")
-                        .HasColumnType("INT")
+                    b.Property<sbyte>("RoleId")
+                        .HasColumnType("TINYINT")
                         .HasColumnName("role_id")
                         .HasColumnOrder(1);
 
@@ -46,8 +46,8 @@ namespace SmartRide.Infrastructure.Migrations
 
             modelBuilder.Entity("SmartRide.Domain.Entities.Lookup.Role", b =>
                 {
-                    b.Property<int>("Id")
-                        .HasColumnType("INT")
+                    b.Property<sbyte>("Id")
+                        .HasColumnType("TINYINT")
                         .HasColumnName("id");
 
                     b.Property<string>("Description")
@@ -98,8 +98,8 @@ namespace SmartRide.Infrastructure.Migrations
                         .HasColumnName("last_name");
 
                     b.Property<string>("Password")
-                        .HasMaxLength(60)
-                        .HasColumnType("CHAR")
+                        .HasMaxLength(150)
+                        .HasColumnType("VARCHAR")
                         .HasColumnName("password");
 
                     b.Property<string>("Phone")

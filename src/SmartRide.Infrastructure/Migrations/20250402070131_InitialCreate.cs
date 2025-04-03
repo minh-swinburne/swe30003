@@ -19,7 +19,7 @@ namespace SmartRide.Infrastructure.Migrations
                 name: "roles",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "INT", nullable: false),
+                    id = table.Column<sbyte>(type: "TINYINT", nullable: false),
                     name = table.Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     description = table.Column<string>(type: "VARCHAR(255)", maxLength: 255, nullable: true)
@@ -44,7 +44,7 @@ namespace SmartRide.Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     phone = table.Column<string>(type: "VARCHAR(45)", maxLength: 45, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    password = table.Column<string>(type: "CHAR(60)", maxLength: 60, nullable: true)
+                    password = table.Column<string>(type: "VARCHAR(150)", maxLength: 150, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     picture = table.Column<string>(type: "TEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -64,7 +64,7 @@ namespace SmartRide.Infrastructure.Migrations
                 columns: table => new
                 {
                     user_id = table.Column<byte[]>(type: "BINARY(16)", nullable: false),
-                    role_id = table.Column<int>(type: "INT", nullable: false)
+                    role_id = table.Column<sbyte>(type: "TINYINT", nullable: false)
                 },
                 constraints: table =>
                 {

@@ -6,8 +6,8 @@ namespace SmartRide.Domain.Entities.Lookup;
 public abstract class LookupEntity
 {
     [Key]
-    [Column(TypeName = "INT")]
-    public int Id { get; set; }
+    [Column(TypeName = "TINYINT")]
+    public byte Id { get; set; }
 
     [Required]
     [Column(TypeName = "VARCHAR")]

@@ -8,7 +8,7 @@ namespace SmartRide.Domain.Entities.Lookup;
 public class Role : LookupEntity
 {
     [Key]
-    [Column(TypeName = "INT")]
+    [Column(TypeName = "TINYINT")]
     public new RoleEnum Id { get; set; }
 
     public ICollection<User> Users { get; set; } = [];

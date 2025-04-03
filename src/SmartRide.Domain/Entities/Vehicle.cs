@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SmartRide.Domain.Entities.Lookup;
 using SmartRide.Domain.Enums;
+using SmartRide.Domain.Events;
+using SmartRide.Domain.Interfaces;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -12,12 +14,19 @@ public class Vehicle : BaseEntity
 {
     [Required]
     [Column(TypeName = "BINARY(16)", Order = 0)]
-    public required string UserId { get; set; }
+    public required Guid UserId { get; set; }
 
     [Required]
-    [Column(TypeName = "INT", Order = 1)]
+    [ForeignKey(nameof(UserId))]    // can be removed if the property name is UserId
+    public required User User { get; set; }
+
+    [Required]
+    [Column(TypeName = "TINYINT", Order = 1)]
     public required VehicleTypeEnum VehicleTypeId { get; set; }
 
+    [Required]
+    [ForeignKey(nameof(VehicleTypeId))]
+    public required VehicleType VehicleType { get; set; }
 
     [Required]
     [Column(TypeName = "CHAR")]
@@ -47,11 +56,21 @@ public class Vehicle : BaseEntity
     [Column(TypeName = "DATE")]
     public required DateTime RegisteredDate { get; set; }
 
-    [Required]
-    [ForeignKey(nameof(UserId))]    // can be removed if the property name is UserId
-    public required User User { get; set; }
-
-    [Required]
-    [ForeignKey(nameof(VehicleTypeId))]
-    public required VehicleType VehicleType { get; set; }
+    public override void OnSave(EntityState state)
+    {
+        base.OnSave(state);
+        // Add domain events based on the entity state
+        if (state == EntityState.Added)
+        {
+            AddDomainEvent(new VehicleCreatedEvent(this));
+        }
+        else if (state == EntityState.Modified)
+        {
+            AddDomainEvent(new VehicleUpdatedEvent(this));
+        }
+        else if (state == EntityState.Deleted)
+        {
+            AddDomainEvent(new VehicleDeletedEvent(this));
+        }
+    }
 }
