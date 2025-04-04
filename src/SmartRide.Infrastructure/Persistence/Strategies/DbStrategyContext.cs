@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using SmartRide.Infrastructure.Settings;
 
-namespace SmartRide.Infrastructure.Strategies;
+namespace SmartRide.Infrastructure.Persistence.Strategies;
 
 public class DbStrategyContext<T> where T : DbContext
 {

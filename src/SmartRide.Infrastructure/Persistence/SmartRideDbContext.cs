@@ -13,8 +13,6 @@ public class SmartRideDbContext : DbContext
 {
     private readonly DbSettings _dbSettings;
 
-    public DbSet<User> Users { get; set; } = null!;
-
     public SmartRideDbContext(DbContextOptions<SmartRideDbContext> options, IOptions<DbSettings> dbSettings) : base(options)
     {
         _dbSettings = dbSettings.Value;
