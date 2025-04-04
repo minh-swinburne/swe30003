@@ -7,7 +7,8 @@ namespace SmartRide.Application.Factories;
 
 public static class MediatRFactory
 {
-    public static TQuery CreateQuery<TQuery>(BaseDTO requestDTO) where TQuery : IQuery, new()
+    public static TQuery CreateQuery<TQuery>(BaseDTO requestDTO)
+        where TQuery : IQuery, new()
     {
         var query = new TQuery();
         var requestProps = requestDTO.GetType().GetProperties();
@@ -25,7 +26,8 @@ public static class MediatRFactory
         return query;
     }
 
-    public static TCommand CreateCommand<TCommand>(BaseDTO requestDTO) where TCommand : ICommand, new()
+    public static TCommand CreateCommand<TCommand>(BaseDTO requestDTO)
+        where TCommand : ICommand, new()
     {
         var command = new TCommand();
         var requestProps = requestDTO.GetType().GetProperties();

@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Humanizer;
-using MediatR;
 using SmartRide.Application.DTOs.Users;
 using SmartRide.Application.Interfaces;
 using SmartRide.Common.Extensions;
@@ -12,12 +11,12 @@ using System.Reflection;
 namespace SmartRide.Application.Queries.Users.Handlers;
 
 public class ListUserQueryHandler(IRepository<User> userRepository, IMapper mapper)
-    : IRequestHandler<ListUserQuery, List<ListUserResponseDTO>>, IFilterableHandler<ListUserQuery, User>
+    : BaseQueryHandler<ListUserQuery, List<ListUserResponseDTO>>, IFilterableHandler<ListUserQuery, User>
 {
     private readonly IRepository<User> _userRepository = userRepository;
     private readonly IMapper _mapper = mapper;
 
-    public async Task<List<ListUserResponseDTO>> Handle(ListUserQuery request, CancellationToken cancellationToken)
+    public override async Task<List<ListUserResponseDTO>> Handle(ListUserQuery request, CancellationToken cancellationToken)
     {
         Expression<Func<User, object>>? orderBy = null;
         Expression<Func<User, bool>>? filter = BuildFilter(request);
