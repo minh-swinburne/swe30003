@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using SmartRide.Domain.Interfaces;
 
-namespace SmartRide.Domain.Entities;
+namespace SmartRide.Domain.Entities.Base;
 
 public abstract class BaseEntity
 {

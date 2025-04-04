@@ -1,6 +1,7 @@
 # Question
 
 in the Vehicle entity, both the UserId & VehicleTypeId (FK columns) and User & VehicleType (FK references) are required, leading to creating a Vehicle requiring passing both the references and their IDs. Is this a recommended implementation? If not then what is the better approach? Because VehicleType is a lookup entity, which means there shouldn't be creation of new instances of that entities, only "get" given ID. How to get them btw?
+
 ```cs
 using Microsoft.EntityFrameworkCore;
 using SmartRide.Domain.Entities.Lookup;
@@ -10,7 +11,7 @@ using SmartRide.Domain.Interfaces;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace SmartRide.Domain.Entities;
+namespace SmartRide.Domain.Entities.Base;
 
 [Index(nameof(Vin), IsUnique = true)]
 [Index(nameof(Plate), IsUnique = true)]
@@ -81,6 +82,7 @@ public class Vehicle : BaseEntity
 ```
 
 When trying to create Vehicle:
+
 ```cs
         var user = new User
         {
@@ -113,9 +115,11 @@ When trying to create Vehicle:
 Your current approach requires both the **ID** and the **navigation property (entity reference)** for `User` and `VehicleType`, which can be cumbersome. Here's how you can improve it:
 
 ### 🔹 **Best Approach**
+
 For **lookup entities** (like `VehicleType`), you don’t need to store a full reference (`VehicleType VehicleType`) in the `Vehicle` entity. Instead, just store the `VehicleTypeId`. Then, when retrieving a vehicle, you can **include** the related `VehicleType` if needed.
 
 ### ✅ **Updated Vehicle Entity**
+
 ```csharp
 public class Vehicle : BaseEntity
 {
@@ -161,18 +165,22 @@ public class Vehicle : BaseEntity
 ---
 
 ### 🔹 **How to Get the Lookup Entity (`VehicleType`)**
+
 Since `VehicleType` is a lookup entity, you don’t create new instances. Instead, you **fetch** it based on the `VehicleTypeId`:
 
 ```csharp
 var vehicleType = await _context.VehicleTypes.FindAsync((byte)VehicleTypeEnum.SmallCar);
 ```
+
 💡 **Note:**
+
 - `VehicleTypeEnum.SmallCar` is an `enum`, so you **cast it to `byte`** (since `VehicleTypeId` is stored as `TINYINT`).
 - If `FindAsync` returns `null`, it means the provided ID is invalid.
 
 ---
 
 ### 🔹 **Updated Vehicle Creation Code**
+
 With the new design, you don’t need to set `VehicleType`, only `VehicleTypeId`:
 
 ```csharp
@@ -198,11 +206,13 @@ var vehicle = new Vehicle
     RegisteredDate = DateTime.UtcNow
 };
 ```
+
 🚀 **Now, it works without errors!** You only fetch `VehicleType` when needed, keeping the object creation simpler.
 
 ---
 
 ### **Summary of Fixes**
+
 ✅ Store only `VehicleTypeId`, not `VehicleType` reference.
 ✅ `User` is nullable (`User? User { get; set; }`), so you only provide `UserId`.
 ✅ When fetching `VehicleType`, use `_context.VehicleTypes.FindAsync((byte)enumValue)`.

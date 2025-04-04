@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using SmartRide.Application.DTOs.Users;
-using SmartRide.Domain.Entities;
+using SmartRide.Domain.Entities.Base;
 
 namespace SmartRide.Application.Mappings;
 

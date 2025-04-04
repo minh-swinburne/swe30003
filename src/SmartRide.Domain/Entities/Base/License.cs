@@ -2,7 +2,7 @@ using SmartRide.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace SmartRide.Domain.Entities;
+namespace SmartRide.Domain.Entities.Base;
 
 public class License : BaseEntity
 {
@@ -21,6 +21,16 @@ public class License : BaseEntity
     [Required]
     [Column(TypeName = "DATE")]
     public required DateTime IssuedDate { get; set; }
+
+    [Required]
+    [Column(TypeName = "VARCHAR(50)")]
+    [StringLength(50)]
+    public string LicenseNumber { get; set; } = null!;
+
+    [Required]
+    [Column(TypeName = "VARCHAR(100)")]
+    [StringLength(100)]
+    public string IssuedCountry { get; set; } = null!;
 
     [Required]
     [ForeignKey(nameof(UserId))]

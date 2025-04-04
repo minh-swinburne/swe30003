@@ -6,7 +6,7 @@ using SmartRide.Domain.Events;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace SmartRide.Domain.Entities;
+namespace SmartRide.Domain.Entities.Base;
 
 [Index(nameof(Email), IsUnique = true)]
 [Index(nameof(Phone), IsUnique = true)]
@@ -48,7 +48,7 @@ public class User : BaseEntity
     public List<Role> Roles { get; set; } = [];
     public List<UserRole> UserRoles { get; set; } = [];
 
-    private List<Vehicle>? _vehicles;
+    private List<Vehicle>? _vehicles { get; set; }
 
     private List<License>? _licenses { get; set; }
 

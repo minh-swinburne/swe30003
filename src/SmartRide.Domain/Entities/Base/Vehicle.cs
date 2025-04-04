@@ -2,11 +2,10 @@
 using SmartRide.Domain.Entities.Lookup;
 using SmartRide.Domain.Enums;
 using SmartRide.Domain.Events;
-using SmartRide.Domain.Interfaces;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace SmartRide.Domain.Entities;
+namespace SmartRide.Domain.Entities.Base;
 
 [Index(nameof(Vin), IsUnique = true)]
 [Index(nameof(Plate), IsUnique = true)]

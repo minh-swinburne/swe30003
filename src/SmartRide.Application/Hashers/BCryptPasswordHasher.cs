@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using SmartRide.Domain.Entities;
+using SmartRide.Domain.Entities.Base;
 
 namespace SmartRide.Application.Hashers;
 

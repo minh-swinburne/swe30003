@@ -3,7 +3,7 @@ using SmartRide.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace SmartRide.Domain.Entities;
+namespace SmartRide.Domain.Entities.Base;
 
 [Index(nameof(UserId), IsUnique = true)]
 [Index(nameof(NationalId), IsUnique = true)]

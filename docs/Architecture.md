@@ -250,23 +250,23 @@ public static class ErrorMessages
 
 ## 📌 **Where Should You Put Everything?**
 
-| Component | Recommended Folder |
-|-----------|-------------------|
-| API Controllers | `Presentation/WebAPI/` |
-| UI Pages (Maui) | `Presentation/MobileApp/` |
-| Services (Business Logic) | `Application/` |
-| CQRS Commands & Queries | `Application/` |
-| MediatR Handlers | `Application/Handlers/` |
-| FluentValidation Validators | `Application/Validators/` |
-| DTOs (Request/Response Models) | `Domain/DTOs/` |
-| Database Models (Entities) | `Domain/Entities/` |
-| Enums | `Domain/Enums/` |
-| Repository Interfaces | `Domain/Interfaces/` |
-| Repository Implementations | `Infrastructure/Repositories/` |
-| External API Calls | `Infrastructure/ExternalAPIs/` |
-| DB Context (EF Core) | `Infrastructure/Persistence/` |
-| Constants & Helpers | `Common/` |
-| Custom Exceptions | `Common/Exceptions/` |
+| Component                      | Recommended Folder             |
+| ------------------------------ | ------------------------------ |
+| API Controllers                | `Presentation/WebAPI/`         |
+| UI Pages (Maui)                | `Presentation/MobileApp/`      |
+| Services (Business Logic)      | `Application/`                 |
+| CQRS Commands & Queries        | `Application/`                 |
+| MediatR Handlers               | `Application/Handlers/`        |
+| FluentValidation Validators    | `Application/Validators/`      |
+| DTOs (Request/Response Models) | `Domain/DTOs/`                 |
+| Database Models (Entities)     | `Domain/Entities/`             |
+| Enums                          | `Domain/Enums/`                |
+| Repository Interfaces          | `Domain/Interfaces/`           |
+| Repository Implementations     | `Infrastructure/Repositories/` |
+| External API Calls             | `Infrastructure/ExternalAPIs/` |
+| DB Context (EF Core)           | `Infrastructure/Persistence/`  |
+| Constants & Helpers            | `Common/`                      |
+| Custom Exceptions              | `Common/Exceptions/`           |
 
 ---
 
@@ -280,26 +280,32 @@ public static class ErrorMessages
 
 ---
 
-Your dependency structure **partially follows Clean Architecture**, but there's a critical **violation of the Dependency Rule**:  
+Your dependency structure **partially follows Clean Architecture**, but there's a critical **violation of the Dependency Rule**:
 
 ### **🚨 Issue: Application Layer Should NOT Depend on Infrastructure**
-Your dependency list shows **Application -> Infrastructure**, which is incorrect in Clean Architecture.  
 
-📌 **Correct dependency flow should be:**  
-- **Presentation** → Application  
-- **Application** → Domain  
-- **Infrastructure** → Domain  
-- **Infrastructure** (Repositories) → Application (**Only via Dependency Injection, not direct reference!**)  
-- **Common (Shared Code)** → Used by all layers (but should not introduce dependencies between layers).  
+Your dependency list shows **Application -> Infrastructure**, which is incorrect in Clean Architecture.
+
+📌 **Correct dependency flow should be:**
+
+- **Presentation** → Application
+- **Application** → Domain
+- **Infrastructure** → Domain
+- **Infrastructure** (Repositories) → Application (**Only via Dependency Injection, not direct reference!**)
+- **Common (Shared Code)** → Used by all layers (but should not introduce dependencies between layers).
 
 ---
+
 ## **✅ How to Fix: Invert the Repository Dependency**
+
 Currently, **IRepository** is defined inside `Infrastructure`. This forces `Application` to reference `Infrastructure`, which is **wrong**.
 
-### **Fix: Move `IRepository<T>` to the Domain Layer**  
+### **Fix: Move `IRepository<T>` to the Domain Layer**
+
 ✅ In **Clean Architecture**, repository interfaces are defined in the **Domain Layer**, while their concrete implementations stay in **Infrastructure**.
 
-📌 **Move `IRepository<T>` to `SmartRide.Domain.Interfaces.Repositories`:**  
+📌 **Move `IRepository<T>` to `SmartRide.Domain.Interfaces.Repositories`:**
+
 ```csharp
 namespace SmartRide.Domain.Interfaces.Repositories;
 
@@ -326,9 +332,10 @@ public interface IRepository<T> where T : Entity
 ```
 
 ### **Then, Implement the Repository in Infrastructure:**
+
 ```csharp
 using SmartRide.Domain.Interfaces.Repositories;
-using SmartRide.Domain.Entities;
+using SmartRide.Domain.Entities.Base;
 
 namespace SmartRide.Infrastructure.Repositories;
 
@@ -353,48 +360,55 @@ public class Repository<T> : IRepository<T> where T : Entity
 ```
 
 ### **🚀 Now, in the Application Layer, you depend only on `IRepository<T>`**
+
 This way:
+
 - **Application Layer does NOT reference Infrastructure**.
 - **Infrastructure depends on Application only at runtime (via Dependency Injection)**.
 
 ---
+
 ## **✅ Final Dependency Flow (Correct)**
+
 ✅ **Your fixed dependencies follow Clean Architecture:**
 
 ```
 +---------------------+
 |  Presentation/UI    |  (ASP.NET API, MAUI, Console)
 +---------------------+
-        ↓ 
+        ↓
 +---------------------+
 |  Application Layer  |  (Use Cases, Services, MediatR Handlers)
 +---------------------+
-        ↓ 
+        ↓
 +---------------------+
 |  Domain Layer       |  (Entities, Enums, IRepository)
 +---------------------+
-        ↓ 
+        ↓
 +---------------------+
 |  Infrastructure     |  (EF Core, Repositories, DB, APIs)
 +---------------------+
 ```
 
 ### **Dependency List (Fixed)**
-- ✅ **Presentation** → Application  
-- ✅ **Application** → Domain  
-- ✅ **Infrastructure** → Domain  
-- ✅ **Infrastructure (Repositories)** → Application (only via Dependency Injection, NOT direct reference!)  
+
+- ✅ **Presentation** → Application
+- ✅ **Application** → Domain
+- ✅ **Infrastructure** → Domain
+- ✅ **Infrastructure (Repositories)** → Application (only via Dependency Injection, NOT direct reference!)
 
 ---
-## **🎯 Is This Still N-Tier Architecture?**
-Yes! **N-Tier Architecture** and **Clean Architecture** overlap, but Clean Architecture introduces stricter separation of concerns.  
-- In **N-Tier**, Infrastructure (Data Access) is **always referenced by Application**, which is why your original structure allowed `Application -> Infrastructure`.  
-- In **Clean Architecture**, Infrastructure is **ONLY injected at runtime** to avoid tight coupling.  
 
-🚀 **By fixing this dependency issue, your project now follows both N-Tier and Clean Architecture correctly.**  
+## **🎯 Is This Still N-Tier Architecture?**
+
+Yes! **N-Tier Architecture** and **Clean Architecture** overlap, but Clean Architecture introduces stricter separation of concerns.
+
+- In **N-Tier**, Infrastructure (Data Access) is **always referenced by Application**, which is why your original structure allowed `Application -> Infrastructure`.
+- In **Clean Architecture**, Infrastructure is **ONLY injected at runtime** to avoid tight coupling.
+
+🚀 **By fixing this dependency issue, your project now follows both N-Tier and Clean Architecture correctly.**
 
 Would you like an example of **Dependency Injection setup in `Program.cs` to wire everything properly?** 💡
-
 
 # Question
 
@@ -404,22 +418,25 @@ Now I'm a bit uncertain about the Presentation Layer, like it currently has 2 di
 
 # Generated Answer
 
-Your **Console App and Web API** are both part of the **Presentation Layer**, but they serve different purposes within that layer. Let’s break this down:  
+Your **Console App and Web API** are both part of the **Presentation Layer**, but they serve different purposes within that layer. Let’s break this down:
 
 ---
 
 ## **1️⃣ What is the Presentation Layer?**
-The **Presentation Layer** is responsible for:  
-✅ Handling user interaction (UI or API calls).  
-✅ Forwarding requests to the **Application Layer** (Use Cases or Services).  
-✅ Returning responses to the user (e.g., displaying results or returning JSON).  
+
+The **Presentation Layer** is responsible for:
+✅ Handling user interaction (UI or API calls).
+✅ Forwarding requests to the **Application Layer** (Use Cases or Services).
+✅ Returning responses to the user (e.g., displaying results or returning JSON).
 
 It does **not** contain business logic or data access code.
 
 ---
 
 ## **2️⃣ How Do Your Projects Fit?**
+
 ### **🔹 Web API (Presentation Layer)**
+
 - The **Controllers** in the Web API **are part of the Presentation Layer**, because:
   - They **accept HTTP requests** and **return responses** (usually JSON).
   - They **do not contain business logic** but instead call **Application Services** (Use Cases).
@@ -430,17 +447,19 @@ It does **not** contain business logic or data access code.
 ---
 
 ### **🔹 Console App (Presentation Layer)**
+
 - The Console App also belongs to the **Presentation Layer**, but it has no controllers.
 - Instead of an API, it uses **menus and direct service calls**.
 - A good approach is to structure it with:
   - A **menu system** (possibly using the **Template Method pattern** to organize different screens/flows).
   - A **Command Handler** or a lightweight "Controller-like" class to manage user inputs.
 
-📌 The Console App **still follows Clean Architecture**, just without HTTP controllers.  
+📌 The Console App **still follows Clean Architecture**, just without HTTP controllers.
 
 ---
 
 ## **3️⃣ Should the Console App Have a Controller?**
+
 - A **traditional Web API needs controllers** because it processes external HTTP requests.
 - A **Console App doesn’t necessarily need controllers**, but it should still follow **separation of concerns**.
 - Instead of controllers, you can structure it using:
@@ -450,9 +469,13 @@ It does **not** contain business logic or data access code.
 ---
 
 ## **4️⃣ Final Answer**
+
 ### ✅ Both Web API (Controllers) and Console App (Menu/UI) are part of the **Presentation Layer**.
+
 ### ❌ Controllers are **not** part of the Application Layer.
+
 ### 🎯 Your structure is correct:
+
 - Web API -> Uses **Controllers** (Presentation Layer) to forward requests to **Application Services**.
 - Console App -> Uses **Menu/UI logic** (Presentation Layer) to call **Application Services**.
 

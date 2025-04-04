@@ -4,8 +4,9 @@
 
 - For DTOs can I use `struct` instead of `class`? Does it affect things like Handler and Validator?
 - Here's my `Entity` working as a base class for other entities from the database, defined in the Domain layer:
+
 ```
-namespace SmartRide.Domain.Entities;
+namespace SmartRide.Domain.Entities.Base;
 
 public abstract class Entity
 {
@@ -29,7 +30,7 @@ public abstract class Entity
     }
 }
 ```
+
 It currently assumes that every entity has a string field `Id` that will be auto-generated as a Guid. Why this is fine for key entities, there are some "enum" entities (like user role table) that don't use string field but auto-increment int id. is there any particular term for this kind of table? And how should I handle this, should I create separate classes to handle two different kinds of entities?
 
 ---
-

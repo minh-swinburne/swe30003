@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using SmartRide.Domain.Entities;
+using SmartRide.Domain.Entities.Base;
 using SmartRide.Domain.Entities.Join;
 using SmartRide.Domain.Entities.Lookup;
 using SmartRide.Domain.Enums;

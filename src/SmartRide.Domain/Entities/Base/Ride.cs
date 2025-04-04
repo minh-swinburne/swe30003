@@ -4,7 +4,7 @@ using SmartRide.Domain.Events;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace SmartRide.Domain.Entities;
+namespace SmartRide.Domain.Entities.Base;
 
 public class Ride : BaseEntity
 {
@@ -47,9 +47,10 @@ public class Ride : BaseEntity
     [Column(TypeName = "DATETIME")]
     public DateTime? ArrivalATA { get; set; }
 
-    [Range(0, float.MaxValue)]
-    [Column(TypeName = "FLOAT")]
-    public float Fare { get; set; } = .0f;
+    [Required]
+    [Range(0, (double)decimal.MaxValue)]
+    [Column(TypeName = "DECIMAL(18,2)")]
+    public float Fare { get; set; } // = .0f;
 
     [Column(TypeName = "TEXT")]
     public string? Notes { get; set; }

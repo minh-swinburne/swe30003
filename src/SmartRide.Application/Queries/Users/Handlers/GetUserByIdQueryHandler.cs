@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using SmartRide.Application.DTOs.Users;
-using SmartRide.Domain.Entities;
+using SmartRide.Domain.Entities.Base;
 using SmartRide.Domain.Interfaces;
 
 namespace SmartRide.Application.Queries.Users.Handlers;

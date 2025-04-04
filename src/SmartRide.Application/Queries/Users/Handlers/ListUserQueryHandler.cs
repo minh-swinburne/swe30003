@@ -4,7 +4,7 @@ using MediatR;
 using SmartRide.Application.DTOs.Users;
 using SmartRide.Application.Interfaces;
 using SmartRide.Common.Extensions;
-using SmartRide.Domain.Entities;
+using SmartRide.Domain.Entities.Base;
 using SmartRide.Domain.Interfaces;
 using System.Linq.Expressions;
 using System.Reflection;

@@ -22,11 +22,11 @@ It is better to create a `Location` entity. This approach provides flexibility, 
 
 Define the `Location` entity.
 
-````csharp
+```csharp
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace SmartRide.Domain.Entities;
+namespace SmartRide.Domain.Entities.Base;
 
 public class Location : BaseEntity
 {
@@ -46,13 +46,13 @@ public class Location : BaseEntity
     [ForeignKey(nameof(UserId))]
     public User? User { get; set; }
 }
-````
+```
 
 ### [Ride.cs](file:///c%3A/Users/xmas4/OneDrive%20-%20Swinburne%20University/BA-CS/SWE30003%20-%20Software%20Architectures%20and%20Design/swe30003/src/SmartRide.Domain/Entities/Ride.cs)
 
 Update the `Ride` entity to reference `Location`.
 
-````csharp
+```csharp
 
 
 Made changes.
@@ -60,7 +60,7 @@ Made changes.
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace SmartRide.Domain.Entities;
+namespace SmartRide.Domain.Entities.Base;
 
 public class Ride : BaseEntity
 {
@@ -79,13 +79,13 @@ public class Ride : BaseEntity
 
     public List<Location>? Stops { get; set; }
 }
-````
+```
 
 ### [SmartRideDbContext.cs](file:///c%3A/Users/xmas4/OneDrive%20-%20Swinburne%20University/BA-CS/SWE30003%20-%20Software%20Architectures%20and%20Design/swe30003/src/SmartRide.Infrastructure/Persistence/SmartRideDbContext.cs)
 
 Add `Location` and update relationships.
 
-````csharp
+```csharp
 
 
 Made changes.
@@ -109,7 +109,7 @@ modelBuilder.Entity<Ride>()
     .WithMany()
     .HasForeignKey(r => r.DestinationLocationId)
     .OnDelete(DeleteBehavior.Restrict);
-````
+```
 
 This design ensures flexibility and scalability for future requirements.
 

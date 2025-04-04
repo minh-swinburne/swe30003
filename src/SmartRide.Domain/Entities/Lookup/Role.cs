@@ -1,4 +1,5 @@
-﻿using SmartRide.Domain.Entities.Join;
+﻿using SmartRide.Domain.Entities.Base;
+using SmartRide.Domain.Entities.Join;
 using SmartRide.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;

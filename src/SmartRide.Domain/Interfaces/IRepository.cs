@@ -1,4 +1,4 @@
-﻿using SmartRide.Domain.Entities;
+﻿using SmartRide.Domain.Entities.Base;
 using System.Linq.Expressions;
 
 namespace SmartRide.Domain.Interfaces;
