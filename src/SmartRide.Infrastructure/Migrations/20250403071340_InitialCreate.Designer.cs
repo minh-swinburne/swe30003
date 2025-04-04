@@ -12,8 +12,8 @@ using SmartRide.Infrastructure.Persistence;
 namespace SmartRide.Infrastructure.Migrations
 {
     [DbContext(typeof(SmartRideDbContext))]
-    [Migration("20250402081856_LinkUserIdentityVehicles")]
-    partial class LinkUserIdentityVehicles
+    [Migration("20250403071340_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -123,6 +123,97 @@ namespace SmartRide.Infrastructure.Migrations
                     b.ToTable("user_roles", (string)null);
                 });
 
+            modelBuilder.Entity("SmartRide.Domain.Entities.License", b =>
+                {
+                    b.Property<byte[]>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("BINARY(16)")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedTime")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("TIMESTAMP")
+                        .HasColumnName("created_time");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlComputedColumn(b.Property<DateTime>("CreatedTime"));
+
+                    b.Property<DateTime>("IssuedDate")
+                        .HasColumnType("DATE")
+                        .HasColumnName("issued_date");
+
+                    b.Property<sbyte>("Status")
+                        .HasColumnType("TINYINT")
+                        .HasColumnName("status");
+
+                    b.Property<sbyte>("Type")
+                        .HasColumnType("TINYINT")
+                        .HasColumnName("type");
+
+                    b.Property<DateTime>("UpdatedTime")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("TIMESTAMP")
+                        .HasColumnName("updated_time");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlComputedColumn(b.Property<DateTime>("UpdatedTime"));
+
+                    b.Property<byte[]>("UserId")
+                        .IsRequired()
+                        .HasColumnType("BINARY(16)")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("licenses", (string)null);
+                });
+
+            modelBuilder.Entity("SmartRide.Domain.Entities.Location", b =>
+                {
+                    b.Property<byte[]>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("BINARY(16)")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("VARCHAR")
+                        .HasColumnName("address");
+
+                    b.Property<DateTime>("CreatedTime")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("TIMESTAMP")
+                        .HasColumnName("created_time");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlComputedColumn(b.Property<DateTime>("CreatedTime"));
+
+                    b.Property<double?>("Latitude")
+                        .HasColumnType("DOUBLE")
+                        .HasColumnName("latitude");
+
+                    b.Property<double?>("Longitude")
+                        .HasColumnType("DOUBLE")
+                        .HasColumnName("longitude");
+
+                    b.Property<DateTime>("UpdatedTime")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("TIMESTAMP")
+                        .HasColumnName("updated_time");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlComputedColumn(b.Property<DateTime>("UpdatedTime"));
+
+                    b.Property<byte[]>("UserId")
+                        .HasColumnType("BINARY(16)")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("locations", (string)null);
+                });
+
             modelBuilder.Entity("SmartRide.Domain.Entities.Lookup.Role", b =>
                 {
                     b.Property<sbyte>("Id")
@@ -143,6 +234,23 @@ namespace SmartRide.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("roles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = (sbyte)1,
+                            Name = "Passenger"
+                        },
+                        new
+                        {
+                            Id = (sbyte)2,
+                            Name = "Driver"
+                        },
+                        new
+                        {
+                            Id = (sbyte)3,
+                            Name = "Manager"
+                        });
                 });
 
             modelBuilder.Entity("SmartRide.Domain.Entities.Lookup.VehicleType", b =>
@@ -169,6 +277,99 @@ namespace SmartRide.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("vehicle_types", (string)null);
+                });
+
+            modelBuilder.Entity("SmartRide.Domain.Entities.Ride", b =>
+                {
+                    b.Property<byte[]>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("BINARY(16)")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime?>("ArrivalATA")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("arrival_ata");
+
+                    b.Property<DateTime?>("ArrivalETA")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("arrival_eta");
+
+                    b.Property<DateTime>("CreatedTime")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("TIMESTAMP")
+                        .HasColumnName("created_time");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlComputedColumn(b.Property<DateTime>("CreatedTime"));
+
+                    b.Property<byte[]>("DestinationId")
+                        .IsRequired()
+                        .HasColumnType("BINARY(16)")
+                        .HasColumnName("destination_id");
+
+                    b.Property<byte[]>("DriverId")
+                        .IsRequired()
+                        .HasColumnType("BINARY(16)")
+                        .HasColumnName("driver_id");
+
+                    b.Property<float>("Fare")
+                        .HasColumnType("FLOAT")
+                        .HasColumnName("fare");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("notes");
+
+                    b.Property<byte[]>("PassengerId")
+                        .IsRequired()
+                        .HasColumnType("BINARY(16)")
+                        .HasColumnName("passenger_id");
+
+                    b.Property<DateTime?>("PickupATA")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("pickup_ata");
+
+                    b.Property<DateTime?>("PickupETA")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("pickup_eta");
+
+                    b.Property<byte[]>("PickupLocationId")
+                        .IsRequired()
+                        .HasColumnType("BINARY(16)")
+                        .HasColumnName("pickup_location_id");
+
+                    b.Property<sbyte>("Status")
+                        .HasColumnType("TINYINT")
+                        .HasColumnName("status");
+
+                    b.Property<sbyte>("Type")
+                        .HasColumnType("TINYINT")
+                        .HasColumnName("type");
+
+                    b.Property<DateTime>("UpdatedTime")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("TIMESTAMP")
+                        .HasColumnName("updated_time");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlComputedColumn(b.Property<DateTime>("UpdatedTime"));
+
+                    b.Property<byte[]>("VehicleId")
+                        .IsRequired()
+                        .HasColumnType("BINARY(16)")
+                        .HasColumnName("vehicle_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DestinationId");
+
+                    b.HasIndex("DriverId");
+
+                    b.HasIndex("PassengerId");
+
+                    b.HasIndex("PickupLocationId");
+
+                    b.HasIndex("VehicleId");
+
+                    b.ToTable("rides", (string)null);
                 });
 
             modelBuilder.Entity("SmartRide.Domain.Entities.User", b =>
@@ -348,6 +549,70 @@ namespace SmartRide.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("SmartRide.Domain.Entities.License", b =>
+                {
+                    b.HasOne("SmartRide.Domain.Entities.User", "User")
+                        .WithMany("Licenses")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("SmartRide.Domain.Entities.Location", b =>
+                {
+                    b.HasOne("SmartRide.Domain.Entities.User", "User")
+                        .WithMany("Locations")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("SmartRide.Domain.Entities.Ride", b =>
+                {
+                    b.HasOne("SmartRide.Domain.Entities.Location", "Destination")
+                        .WithMany()
+                        .HasForeignKey("DestinationId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SmartRide.Domain.Entities.User", "Driver")
+                        .WithMany()
+                        .HasForeignKey("DriverId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SmartRide.Domain.Entities.User", "Passenger")
+                        .WithMany()
+                        .HasForeignKey("PassengerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SmartRide.Domain.Entities.Location", "PickupLocation")
+                        .WithMany()
+                        .HasForeignKey("PickupLocationId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SmartRide.Domain.Entities.Vehicle", "Vehicle")
+                        .WithMany()
+                        .HasForeignKey("VehicleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Destination");
+
+                    b.Navigation("Driver");
+
+                    b.Navigation("Passenger");
+
+                    b.Navigation("PickupLocation");
+
+                    b.Navigation("Vehicle");
+                });
+
             modelBuilder.Entity("SmartRide.Domain.Entities.Vehicle", b =>
                 {
                     b.HasOne("SmartRide.Domain.Entities.User", "User")
@@ -380,6 +645,10 @@ namespace SmartRide.Infrastructure.Migrations
             modelBuilder.Entity("SmartRide.Domain.Entities.User", b =>
                 {
                     b.Navigation("Identity");
+
+                    b.Navigation("Licenses");
+
+                    b.Navigation("Locations");
 
                     b.Navigation("UserRoles");
 

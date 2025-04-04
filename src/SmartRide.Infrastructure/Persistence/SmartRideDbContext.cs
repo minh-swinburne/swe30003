@@ -3,13 +3,24 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using SmartRide.Domain.Entities;
 using SmartRide.Domain.Entities.Join;
+using SmartRide.Domain.Entities.Lookup;
+using SmartRide.Domain.Enums;
 using SmartRide.Infrastructure.Settings;
 
 namespace SmartRide.Infrastructure.Persistence;
 
-public class SmartRideDbContext(DbContextOptions<SmartRideDbContext> options, IOptions<DbSettings> dbSettings) : DbContext(options)
+public class SmartRideDbContext : DbContext
 {
-    private readonly DbSettings _dbSettings = dbSettings.Value;
+    private readonly DbSettings _dbSettings;
+
+    public DbSet<User> Users { get; set; } = null!;
+
+    public SmartRideDbContext(DbContextOptions<SmartRideDbContext> options, IOptions<DbSettings> dbSettings) : base(options)
+    {
+        _dbSettings = dbSettings.Value;
+        // Ensure lookup values exist
+        EnsureLookupValuesExist();
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -34,7 +45,7 @@ public class SmartRideDbContext(DbContextOptions<SmartRideDbContext> options, IO
             .HasOne(l => l.User)
             .WithMany(u => u.Licenses)
             .HasForeignKey(l => l.UserId);
-            // .OnDelete(DeleteBehavior.Cascade); // should have been handled by [Required] attribute, but just in case
+        // .OnDelete(DeleteBehavior.Cascade); // should have been handled by [Required] attribute, but just in case
 
         modelBuilder.Entity<Location>()
             .HasOne(l => l.User)
@@ -54,10 +65,16 @@ public class SmartRideDbContext(DbContextOptions<SmartRideDbContext> options, IO
                 .WithMany()
                 .HasForeignKey(r => r.DestinationId)
                 .OnDelete(DeleteBehavior.Restrict);
-
-            // Check constraints
-            entity.ToTable(t => t.HasCheckConstraint("CK_Ride_Fare", "[Fare] >= 0"));
         });
+
+        // Seed data for Role
+        modelBuilder.Entity<Role>().HasData(
+            Enum.GetValues<RoleEnum>().Select(role => new Role
+            {
+                Id = role,
+                Name = role.ToString()
+            })
+        );
 
         // Apply custom table name mapping
         if (_dbSettings.UseSnakeCaseNaming)
@@ -105,6 +122,22 @@ public class SmartRideDbContext(DbContextOptions<SmartRideDbContext> options, IO
             }
 
             entry.Entity.ClearDomainEvents();
+        }
+    }
+
+    private void EnsureLookupValuesExist()
+    {
+        if (Database.IsRelational() && Database.CanConnect())
+        {
+            foreach (var role in Enum.GetValues<RoleEnum>())
+            {
+                if (!Set<Role>().Any(r => r.Id == role))
+                {
+                    Set<Role>().Add(new Role { Id = role, Name = role.ToString() });
+                }
+            }
+
+            SaveChanges();
         }
     }
 }

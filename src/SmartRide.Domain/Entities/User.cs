@@ -2,6 +2,7 @@
 using SmartRide.Domain.Entities.Join;
 using SmartRide.Domain.Entities.Lookup;
 using SmartRide.Domain.Enums;
+using SmartRide.Domain.Events;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -42,20 +43,20 @@ public class User : BaseEntity
 
     public Identity? Identity { get; set; }
 
+    public List<Location>? Locations { get; set; } = [];
+
     public List<Role> Roles { get; set; } = [];
     public List<UserRole> UserRoles { get; set; } = [];
 
-    private List<Vehicle>? _vehicles { get; set; }
+    private List<Vehicle>? _vehicles;
+
+    private List<License>? _licenses { get; set; }
 
     [BackingField(nameof(_vehicles))]
     public List<Vehicle>? Vehicles => IsDriver() ? _vehicles : null;
 
-    private List<License>? _licenses { get; set; }
-
     [BackingField(nameof(_licenses))]
     public List<License>? Licenses => IsDriver() ? _licenses : null;
-
-    public List<Location>? Locations { get; set; } = [];
 
     public bool IsDriver()
     {
@@ -70,5 +71,33 @@ public class User : BaseEntity
     public bool IsManager()
     {
         return UserRoles.Any(ur => ur.RoleId == RoleEnum.Manager);
+    }
+
+    public override void OnSave(EntityState state)
+    {
+        base.OnSave(state);
+
+        if (state == EntityState.Added)
+        {
+            // Assign Passenger role if no roles are assigned
+            if (UserRoles.Count == 0)
+            {
+                UserRoles.Add(new UserRole
+                {
+                    UserId = Id,
+                    RoleId = RoleEnum.Passenger
+                });
+            }
+
+            AddDomainEvent(new UserCreatedEvent(this));
+        }
+        else if (state == EntityState.Modified)
+        {
+            AddDomainEvent(new UserUpdatedEvent(this));
+        }
+        else if (state == EntityState.Deleted)
+        {
+            AddDomainEvent(new UserDeletedEvent(this));
+        }
     }
 }

@@ -17,9 +17,9 @@ public class UserRole : JoinEntity
 
     [Required]
     [ForeignKey(nameof(UserId))]
-    public required User User { get; set; }
+    public User User { get; set; } = null!;
 
     [Required]
     [ForeignKey(nameof(RoleId))]
-    public required Role Role { get; set; }
+    public Role Role { get; set; } = null!;
 }

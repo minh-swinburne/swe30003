@@ -16,7 +16,7 @@ public class License : BaseEntity
 
     [Required]
     [Column(TypeName = "TINYINT")]
-    public required LicenseStatusEnum Status { get; set; }
+    public LicenseStatusEnum Status { get; set; } = LicenseStatusEnum.Active;  // License Validity Status
 
     [Required]
     [Column(TypeName = "DATE")]
@@ -24,5 +24,5 @@ public class License : BaseEntity
 
     [Required]
     [ForeignKey(nameof(UserId))]
-    public required User User { get; set; }
+    public User User { get; set; } = null!;
 }

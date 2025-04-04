@@ -1,8 +1,8 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using SmartRide.Domain.Enums;
 using SmartRide.Domain.Events;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SmartRide.Domain.Entities;
 
@@ -10,45 +10,30 @@ public class Ride : BaseEntity
 {
     [Required]
     [Column(TypeName = "BINARY(16)")]
-    public required Guid PassengerId { get; init; }
-
-    [ForeignKey(nameof(PassengerId))]
-    public required User Passenger { get; init; }
+    public Guid PassengerId { get; init; }
 
     [Required]
     [Column(TypeName = "BINARY(16)")]
-    public required Guid DriverId { get; init; }
-
-    [ForeignKey(nameof(DriverId))]
-    public required User Driver { get; init; }
+    public Guid DriverId { get; init; }
 
     [Required]
     [Column(TypeName = "BINARY(16)")]
-    public required Guid VehicleId { get; init; }
-
-    [ForeignKey(nameof(VehicleId))]
-    public required Vehicle Vehicle { get; init; }
+    public Guid VehicleId { get; init; }
 
     [Required]
     [Column(TypeName = "TINYINT")]
-    public required RideTypeEnum Type { get; init; }
+    public RideTypeEnum Type { get; init; }
 
     [Column(TypeName = "TINYINT")]
     public RideStatusEnum Status { get; set; } = RideStatusEnum.Pending;
 
     [Required]
     [Column(TypeName = "BINARY(16)")]
-    public required Guid PickupLocationId { get; set; }
-
-    [ForeignKey(nameof(PickupLocationId))]
-    public required Location PickupLocation { get; set; }
+    public Guid PickupLocationId { get; set; }
 
     [Required]
     [Column(TypeName = "BINARY(16)")]
-    public required Guid DestinationId { get; set; }
-
-    [ForeignKey(nameof(DestinationId))]
-    public required Location Destination { get; set; }
+    public Guid DestinationId { get; set; }
 
     [Column(TypeName = "DATETIME")]
     public DateTime? PickupETA { get; set; }
@@ -62,11 +47,27 @@ public class Ride : BaseEntity
     [Column(TypeName = "DATETIME")]
     public DateTime? ArrivalATA { get; set; }
 
+    [Range(0, float.MaxValue)]
     [Column(TypeName = "FLOAT")]
     public float Fare { get; set; } = .0f;
 
     [Column(TypeName = "TEXT")]
     public string? Notes { get; set; }
+
+    [ForeignKey(nameof(PassengerId))]
+    public User Passenger { get; set; } = null!;
+
+    [ForeignKey(nameof(DriverId))]
+    public User Driver { get; set; } = null!;
+
+    [ForeignKey(nameof(VehicleId))]
+    public Vehicle Vehicle { get; set; } = null!;
+
+    [ForeignKey(nameof(PickupLocationId))]
+    public Location PickupLocation { get; set; } = null!;
+
+    [ForeignKey(nameof(DestinationId))]
+    public Location Destination { get; set; } = null!;
 
     public void ValidateDriverRole()
     {

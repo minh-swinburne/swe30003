@@ -17,16 +17,8 @@ public class Vehicle : BaseEntity
     public required Guid UserId { get; set; }
 
     [Required]
-    [ForeignKey(nameof(UserId))]    // can be removed if the property name is UserId
-    public required User User { get; set; }
-
-    [Required]
     [Column(TypeName = "TINYINT", Order = 1)]
     public required VehicleTypeEnum VehicleTypeId { get; set; }
-
-    [Required]
-    [ForeignKey(nameof(VehicleTypeId))]
-    public required VehicleType VehicleType { get; set; }
 
     [Required]
     [Column(TypeName = "CHAR")]
@@ -56,12 +48,30 @@ public class Vehicle : BaseEntity
     [Column(TypeName = "DATE")]
     public required DateTime RegisteredDate { get; set; }
 
+    [Required]
+    [ForeignKey(nameof(UserId))]    // can be removed if the property name is UserId
+    public User User { get; set; } = null!;
+
+    [Required]
+    [ForeignKey(nameof(VehicleTypeId))]
+    public VehicleType VehicleType { get; set; } = null!;
+
+    public void ValidateDriverRole()
+    {
+        if (User == null || !User.IsDriver())
+        {
+            throw new InvalidOperationException("Vehicle can only be assigned to a driver.");
+        }
+    }
+
     public override void OnSave(EntityState state)
     {
         base.OnSave(state);
+
         // Add domain events based on the entity state
         if (state == EntityState.Added)
         {
+            ValidateDriverRole();
             AddDomainEvent(new VehicleCreatedEvent(this));
         }
         else if (state == EntityState.Modified)

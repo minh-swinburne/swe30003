@@ -14,12 +14,8 @@ public class Identity : BaseEntity
     public required Guid UserId { get; set; }
 
     [Required]
-    [ForeignKey(nameof(UserId))]
-    public required User User { get; set; }
-
-    [Required]
     [Column(TypeName = "TINYINT")]
-    public required IdentityStatusEnum Status { get; set; }  // Verification Status
+    public IdentityStatusEnum Status { get; set; } = IdentityStatusEnum.Pending;  // Verification Status
 
     [Required]
     [Column(TypeName = "VARCHAR")]
@@ -53,4 +49,8 @@ public class Identity : BaseEntity
     [Column(TypeName = "VARCHAR")]
     [StringLength(100)]
     public required string City { get; set; }
+
+    [Required]
+    [ForeignKey(nameof(UserId))]
+    public User User { get; set; } = null!;
 }
