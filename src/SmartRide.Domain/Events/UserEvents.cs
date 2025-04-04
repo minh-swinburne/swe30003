@@ -1,23 +1,22 @@
-using MediatR;
 using SmartRide.Domain.Entities.Base;
 using SmartRide.Domain.Interfaces;
 
 namespace SmartRide.Domain.Events;
 
-public record UserCreatedEvent(User User) : IDomainEvent, INotification
+public record UserCreatedEvent(User user) : IDomainEvent
 {
     public DateTime OccurredOn { get; } = DateTime.UtcNow;
-    public readonly User User = User;
+    public readonly User User = user;
 }
 
-public record UserUpdatedEvent(User User) : IDomainEvent, INotification
+public record UserUpdatedEvent(User user) : IDomainEvent
 {
     public DateTime OccurredOn { get; } = DateTime.UtcNow;
-    public readonly User User = User;
+    public readonly User User = user;
 }
 
-public record UserDeletedEvent(User User) : IDomainEvent, INotification
+public record UserDeletedEvent(User user) : IDomainEvent
 {
     public DateTime OccurredOn { get; } = DateTime.UtcNow;
-    public readonly User User = User;
+    public readonly User User = user;
 }
