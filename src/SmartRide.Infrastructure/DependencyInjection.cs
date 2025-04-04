@@ -1,8 +1,10 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Humanizer;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using SmartRide.Domain.Interfaces;
 using SmartRide.Infrastructure.Persistence;
+using SmartRide.Infrastructure.Services;
 using SmartRide.Infrastructure.Settings;
 using SmartRide.Infrastructure.Strategies;
 

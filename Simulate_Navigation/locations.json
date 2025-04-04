@@ -1,0 +1,20 @@
+[
+  {
+    "Name": "User Location",
+    "Address": "123 Main Street, City A",
+    "Latitude": 40.712776,
+    "Longitude": -74.005974
+  },
+  {
+    "Name": "Driver Location",
+    "Address": "456 Elm Street, City B",
+    "Latitude": 40.730610,
+    "Longitude": -73.935242
+  },
+  {
+    "Name": "Restaurant",
+    "Address": "789 Oak Street, City C",
+    "Latitude": 40.741895,
+    "Longitude": -73.989308
+  }
+]
