@@ -1,11 +1,11 @@
-using SmartRide.Domain.Enums;
+using SmartRide.Application.DTOs.Lookup;
 
 namespace SmartRide.Application.DTOs.Vehicles;
 
 public class ListVehicleResponseDTO : BaseDTO
 {
     public Guid VehicleId { get; init; }
-    public VehicleTypeEnum VehicleType { get; init; }
+    public required VehicleTypeDTO VehicleType { get; init; }
     public required string Vin { get; init; }
     public required string Plate { get; init; }
     public required string Make { get; init; }

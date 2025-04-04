@@ -8,11 +8,11 @@ public class UserMappingProfile : Profile
 {
     public UserMappingProfile()
     {
-        CreateMap<User, ListUserResponseDTO>()
+        CreateMap<User, GetUserByIdResponseDTO>()
             .ForMember(dest => dest.Roles, opt => opt.MapFrom(src => src.Roles.Select(r => r.Id).ToList()))
             .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.Id));
 
-        CreateMap<User, GetUserByIdResponseDTO>()
+        CreateMap<User, ListUserResponseDTO>()
             .ForMember(dest => dest.Roles, opt => opt.MapFrom(src => src.Roles.Select(r => r.Id).ToList()))
             .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.Id));
     }
