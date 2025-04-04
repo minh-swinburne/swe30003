@@ -1,5 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Moq;
 using SmartRide.Domain.Entities.Base;
 using SmartRide.Domain.Entities.Lookup;
 using SmartRide.Domain.Enums;
@@ -10,6 +12,8 @@ namespace SmartRide.UnitTests.Infrastructure.Persistence;
 
 public class DbContextTests
 {
+    private static readonly Mock<IMediator> _mockMediator = new();
+
     private static DbSettings GetTestDbSettings()
     {
         return new DbSettings
@@ -27,7 +31,7 @@ public class DbContextTests
             .UseInMemoryDatabase("TestDatabase")
             .Options;
 
-        return new SmartRideDbContext(options, Options.Create(dbSettings));
+        return new SmartRideDbContext(options, Options.Create(dbSettings), _mockMediator.Object);
     }
 
     [Fact]

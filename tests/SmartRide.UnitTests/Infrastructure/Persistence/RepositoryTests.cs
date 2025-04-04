@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Moq;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using SmartRide.Domain.Entities.Base;
 using SmartRide.Domain.Entities.Join;
@@ -14,6 +16,7 @@ namespace SmartRide.UnitTests.Infrastructure.Persistence;
 
 public class RepositoryTests : IDisposable
 {
+    private readonly Mock<IMediator> _mockMediator;
     private readonly SmartRideDbContext _context;
     private readonly BaseRepository<User> _userRepository;
     private readonly BaseRepository<Vehicle> _vehicleRepository;
@@ -30,7 +33,8 @@ public class RepositoryTests : IDisposable
             .UseInMemoryDatabase(Guid.NewGuid().ToString()) // Unique database name
             .Options;
 
-        _context = new SmartRideDbContext(options, Options.Create(dbSettings));
+        _mockMediator = new Mock<IMediator>();
+        _context = new SmartRideDbContext(options, Options.Create(dbSettings), _mockMediator.Object);
         _userRepository = new BaseRepository<User>(_context);
         _vehicleRepository = new BaseRepository<Vehicle>(_context);
 

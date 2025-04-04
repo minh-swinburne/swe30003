@@ -1,4 +1,5 @@
 ﻿using Humanizer;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using SmartRide.Domain.Entities.Base;
@@ -12,10 +13,12 @@ namespace SmartRide.Infrastructure.Persistence;
 public class SmartRideDbContext : DbContext
 {
     private readonly DbSettings _dbSettings;
+    private readonly IMediator _mediator;
 
-    public SmartRideDbContext(DbContextOptions<SmartRideDbContext> options, IOptions<DbSettings> dbSettings) : base(options)
+    public SmartRideDbContext(DbContextOptions<SmartRideDbContext> options, IOptions<DbSettings> dbSettings, IMediator mediator) : base(options)
     {
         _dbSettings = dbSettings.Value;
+        _mediator = mediator;
         // Ensure lookup values exist
         EnsureLookupValuesExist();
     }
@@ -115,7 +118,7 @@ public class SmartRideDbContext : DbContext
             foreach (var domainEvent in entry.Entity.DomainEvents)
             {
                 // Dispatch the domain event (e.g., using MediatR or a custom dispatcher)
-                // _mediator.Publish(domainEvent, cancellationToken: CancellationToken.None);
+                _mediator.Publish(domainEvent, cancellationToken: CancellationToken.None);
                 Console.WriteLine($"Dispatching event: {domainEvent.GetType().Name}");
             }
 

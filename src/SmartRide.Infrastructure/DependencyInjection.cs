@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using MediatR;
+using System.Reflection;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using SmartRide.Domain.Interfaces;
@@ -26,6 +28,9 @@ public static class DependencyInjection
             dbStrategyContext.SetStrategy(dbSettings.Provider);
             dbStrategyContext.Configure(options, dbSettings.ConnectionString);
         });
+
+        // Register MediatR (Scan all event handlers)
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
         // Register repositories of all entity types
         services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
