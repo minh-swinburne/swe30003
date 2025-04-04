@@ -3,9 +3,9 @@ using Microsoft.Extensions.Options;
 using SmartRide.Infrastructure.Persistence;
 using SmartRide.Infrastructure.Settings;
 
-namespace SmartRide.UnitTests.Infrastructure;
+namespace SmartRide.UnitTests.Infrastructure.Persistence;
 
-public class SmartRideDbContextTests
+public class DbContextTests
 {
     private static DbSettings GetTestDbSettings()
     {
