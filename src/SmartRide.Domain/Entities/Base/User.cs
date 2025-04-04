@@ -43,20 +43,20 @@ public class User : BaseEntity
 
     public Identity? Identity { get; set; }
 
-    public List<Location>? Locations { get; set; } = [];
+    public ICollection<Location> Locations { get; set; } = [];
 
-    public List<Role> Roles { get; set; } = [];
-    public List<UserRole> UserRoles { get; set; } = [];
+    public ICollection<Role> Roles { get; set; } = [];
+    public ICollection<UserRole> UserRoles { get; set; } = [];
 
-    private List<Vehicle>? _vehicles { get; set; }
+    private ICollection<Vehicle>? _vehicles { get; set; }
 
-    private List<License>? _licenses { get; set; }
+    private ICollection<License>? _licenses { get; set; }
 
     [BackingField(nameof(_vehicles))]
-    public List<Vehicle>? Vehicles => IsDriver() ? _vehicles : null;
+    public ICollection<Vehicle>? Vehicles => IsDriver() ? _vehicles : null;
 
     [BackingField(nameof(_licenses))]
-    public List<License>? Licenses => IsDriver() ? _licenses : null;
+    public ICollection<License>? Licenses => IsDriver() ? _licenses : null;
 
     public bool IsDriver()
     {

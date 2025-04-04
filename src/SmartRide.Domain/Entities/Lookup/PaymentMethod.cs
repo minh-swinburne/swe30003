@@ -9,4 +9,7 @@ public class PaymentMethod : LookupEntity
     [Key]
     [Column(TypeName = "TINYINT")]
     public new PaymentMethodEnum Id { get; set; }
+
+    [Column(TypeName = "BIT")]
+    public bool IsEnabled { get; set; } = true; // Indicates if the payment method is enabled for use
 }
