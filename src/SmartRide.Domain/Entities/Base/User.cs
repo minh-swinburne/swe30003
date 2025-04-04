@@ -48,9 +48,9 @@ public class User : BaseEntity
     public ICollection<Role> Roles { get; set; } = [];
     public ICollection<UserRole> UserRoles { get; set; } = [];
 
-    private ICollection<Vehicle>? _vehicles { get; set; }
+    private ICollection<Vehicle>? _vehicles { get; set; } = [];
 
-    private ICollection<License>? _licenses { get; set; }
+    private ICollection<License>? _licenses { get; set; } = [];
 
     [BackingField(nameof(_vehicles))]
     public ICollection<Vehicle>? Vehicles => IsDriver() ? _vehicles : null;
