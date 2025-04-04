@@ -1,0 +1,211 @@
+@page "/"
+
+<div class="flex min-h-screen flex-col">
+    <!-- Hero Section -->
+    <section class="relative">
+        <div class="absolute inset-0 bg-black/60 z-10"></div>
+        <div class="h-[500px] bg-cover bg-center"
+             style="background-image: url('/placeholder.svg?height=500&width=1200')">
+        </div>
+        <div class="container absolute inset-0 z-20 flex flex-col items-center justify-center text-center text-white">
+            <h1 class="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
+                Fast & Reliable Taxi Service
+            </h1>
+            <p class="mt-6 max-w-md text-lg text-gray-200">
+                Get to your destination safely and on time with our professional taxi service.
+            </p>
+            <div class="mt-8 flex flex-col sm:flex-row gap-4">
+                <a href="#booking" class="inline-flex items-center justify-center rounded-md bg-yellow-500 px-4 py-2 text-sm font-medium text-black hover:bg-yellow-600">
+                    Book Now
+                </a>
+                <a href="#services" class="inline-flex items-center justify-center rounded-md border border-white px-4 py-2 text-sm font-medium text-white hover:bg-white/20">
+                    Learn More
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="py-12 bg-gray-50">
+        <div class="container">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="flex flex-col items-center text-center p-6 bg-white rounded-lg shadow-sm">
+                    <div class="rounded-full bg-yellow-100 p-3 mb-4">
+                        <i class="oi oi-clock text-yellow-600" style="font-size: 1.5rem;"></i>
+                    </div>
+                    <h3 class="text-xl font-medium mb-2">24/7 Service</h3>
+                    <p class="text-gray-600">Available around the clock for your convenience, whenever you need a ride.</p>
+                </div>
+                <div class="flex flex-col items-center text-center p-6 bg-white rounded-lg shadow-sm">
+                    <div class="rounded-full bg-yellow-100 p-3 mb-4">
+                        <i class="oi oi-map-marker text-yellow-600" style="font-size: 1.5rem;"></i>
+                    </div>
+                    <h3 class="text-xl font-medium mb-2">City-Wide Coverage</h3>
+                    <p class="text-gray-600">We cover all areas of the city and surrounding suburbs for your convenience.</p>
+                </div>
+                <div class="flex flex-col items-center text-center p-6 bg-white rounded-lg shadow-sm">
+                    <div class="rounded-full bg-yellow-100 p-3 mb-4">
+                        <i class="oi oi-star text-yellow-600" style="font-size: 1.5rem;"></i>
+                    </div>
+                    <h3 class="text-xl font-medium mb-2">Professional Drivers</h3>
+                    <p class="text-gray-600">Our experienced drivers are licensed, insured, and committed to your safety.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services -->
+    <section id="services" class="py-16">
+        <div class="container">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold">Our Services</h2>
+                <p class="mt-4 text-gray-600 max-w-2xl mx-auto">
+                    We offer a variety of taxi services to meet your transportation needs.
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <ServiceCard Title="Standard Taxi"
+                             Description="Comfortable and affordable rides for everyday travel around the city."
+                             Price="Starting at $10"
+                             ImageSrc="/placeholder.svg?height=200&width=300" />
+                             
+                <ServiceCard Title="Business Class"
+                             Description="Premium vehicles with extra amenities for business professionals."
+                             Price="Starting at $25"
+                             ImageSrc="/placeholder.svg?height=200&width=300" />
+                             
+                <ServiceCard Title="Airport Transfer"
+                             Description="Reliable airport pickups and drop-offs with flight tracking."
+                             Price="Starting at $35"
+                             ImageSrc="/placeholder.svg?height=200&width=300" />
+            </div>
+        </div>
+    </section>
+
+    <!-- Booking Section -->
+    <section id="booking" class="py-16 bg-gray-900 text-white">
+        <div class="container">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div>
+                    <h2 class="text-3xl font-bold mb-6">Book Your Ride</h2>
+                    <p class="mb-8">
+                        Need a taxi? Book your ride in advance to ensure timely pickup and a smooth journey to your destination.
+                    </p>
+                    <div class="space-y-6">
+                        <div class="flex items-start gap-4">
+                            <div class="rounded-full bg-yellow-500 p-2 mt-1">
+                                <span class="font-bold text-black">1</span>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-medium mb-2">Enter Your Details</h3>
+                                <p class="text-gray-300">Fill in your pickup location, destination, and contact information.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="rounded-full bg-yellow-500 p-2 mt-1">
+                                <span class="font-bold text-black">2</span>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-medium mb-2">Choose Your Service</h3>
+                                <p class="text-gray-300">Select the type of taxi service that best suits your needs.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="rounded-full bg-yellow-500 p-2 mt-1">
+                                <span class="font-bold text-black">3</span>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-medium mb-2">Confirm & Ride</h3>
+                                <p class="text-gray-300">Receive confirmation and enjoy your ride with our professional drivers.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <BookingForm />
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section id="testimonials" class="py-16 bg-gray-50">
+        <div class="container">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold">What Our Customers Say</h2>
+                <p class="mt-4 text-gray-600 max-w-2xl mx-auto">
+                    Don't just take our word for it. Here's what our satisfied customers have to say about our service.
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <Testimonial Name="Sarah Johnson"
+                             Role="Business Traveler"
+                             Content="I use SpeedyTaxi for all my business trips. The drivers are always on time and professional. Highly recommended!"
+                             Rating="5"
+                             ImageSrc="/placeholder.svg?height=100&width=100" />
+                             
+                <Testimonial Name="Michael Chen"
+                             Role="Regular Customer"
+                             Content="Reliable service every time. The app is easy to use and the drivers know the best routes to avoid traffic."
+                             Rating="4"
+                             ImageSrc="/placeholder.svg?height=100&width=100" />
+                             
+                <Testimonial Name="Emily Rodriguez"
+                             Role="Tourist"
+                             Content="As a visitor to the city, I was impressed by the knowledge of my driver who suggested great local spots to visit!"
+                             Rating="5"
+                             ImageSrc="/placeholder.svg?height=100&width=100" />
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="py-16">
+        <div class="container">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div>
+                    <h2 class="text-3xl font-bold mb-6">Contact Us</h2>
+                    <p class="mb-8 text-gray-600">
+                        Have questions or need assistance? Our customer service team is here to help.
+                    </p>
+                    <div class="space-y-6">
+                        <div class="flex items-center gap-4">
+                            <div class="rounded-full bg-yellow-100 p-3">
+                                <i class="oi oi-phone text-yellow-600"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-medium">Phone</h3>
+                                <p class="text-gray-600">123-456-7890</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="rounded-full bg-yellow-100 p-3">
+                                <i class="oi oi-map-marker text-yellow-600"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-medium">Address</h3>
+                                <p class="text-gray-600">123 Taxi Street, City Center, 10001</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="rounded-full bg-yellow-100 p-3">
+                                <i class="oi oi-clock text-yellow-600"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-medium">Operating Hours</h3>
+                                <p class="text-gray-600">24 hours a day, 7 days a week</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="h-[400px] bg-gray-200 rounded-lg">
+                    <!-- Map placeholder -->
+                    <div class="h-full flex items-center justify-center">
+                        <p class="text-gray-500">Interactive Map Would Go Here</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+

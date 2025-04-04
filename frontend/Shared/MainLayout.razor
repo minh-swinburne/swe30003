@@ -1,0 +1,83 @@
+@inherits LayoutComponentBase
+
+<div class="flex min-h-screen flex-col">
+    <!-- Header -->
+    <header class="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div class="container flex h-16 items-center justify-between">
+            <div class="flex items-center gap-2">
+                <i class="oi oi-car text-yellow-500" style="font-size: 1.5rem;"></i>
+                <span class="text-xl font-bold">SpeedyTaxi</span>
+            </div>
+            <nav class="hidden md:flex items-center gap-6">
+                <a href="#" class="text-sm font-medium hover:underline text-muted-foreground">Projects</a>
+                <a href="#" class="text-sm font-medium hover:underline text-muted-foreground">Deployments</a>
+                <a href="/" class="text-sm font-medium hover:underline font-bold">Analytics</a>
+                <a href="#" class="text-sm font-medium hover:underline text-muted-foreground">Logs</a>
+                <a href="#" class="text-sm font-medium hover:underline text-muted-foreground">Settings</a>
+            </nav>
+            <div class="flex items-center w-full gap-4 md:ml-auto md:gap-2 lg:gap-4">
+                <a href="tel:+1234567890" class="hidden md:flex items-center gap-2">
+                    <i class="oi oi-phone" style="font-size: 1rem;"></i>
+                    <span class="text-sm font-medium">123-456-7890</span>
+                </a>
+                <button class="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground">
+                    <i class="oi oi-phone mr-2 md:hidden" style="font-size: 1rem;"></i>
+                    <span class="hidden md:inline">Book a Taxi</span>
+                    <span class="md:hidden">Call Now</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    @Body
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center gap-2 mb-4">
+                        <i class="oi oi-car text-yellow-500" style="font-size: 1.5rem;"></i>
+                        <span class="text-xl font-bold">SpeedyTaxi</span>
+                    </div>
+                    <p class="text-gray-400">
+                        Providing reliable taxi services since 2005. Your trusted transportation partner.
+                    </p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-medium mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Home</a></li>
+                        <li><a href="#services" class="text-gray-400 hover:text-white">Services</a></li>
+                        <li><a href="#booking" class="text-gray-400 hover:text-white">Book Now</a></li>
+                        <li><a href="#contact" class="text-gray-400 hover:text-white">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-medium mb-4">Services</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Standard Taxi</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Business Class</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Airport Transfer</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Group Travel</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-medium mb-4">Newsletter</h3>
+                    <p class="text-gray-400 mb-4">Subscribe to receive updates and special offers.</p>
+                    <div class="flex gap-2">
+                        <input type="email" placeholder="Your email" class="px-3 py-2 rounded text-black flex-grow" />
+                        <button class="inline-flex items-center justify-center rounded-md bg-yellow-500 px-4 py-2 text-sm font-medium text-black hover:bg-yellow-600">
+                            Subscribe
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>© @DateTime.Now.Year SpeedyTaxi. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</div>
+
