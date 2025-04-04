@@ -1,5 +1,7 @@
-﻿using SmartRide.Domain.Entities.Lookup;
+﻿using Microsoft.EntityFrameworkCore;
+using SmartRide.Domain.Entities.Lookup;
 using SmartRide.Domain.Enums;
+using SmartRide.Domain.Events;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -32,4 +34,22 @@ public class Payment : BaseEntity
 
     [ForeignKey(nameof(PaymentMethodId))]
     public PaymentMethod PaymentMethod { get; set; } = null!;
+
+    public override void OnSave(EntityState state)
+    {
+        base.OnSave(state);
+
+        if (state == EntityState.Added)
+        {
+            AddDomainEvent(new PaymentCreatedEvent(this));
+        }
+        else if (state == EntityState.Modified)
+        {
+            AddDomainEvent(new PaymentUpdatedEvent(this));
+        }
+        else if (state == EntityState.Deleted)
+        {
+            AddDomainEvent(new PaymentDeletedEvent(this));
+        }
+    }
 }

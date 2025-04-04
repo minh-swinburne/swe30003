@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SmartRide.Domain.Enums;
+using SmartRide.Domain.Events;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -53,4 +54,22 @@ public class Identity : BaseEntity
     [Required]
     [ForeignKey(nameof(UserId))]
     public User User { get; set; } = null!;
+
+    public override void OnSave(EntityState state)
+    {
+        base.OnSave(state);
+
+        if (state == EntityState.Added)
+        {
+            AddDomainEvent(new IdentityCreatedEvent(this));
+        }
+        else if (state == EntityState.Modified)
+        {
+            AddDomainEvent(new IdentityUpdatedEvent(this));
+        }
+        else if (state == EntityState.Deleted)
+        {
+            AddDomainEvent(new IdentityDeletedEvent(this));
+        }
+    }
 }
