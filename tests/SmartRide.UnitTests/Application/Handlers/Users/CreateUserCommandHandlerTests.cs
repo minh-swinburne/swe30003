@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Moq;
 using SmartRide.Application.Commands.Users;
 using SmartRide.Application.Commands.Users.Handlers;
@@ -11,14 +12,43 @@ namespace SmartRide.UnitTests.Application.Handlers.Users;
 public class CreateUserCommandHandlerTests
 {
     private readonly Mock<IRepository<User>> _mockUserRepository;
+    private readonly Mock<IPasswordHasher<User>> _mockPasswordHasher;
     private readonly Mock<IMapper> _mockMapper;
     private readonly CreateUserCommandHandler _handler;
 
     public CreateUserCommandHandlerTests()
     {
         _mockUserRepository = new Mock<IRepository<User>>();
+        _mockPasswordHasher = new Mock<IPasswordHasher<User>>();
         _mockMapper = new Mock<IMapper>();
-        _handler = new CreateUserCommandHandler(_mockUserRepository.Object, _mockMapper.Object);
+        _handler = new CreateUserCommandHandler(_mockUserRepository.Object, _mockPasswordHasher.Object, _mockMapper.Object);
+    }
+
+    private void SetupMocks(Guid userId)
+    {
+        _mockUserRepository.Setup(m => m.CreateAsync(It.IsAny<User>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync((User user, CancellationToken ct) => user);
+        _mockPasswordHasher.Setup(m => m.HashPassword(It.IsAny<User>(), It.IsAny<string>()))
+            .Returns("hashed-password");
+        _mockMapper.Setup(m => m.Map<User>(It.IsAny<CreateUserCommand>()))
+            .Returns((CreateUserCommand command) => new User
+            {
+                Id = userId,
+                FirstName = command.FirstName,
+                LastName = command.LastName,
+                Email = command.Email,
+                Phone = command.Phone,
+                Password = "hashed-password"
+            });
+        _mockMapper.Setup(m => m.Map<CreateUserResponseDTO>(It.IsAny<User>()))
+            .Returns((User user) => new CreateUserResponseDTO
+            {
+                UserId = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                Phone = user.Phone
+            });
     }
 
     [Fact]
@@ -33,7 +63,6 @@ public class CreateUserCommandHandlerTests
             Phone = "0123456789",
             Password = "secure-password"
         };
-
         var user = new User
         {
             Id = Guid.NewGuid(),
@@ -42,7 +71,6 @@ public class CreateUserCommandHandlerTests
             Email = command.Email,
             Phone = command.Phone
         };
-
         var response = new CreateUserResponseDTO
         {
             UserId = user.Id,
@@ -51,10 +79,8 @@ public class CreateUserCommandHandlerTests
             Email = user.Email,
             Phone = user.Phone
         };
-
-        _mockMapper.Setup(m => m.Map<User>(command)).Returns(user);
-        _mockMapper.Setup(m => m.Map<CreateUserResponseDTO>(user)).Returns(response);
-        _mockUserRepository.Setup(r => r.CreateAsync(It.IsAny<User>(), It.IsAny<CancellationToken>())).Returns(Task.FromResult(user));
+        
+        SetupMocks(user.Id);
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);
