@@ -2,7 +2,7 @@ using FluentValidation.TestHelper;
 using SmartRide.Application.Commands.Users;
 using SmartRide.Application.Commands.Users.Validators;
 
-namespace SmartRide.UnitTests.Application.Validators;
+namespace SmartRide.UnitTests.Application.Validators.Users;
 
 public class CreateUserCommandValidatorTests
 {

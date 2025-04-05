@@ -11,15 +11,14 @@ public class UserMappingProfile : Profile
     {
         CreateMap<CreateUserCommand, User>();
 
-        CreateMap<User, CreateUserResponseDTO>()
+        // Common mapping for BaseUserResponseDTO
+        CreateMap<User, BaseUserResponseDTO>()
             .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.Id));
 
-        CreateMap<User, GetUserByIdResponseDTO>()
-            .ForMember(dest => dest.Roles, opt => opt.MapFrom(src => src.Roles.Select(r => r.Id).ToList()))
-            .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.Id));
-
-        CreateMap<User, ListUserResponseDTO>()
-            .ForMember(dest => dest.Roles, opt => opt.MapFrom(src => src.Roles.Select(r => r.Id).ToList()))
-            .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.Id));
+        // Derived DTOs inherit the mapping from BaseUserResponseDTO
+        CreateMap<User, CreateUserResponseDTO>();
+        CreateMap<User, UpdateUserResponseDTO>();
+        CreateMap<User, GetUserByIdResponseDTO>();
+        CreateMap<User, ListUserResponseDTO>();
     }
 }

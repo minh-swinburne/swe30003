@@ -3,7 +3,7 @@ using SmartRide.Common.Interfaces;
 
 namespace SmartRide.Application.DTOs.Users;
 
-public class ListUserRequestDTO : BaseDTO, ISortable, IPageable
+public class ListUserRequestDTO : BaseRequestDTO, ISortable, IPageable
 {
     public string? FirstName { get; set; }
     public string? LastName { get; set; }

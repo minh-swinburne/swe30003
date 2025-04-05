@@ -2,7 +2,7 @@ using SmartRide.Domain.Enums;
 
 namespace SmartRide.Application.DTOs.Vehicles;
 
-public class ListVehicleRequestDTO : BaseDTO
+public class ListVehicleRequestDTO : BaseRequestDTO
 {
     public string? Vin { get; init; }
     public string? Plate { get; init; }

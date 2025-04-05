@@ -1,11 +1,9 @@
 ﻿using SmartRide.Application.DTOs.Lookup;
-using SmartRide.Domain.Enums;
 
 namespace SmartRide.Application.DTOs.Users;
 
-public class CreateUserResponseDTO
+public class CreateUserResponseDTO : BaseUserResponseDTO
 {
-    public required Guid UserId { get; set; }
     public required string FirstName { get; set; }
     public string? LastName { get; set; }
     public required string Email { get; set; }

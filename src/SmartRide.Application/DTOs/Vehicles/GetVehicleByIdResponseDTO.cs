@@ -2,7 +2,7 @@ using SmartRide.Application.DTOs.Lookup;
 
 namespace SmartRide.Application.DTOs.Vehicles;
 
-public class GetVehicleByIdResponseDTO : BaseDTO
+public class GetVehicleByIdResponseDTO
 {
     public Guid VehicleId { get; init; }
     public Guid UserId { get; init; }
