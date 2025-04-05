@@ -26,12 +26,15 @@ public class Payment : BaseEntity
     [Column(TypeName = "DATETIME")]
     public DateTime PaymentTime { get; set; }
 
+    [Required]
     [Column(TypeName = "TINYINT")]
     public PaymentStatusEnum Status { get; set; } = PaymentStatusEnum.Pending;
 
+    [Required]
     [ForeignKey(nameof(RideId))]
     public Ride Ride { get; set; } = null!;
 
+    [Required]
     [ForeignKey(nameof(PaymentMethodId))]
     public PaymentMethod PaymentMethod { get; set; } = null!;
 

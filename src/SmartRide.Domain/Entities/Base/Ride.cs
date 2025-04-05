@@ -24,6 +24,7 @@ public class Ride : BaseEntity
     [Column(TypeName = "TINYINT")]
     public RideTypeEnum Type { get; init; }
 
+    [Required]
     [Column(TypeName = "TINYINT")]
     public RideStatusEnum Status { get; set; } = RideStatusEnum.Pending;
 
@@ -55,20 +56,27 @@ public class Ride : BaseEntity
     [Column(TypeName = "TEXT")]
     public string? Notes { get; set; }
 
+    [Required]
     [ForeignKey(nameof(PassengerId))]
     public User Passenger { get; set; } = null!;
 
+    [Required]
     [ForeignKey(nameof(DriverId))]
     public User Driver { get; set; } = null!;
 
+    [Required]
     [ForeignKey(nameof(VehicleId))]
     public Vehicle Vehicle { get; set; } = null!;
 
+    [Required]
     [ForeignKey(nameof(PickupLocationId))]
     public Location PickupLocation { get; set; } = null!;
 
+    [Required]
     [ForeignKey(nameof(DestinationId))]
     public Location Destination { get; set; } = null!;
+
+    public Payment? Payment { get; set; }
 
     public void ValidateDriverRole()
     {

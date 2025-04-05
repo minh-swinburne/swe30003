@@ -28,23 +28,44 @@ public class UserController(IUserService userService) : BaseController
         return Respond(result);
     }
 
+    // GET api/v1/user/email/<email>
+    [HttpGet("email/{email}")]
+    public async Task<IActionResult> GetUserByEmail([FromRoute] string email)
+    {
+        var result = await _userService.GetUserByEmailAsync(new GetUserByEmailRequestDTO { Email = email });
+        return Respond(result);
+    }
+
+    // GET api/v1/user/phone/<phone>
+    [HttpGet("phone/{phone}")]
+    public async Task<IActionResult> GetUserByPhone([FromRoute] string phone)
+    {
+        var result = await _userService.GetUserByPhoneAsync(new GetUserByPhoneRequestDTO { Phone = phone });
+        return Respond(result);
+    }
+
     // POST api/v1/user
     [HttpPost]
-    public async Task<IActionResult> Post([FromBody] CreateUserRequestDTO request)
+    public async Task<IActionResult> CreateUser([FromBody] CreateUserRequestDTO request)
     {
         var result = await _userService.CreateUserAsync(request);
         return Respond(result);
     }
 
-    //// PUT api/v1/user/<userId>
-    //[HttpPut("{id}")]
-    //public void Put([FromRoute] int id, [FromBody] string value)
-    //{
-    //}
+    // PUT api/v1/user/<userId>
+    [HttpPut("{userId}")]
+    public async Task<IActionResult> UpdateUser([FromRoute] Guid userId, [FromBody] UpdateUserRequestDTO request)
+    {
+        request.UserId = userId;
+        var result = await _userService.UpdateUserAsync(request);
+        return Respond(result);
+    }
 
-    //// DELETE api/v1/user/<userId>
-    //[HttpDelete("{id}")]
-    //public void Delete(int id)
-    //{
-    //}
+    // DELETE api/v1/user/<userId>
+    [HttpDelete("{userId}")]
+    public async Task<IActionResult> DeleteUser([FromRoute] Guid userId)
+    {
+        var result = await _userService.DeleteUserAsync(new DeleteUserRequestDTO { UserId = userId });
+        return Respond(result);
+    }
 }

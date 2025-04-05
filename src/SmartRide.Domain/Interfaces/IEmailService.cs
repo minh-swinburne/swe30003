@@ -3,8 +3,8 @@ namespace SmartRide.Domain.Interfaces;
 public interface IEmailService
 {
     Task SendEmailAsync(string to, string subject, string body);
-    Task SendEmailWithAttachmentAsync(string to, string subject, string body, string attachmentPath);
+    Task SendEmailWithAttachmentsAsync(string to, string subject, string body, List<string> attachmentPaths);
     Task SendBulkEmailAsync(IEnumerable<string> to, string subject, string body);
     Task SendEmailWithTemplateAsync(string to, string templateName, object model);
-    Task SendEmailWithTemplateAndAttachmentAsync(string to, string templateName, object model, string attachmentPath);
+    Task SendEmailWithTemplateAndAttachmentsAsync(string to, string templateName, object model, List<string> attachmentPaths);
 }

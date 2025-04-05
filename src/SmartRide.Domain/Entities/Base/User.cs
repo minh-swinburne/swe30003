@@ -38,15 +38,12 @@ public class User : BaseEntity
     [Column(TypeName = "TEXT")]
     public string? Picture { get; set; }
 
-    [Column(TypeName = "BINARY(16)")]
-    public Guid? IdentityId { get; set; }
-
     public Identity? Identity { get; set; }
 
-    public ICollection<Location> Locations { get; set; } = [];
-
     public ICollection<Role> Roles { get; set; } = [];
+    public ICollection<Ride> Rides { get; set; } = [];
     public ICollection<UserRole> UserRoles { get; set; } = [];
+    public ICollection<Location> Locations { get; set; } = [];
 
     private ICollection<Vehicle>? _vehicles { get; set; } = [];
 
