@@ -16,10 +16,10 @@ public class ListUserQueryHandler(IRepository<User> userRepository, IMapper mapp
     private readonly IRepository<User> _userRepository = userRepository;
     private readonly IMapper _mapper = mapper;
 
-    public override async Task<List<ListUserResponseDTO>> Handle(ListUserQuery request, CancellationToken cancellationToken)
+    public override async Task<List<ListUserResponseDTO>> Handle(ListUserQuery query, CancellationToken cancellationToken)
     {
         Expression<Func<User, object>>? orderBy = null;
-        Expression<Func<User, bool>>? filter = BuildFilter(request);
+        Expression<Func<User, bool>>? filter = BuildFilter(query);
         //Expression<Func<User, ListUserResponseDTO>>? select = u => new ListUserResponseDTO
         //{
         //    Id = u.Id,
@@ -31,10 +31,10 @@ public class ListUserQueryHandler(IRepository<User> userRepository, IMapper mapp
         //    Roles = u.Roles.Select(r => r.Id).ToList(),
         //};
 
-        if (!string.IsNullOrEmpty(request.OrderBy))
+        if (!string.IsNullOrEmpty(query.OrderBy))
         {
-            var propertyInfo = typeof(User).GetProperty(request.OrderBy.Pascalize(), BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance)
-                ?? throw new InvalidFilterCriteriaException($"Property {request.OrderBy} does not exist in {nameof(User)}.");
+            var propertyInfo = typeof(User).GetProperty(query.OrderBy.Pascalize(), BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance)
+                ?? throw new InvalidFilterCriteriaException($"Property {query.OrderBy} does not exist in {nameof(User)}.");
 
             var parameter = Expression.Parameter(typeof(User), "u");
             var propertyAccess = Expression.Property(parameter, propertyInfo);
@@ -45,9 +45,9 @@ public class ListUserQueryHandler(IRepository<User> userRepository, IMapper mapp
             filter,
             //select,
             orderBy: orderBy,
-            ascending: request.Ascending,
-            skip: request.PageSize * (request.PageNo - 1),
-            limit: request.PageSize,
+            ascending: query.Ascending,
+            skip: query.PageSize * (query.PageNo - 1),
+            limit: query.PageSize,
             cancellationToken: cancellationToken
         );
 
@@ -73,10 +73,10 @@ public class ListUserQueryHandler(IRepository<User> userRepository, IMapper mapp
         if (query.Roles is { Count: > 0 })
         {
             if (query.MatchAllRoles)
-                // Ensure the user has *all* the requested roles
+                // Ensure the user has *all* the queryed roles
                 filter = filter.AddFilter(user => query.Roles.All(role => user.UserRoles.Any(ur => ur.RoleId == role)));
             else
-                // Ensure the user has *at least one* of the requested roles
+                // Ensure the user has *at least one* of the queryed roles
                 filter = filter.AddFilter(user => user.UserRoles.Any(ur => query.Roles.Contains(ur.RoleId)));
         }
 

@@ -98,6 +98,7 @@ public class RepositoryTests : IDisposable
 
         // Act
         var createdUser = await _userRepository.CreateAsync(user);
+        await _context.SaveChangesAsync();
 
         // Assert
         Assert.NotNull(createdUser);
@@ -131,6 +132,7 @@ public class RepositoryTests : IDisposable
         // Act
         user!.FirstName = newFirstName;
         var updatedUser = await _userRepository.UpdateAsync(user);
+        await _context.SaveChangesAsync();
 
         // Assert
         Assert.NotNull(updatedUser);
@@ -145,6 +147,7 @@ public class RepositoryTests : IDisposable
 
         // Act
         var deletedUser = await _userRepository.DeleteAsync(userId);
+        await _context.SaveChangesAsync();
 
         // Assert
         Assert.NotNull(deletedUser);
@@ -172,7 +175,7 @@ public class RepositoryTests : IDisposable
         };
 
         // Act
-        await _context.AddAsync(vehicle);
+        await _vehicleRepository.CreateAsync(vehicle);
         await _context.SaveChangesAsync();
         var createdVehicle = await _vehicleRepository.GetByIdAsync(vehicle.Id);
 

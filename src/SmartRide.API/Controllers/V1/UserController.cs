@@ -21,10 +21,10 @@ public class UserController(IUserService userService) : BaseController
     }
 
     // GET api/v1/user/<userId>
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetUserById([FromRoute] Guid id)
+    [HttpGet("{userId}")]
+    public async Task<IActionResult> GetUserById([FromRoute] Guid userId)
     {
-        var result = await _userService.GetUserByIdAsync(new GetUserByIdRequestDTO { Id = id });
+        var result = await _userService.GetUserByIdAsync(new GetUserByIdRequestDTO { UserId = userId });
         return Respond(result);
     }
 

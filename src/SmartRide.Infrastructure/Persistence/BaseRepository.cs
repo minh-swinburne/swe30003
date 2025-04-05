@@ -28,16 +28,14 @@ public class BaseRepository<T>(SmartRideDbContext dbContext) : IRepository<T> wh
 
     public async Task<T> CreateAsync(T entity, CancellationToken cancellationToken = default)
     {
-        await _dbSet.AddAsync(entity, cancellationToken);
-        await _dbContext.SaveChangesAsync(cancellationToken);
-        return entity;
+        var result = await _dbSet.AddAsync(entity, cancellationToken);
+        return result.Entity;
     }
 
-    public async Task<T> UpdateAsync(T entity, CancellationToken cancellationToken = default)
+    public Task<T> UpdateAsync(T entity, CancellationToken cancellationToken = default)
     {
-        _dbSet.Update(entity);
-        await _dbContext.SaveChangesAsync(cancellationToken);
-        return entity;
+        var result = _dbSet.Update(entity);
+        return Task.FromResult(result.Entity);
     }
 
     public async Task<T> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
@@ -45,9 +43,8 @@ public class BaseRepository<T>(SmartRideDbContext dbContext) : IRepository<T> wh
         var entity = await _dbSet.FindAsync([id], cancellationToken: cancellationToken)
             ?? throw new KeyNotFoundException($"Entity of type {typeof(T)} with id {id} not found.");
 
-        _dbSet.Remove(entity);
-        await _dbContext.SaveChangesAsync(cancellationToken);
-        return entity;
+        var result = _dbSet.Remove(entity);
+        return result.Entity;
     }
 
     public async Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)

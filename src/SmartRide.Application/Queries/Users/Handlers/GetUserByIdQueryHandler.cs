@@ -11,9 +11,9 @@ public class GetUserByIdQueryHandler(IRepository<User> userRepository, IMapper m
     private readonly IRepository<User> _userRepository = userRepository;
     private readonly IMapper _mapper = mapper;
 
-    public override async Task<GetUserByIdResponseDTO> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
+    public override async Task<GetUserByIdResponseDTO> Handle(GetUserByIdQuery query, CancellationToken cancellationToken)
     {
-        var user = await _userRepository.GetByIdAsync(request.UserId, cancellationToken);
+        var user = await _userRepository.GetByIdAsync(query.UserId, cancellationToken);
         return _mapper.Map<GetUserByIdResponseDTO>(user);
     }
 }
