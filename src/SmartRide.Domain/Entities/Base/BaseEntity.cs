@@ -57,6 +57,10 @@ public abstract class BaseEntity
         if (state == EntityState.Modified || state == EntityState.Added)
         {
             UpdateTimestamp();
+            if (state == EntityState.Added)
+            {
+                CreatedTime = DateTime.UtcNow;
+            }
         }
     }
 }

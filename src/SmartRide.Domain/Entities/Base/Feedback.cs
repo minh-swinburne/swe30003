@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SmartRide.Domain.Entities.Base;
 
+[Index(nameof(RideId), IsUnique = true)]
 public class Feedback : BaseEntity
 {
     [Required]
@@ -19,6 +20,7 @@ public class Feedback : BaseEntity
     [Column(TypeName = "TEXT")]
     public string? Comment { get; set; }
 
+    [Required]
     [ForeignKey(nameof(RideId))]
     public Ride Ride { get; set; } = null!;
 

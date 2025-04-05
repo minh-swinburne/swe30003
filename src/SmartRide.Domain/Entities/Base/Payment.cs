@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SmartRide.Domain.Entities.Base;
 
+[Index(nameof(RideId), IsUnique = true)]
 public class Payment : BaseEntity
 {
     [Required]
@@ -23,12 +24,12 @@ public class Payment : BaseEntity
     public PaymentMethodEnum PaymentMethodId { get; set; }
 
     [Required]
-    [Column(TypeName = "DATETIME")]
-    public DateTime PaymentTime { get; set; }
-
-    [Required]
     [Column(TypeName = "TINYINT")]
     public PaymentStatusEnum Status { get; set; } = PaymentStatusEnum.Pending;
+
+    [Required]
+    [Column(TypeName = "DATETIME")]
+    public DateTime Time { get; set; }
 
     [Required]
     [ForeignKey(nameof(RideId))]

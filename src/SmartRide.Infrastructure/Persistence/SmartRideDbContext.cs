@@ -103,8 +103,9 @@ public class SmartRideDbContext : DbContext
         // Feedback entity
         modelBuilder.Entity<Feedback>()
             .HasOne(f => f.Ride)
-            .WithMany()
-            .HasForeignKey(f => f.RideId);
+            .WithOne(r => r.Feedback)
+            .HasForeignKey<Feedback>(f => f.RideId)
+            .OnDelete(DeleteBehavior.Cascade); // Ensure proper delete behavior
 
         // Seed data for Role
         modelBuilder.Entity<Role>().HasData(
@@ -203,7 +204,7 @@ public class SmartRideDbContext : DbContext
             {
                 // Dispatch the domain event (e.g., using MediatR or a custom dispatcher)
                 _mediator.Publish(domainEvent, cancellationToken: CancellationToken.None);
-                Console.WriteLine($"Dispatching event: {domainEvent.GetType().Name}");
+                // Console.WriteLine($"Dispatching event: {domainEvent.GetType().Name}");
             }
 
             entry.Entity.ClearDomainEvents();

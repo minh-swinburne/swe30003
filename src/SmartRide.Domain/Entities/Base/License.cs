@@ -6,11 +6,17 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SmartRide.Domain.Entities.Base;
 
+[Index(nameof(Number), IsUnique = true)]
 public class License : BaseEntity
 {
     [Required]
     [Column(TypeName = "BINARY(16)")]
     public required Guid UserId { get; set; }
+
+    [Required]
+    [Column(TypeName = "VARCHAR(50)")]
+    [StringLength(50)]
+    public string Number { get; set; } = null!;
 
     [Required]
     [Column(TypeName = "TINYINT")]
@@ -23,11 +29,6 @@ public class License : BaseEntity
     [Required]
     [Column(TypeName = "DATE")]
     public required DateTime IssuedDate { get; set; }
-
-    [Required]
-    [Column(TypeName = "VARCHAR(50)")]
-    [StringLength(50)]
-    public string LicenseNumber { get; set; } = null!;
 
     [Required]
     [Column(TypeName = "VARCHAR(100)")]

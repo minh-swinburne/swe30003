@@ -1,18 +1,21 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SmartRide.Application;
 using SmartRide.Common.Extensions;
+using SmartRide.Domain.Entities.Base;
 using SmartRide.Infrastructure;
 using SmartRide.Infrastructure.Persistence;
+using SmartRide.Infrastructure.Seed;
 using SmartRide.Infrastructure.Settings;
 
 namespace SmartRide.ConsoleApp;
 
 internal class Program
 {
-    static void Main(string[] args)
+    static async Task Main(string[] args)
     {
         var builder = Host.CreateDefaultBuilder(args)
             .ConfigureAppConfiguration((context, config) =>
@@ -37,6 +40,13 @@ internal class Program
 
         using var scope = host.Services.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<SmartRideDbContext>();
+        var passwordHasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher<User>>();
+
+        // Run the database seeder
+        await DatabaseSeeder.SeedAsync(dbContext, passwordHasher);
+
+        Console.WriteLine("Database seeding completed.");
+
         int idx = 0;
 
         Console.WriteLine("\nDatabase Schema:");

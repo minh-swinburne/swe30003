@@ -51,7 +51,7 @@ public class Ride : BaseEntity
     [Required]
     [Range(0, (double)decimal.MaxValue)]
     [Column(TypeName = "DECIMAL(18,2)")]
-    public float Fare { get; set; } // = .0f;
+    public decimal Fare { get; set; } // = .0f;
 
     [Column(TypeName = "TEXT")]
     public string? Notes { get; set; }
@@ -77,6 +77,8 @@ public class Ride : BaseEntity
     public Location Destination { get; set; } = null!;
 
     public Payment? Payment { get; set; }
+
+    public Feedback? Feedback { get; set; }
 
     public void ValidateDriverRole()
     {
