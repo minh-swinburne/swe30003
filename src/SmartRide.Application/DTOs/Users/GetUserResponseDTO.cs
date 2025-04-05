@@ -2,7 +2,7 @@
 
 namespace SmartRide.Application.DTOs.Users;
 
-public class GetUserByIdResponseDTO : BaseUserResponseDTO
+public class GetUserResponseDTO : BaseUserResponseDTO
 {
     public required string FirstName { get; set; }
     public string? LastName { get; set; }

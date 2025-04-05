@@ -18,7 +18,7 @@ public class UserMappingProfile : Profile
         // Derived DTOs inherit the mapping from BaseUserResponseDTO
         CreateMap<User, CreateUserResponseDTO>();
         CreateMap<User, UpdateUserResponseDTO>();
-        CreateMap<User, GetUserByIdResponseDTO>();
+        CreateMap<User, GetUserResponseDTO>();
         CreateMap<User, ListUserResponseDTO>();
     }
 }

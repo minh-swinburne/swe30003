@@ -24,11 +24,25 @@ public class UserService(IMediator mediator) : IUserService
         };
     }
 
-    public async Task<ResponseDTO<GetUserByIdResponseDTO>> GetUserByIdAsync(GetUserByIdRequestDTO request)
+    public async Task<ResponseDTO<GetUserResponseDTO>> GetUserByIdAsync(GetUserByIdRequestDTO request)
     {
         var query = MediatRFactory.CreateQuery<GetUserByIdQuery>(request);
         var result = await _mediator.Send(query);
-        return new ResponseDTO<GetUserByIdResponseDTO> { Data = result };
+        return new ResponseDTO<GetUserResponseDTO> { Data = result };
+    }
+
+    public async Task<ResponseDTO<GetUserResponseDTO>> GetUserByEmailAsync(GetUserByEmailRequestDTO request)
+    {
+        var query = MediatRFactory.CreateQuery<GetUserByEmailQuery>(request);
+        var result = await _mediator.Send(query);
+        return new ResponseDTO<GetUserResponseDTO> { Data = result };
+    }
+
+    public async Task<ResponseDTO<GetUserResponseDTO>> GetUserByPhoneAsync(GetUserByPhoneRequestDTO request)
+    {
+        var query = MediatRFactory.CreateQuery<GetUserByPhoneQuery>(request);
+        var result = await _mediator.Send(query);
+        return new ResponseDTO<GetUserResponseDTO> { Data = result };
     }
 
     public async Task<ResponseDTO<CreateUserResponseDTO>> CreateUserAsync(CreateUserRequestDTO request)
@@ -36,5 +50,19 @@ public class UserService(IMediator mediator) : IUserService
         var command = MediatRFactory.CreateCommand<CreateUserCommand>(request);
         var result = await _mediator.Send(command);
         return new ResponseDTO<CreateUserResponseDTO> { Data = result };
+    }
+
+    public async Task<ResponseDTO<UpdateUserResponseDTO>> UpdateUserAsync(UpdateUserRequestDTO request)
+    {
+        var command = MediatRFactory.CreateCommand<UpdateUserCommand>(request);
+        var result = await _mediator.Send(command);
+        return new ResponseDTO<UpdateUserResponseDTO> { Data = result };
+    }
+
+    public async Task<ResponseDTO<DeleteUserResponseDTO>> DeleteUserAsync(DeleteUserRequestDTO request)
+    {
+        var command = MediatRFactory.CreateCommand<DeleteUserCommand>(request);
+        var result = await _mediator.Send(command);
+        return new ResponseDTO<DeleteUserResponseDTO> { Data = result };
     }
 }

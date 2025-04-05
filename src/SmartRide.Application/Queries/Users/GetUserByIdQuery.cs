@@ -2,7 +2,7 @@
 
 namespace SmartRide.Application.Queries.Users;
 
-public class GetUserByIdQuery : BaseQuery<GetUserByIdResponseDTO>
+public class GetUserByIdQuery : BaseQuery<GetUserResponseDTO>
 {
     public Guid UserId { get; init; }
 }
