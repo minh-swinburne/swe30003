@@ -18,7 +18,7 @@ public class UpdateUserCommandHandler(IRepository<User> userRepository, IPasswor
     public override async Task<UpdateUserResponseDTO> Handle(UpdateUserCommand command, CancellationToken cancellationToken)
     {
         var user = await _userRepository.GetByIdAsync(command.UserId, cancellationToken)
-            ?? throw new BaseException(UserErrors.Module, UserErrors.USER_NOT_FOUND.FormatMessage(command.UserId));
+            ?? throw new BaseException(UserErrors.Module, UserErrors.USER_NOT_FOUND.FormatMessage(("UserId", command.UserId)));
 
         // Update required fields only if they are not null and not empty
         if (!string.IsNullOrWhiteSpace(command.FirstName)) user.FirstName = command.FirstName;
@@ -36,7 +36,7 @@ public class UpdateUserCommandHandler(IRepository<User> userRepository, IPasswor
         }
 
         var updatedUser = await _userRepository.UpdateAsync(user, cancellationToken);
-        
+
         return _mapper.Map<UpdateUserResponseDTO>(updatedUser);
     }
 }
