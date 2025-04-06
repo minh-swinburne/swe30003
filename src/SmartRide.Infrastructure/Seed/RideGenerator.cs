@@ -47,7 +47,14 @@ public static class RideGenerator
                 DriverId = driver.Id,
                 VehicleId = vehicle.Id,
                 Type = faker.PickRandom<RideTypeEnum>(),
-                Status = faker.PickRandom<RideStatusEnum>(),
+                Status = faker.Random.WeightedRandom(
+                [
+                    RideStatusEnum.Pending,
+                    RideStatusEnum.Picking,
+                    RideStatusEnum.Travelling,
+                    RideStatusEnum.Completed,
+                    RideStatusEnum.Cancelled
+                ], [0.1f, 0.1f, 0.2f, 0.5f, 0.1f]),
                 PickupLocationId = pickupLocation.Id,
                 DestinationId = destinationLocation.Id,
                 PickupETA = faker.Date.Future(),

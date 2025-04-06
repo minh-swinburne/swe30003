@@ -34,7 +34,12 @@ public static class LicenseGenerator
                     UserId = driver.Id,
                     Number = licenseNumber,
                     Type = faker.PickRandom<LicenseTypeEnum>(),
-                    Status = faker.PickRandom<LicenseStatusEnum>(),
+                    Status = faker.Random.WeightedRandom(
+                    [
+                        LicenseStatusEnum.Active,
+                        LicenseStatusEnum.Expired,
+                        LicenseStatusEnum.Suspended
+                    ], [0.7f, 0.2f, 0.1f]),
                     IssuedDate = faker.Date.Past(5, DateTime.UtcNow),
                     IssuedCountry = faker.Address.Country(),
                     User = driver

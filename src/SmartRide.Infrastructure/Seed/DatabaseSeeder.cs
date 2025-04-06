@@ -1,3 +1,4 @@
+using Bogus;
 using Microsoft.AspNetCore.Identity;
 using SmartRide.Domain.Entities.Base;
 using SmartRide.Infrastructure.Persistence;
@@ -10,6 +11,8 @@ public static class DatabaseSeeder
     {
         if (!dbContext.Set<User>().Any())
         {
+            // Set a seed for random generator for reproducibility
+            Randomizer.Seed = new Random(1508);
             // Generate users
             var users = UserGenerator.GenerateUsers(userCount, passwordHasher);
             await dbContext.Set<User>().AddRangeAsync(users);

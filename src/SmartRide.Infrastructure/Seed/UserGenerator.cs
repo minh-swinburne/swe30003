@@ -19,7 +19,7 @@ public static class UserGenerator
             .RuleFor(u => u.LastName, f => f.Name.LastName())
             .RuleFor(u => u.Email, f => f.Internet.Email())
             .RuleFor(u => u.Phone, f => f.Phone.PhoneNumber())
-            .RuleFor(u => u.Password, (f, u) => passwordHasher.HashPassword(u, f.Internet.Password()))
+            .RuleFor(u => u.Password, (f, u) => passwordHasher.HashPassword(u, f.Internet.Password())) // Hash the password
             .RuleFor(u => u.Picture, f => f.Internet.Avatar())
             .RuleFor(u => u.Identity, (f, u) =>
             {
@@ -35,9 +35,18 @@ public static class UserGenerator
                     {
                         Id = Guid.NewGuid(),
                         UserId = u.Id,
-                        Status = f.PickRandom<IdentityStatusEnum>(),
+                        Status = f.Random.WeightedRandom(
+                        [   // 70% Approved, 20% Pending, 10% Rejected
+                            IdentityStatusEnum.Approved,
+                            IdentityStatusEnum.Pending,
+                            IdentityStatusEnum.Rejected
+                        ], [0.7f, 0.2f, 0.1f]),
                         LegalName = $"{u.FirstName} {u.LastName}",
-                        Sex = f.PickRandom<IdentitySexEnum>(),
+                        Sex = f.Random.WeightedRandom([
+                            IdentitySexEnum.Male,
+                            IdentitySexEnum.Female,
+                            IdentitySexEnum.Other
+                        ], [0.45f, 0.45f, 0.1f]),
                         BirthDate = f.Date.Past(30, DateTime.UtcNow.AddYears(-18)),
                         NationalId = nationalId,
                         Nationality = f.Address.Country(),
@@ -58,7 +67,11 @@ public static class UserGenerator
                 {
                     roles.Add(new UserRole
                     {
-                        RoleId = f.PickRandom(new[] { RoleEnum.Driver, RoleEnum.Manager }),
+                        RoleId = f.Random.WeightedRandom(
+                        [   // 90% Driver, 10% Manager
+                            RoleEnum.Driver,
+                            RoleEnum.Manager
+                        ], [0.9f, 0.1f]),
                         UserId = u.Id
                     });
                 }
