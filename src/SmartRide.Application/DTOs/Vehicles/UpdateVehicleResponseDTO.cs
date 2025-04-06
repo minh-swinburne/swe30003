@@ -1,8 +1,7 @@
 namespace SmartRide.Application.DTOs.Vehicles;
 
-public class UpdateVehicleResponseDTO
+public class UpdateVehicleResponseDTO : BaseVehicleResponseDTO
 {
-    public required Guid VehicleId { get; init; }
     public required string Plate { get; init; }
     public required string Make { get; init; }
     public required string Model { get; init; }

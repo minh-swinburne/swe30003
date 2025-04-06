@@ -1,0 +1,92 @@
+using AutoMapper;
+using Moq;
+using SmartRide.Application.DTOs.Lookup;
+using SmartRide.Application.DTOs.Vehicles;
+using SmartRide.Application.Queries.Vehicles;
+using SmartRide.Application.Queries.Vehicles.Handlers;
+using SmartRide.Domain.Entities.Base;
+using SmartRide.Domain.Enums;
+using SmartRide.Domain.Interfaces;
+
+namespace SmartRide.UnitTests.Application.Handlers.Vehicles;
+
+public class GetVehicleByIdQueryHandlerTests
+{
+    private readonly Mock<IRepository<Vehicle>> _mockVehicleRepository;
+    private readonly Mock<IMapper> _mockMapper;
+    private readonly GetVehicleByIdQueryHandler _handler;
+
+    public GetVehicleByIdQueryHandlerTests()
+    {
+        _mockVehicleRepository = new Mock<IRepository<Vehicle>>();
+        _mockMapper = new Mock<IMapper>();
+        _handler = new GetVehicleByIdQueryHandler(_mockVehicleRepository.Object, _mockMapper.Object);
+    }
+
+    [Fact]
+    public async Task Handle_Should_Return_Vehicle_When_Vehicle_Is_Found()
+    {
+        // Arrange
+        var userId = Guid.NewGuid();
+        var vehicleId = Guid.NewGuid();
+        var vehicle = new Vehicle
+        {
+            Id = vehicleId,
+            UserId = userId,
+            VehicleTypeId = VehicleTypeEnum.SmallCar,
+            Make = "Toyota",
+            Model = "Corolla",
+            Plate = "ABC123",
+            Vin = "1HGCM82633A123456",
+            Year = 2020,
+            RegisteredDate = DateTime.UtcNow.AddYears(-1),
+        };
+        var responseDto = new GetVehicleResponseDTO
+        {
+            VehicleId = vehicleId,
+            UserId = userId,
+            Make = vehicle.Make,
+            Model = vehicle.Model,
+            Plate = vehicle.Plate,
+            Vin = vehicle.Vin,
+            Year = vehicle.Year,
+            RegisteredDate = vehicle.RegisteredDate,
+            VehicleType = new VehicleTypeDTO
+            {
+                VehicleTypeId = (byte)vehicle.VehicleTypeId,
+                Name = vehicle.VehicleTypeId.ToString()
+            },
+        };
+
+        _mockVehicleRepository.Setup(r => r.GetByIdAsync(vehicleId, It.IsAny<CancellationToken>())).ReturnsAsync(vehicle);
+        _mockMapper.Setup(m => m.Map<GetVehicleResponseDTO>(vehicle)).Returns(responseDto);
+
+        var query = new GetVehicleByIdQuery { Id = vehicleId };
+
+        // Act
+        var result = await _handler.Handle(query, CancellationToken.None);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(responseDto.VehicleId, result.VehicleId);
+        Assert.Equal(responseDto.Make, result.Make);
+        _mockVehicleRepository.Verify(r => r.GetByIdAsync(vehicleId, It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task Handle_Should_Return_Null_When_Vehicle_Is_Not_Found()
+    {
+        // Arrange
+        var vehicleId = Guid.NewGuid();
+        _mockVehicleRepository.Setup(r => r.GetByIdAsync(vehicleId, It.IsAny<CancellationToken>())).ReturnsAsync(null as Vehicle);
+
+        var query = new GetVehicleByIdQuery { Id = vehicleId };
+
+        // Act
+        var result = await _handler.Handle(query, CancellationToken.None);
+
+        // Assert
+        Assert.Null(result);
+        _mockVehicleRepository.Verify(r => r.GetByIdAsync(vehicleId, It.IsAny<CancellationToken>()), Times.Once);
+    }
+}

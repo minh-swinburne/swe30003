@@ -2,15 +2,14 @@ using SmartRide.Application.DTOs.Lookup;
 
 namespace SmartRide.Application.DTOs.Vehicles;
 
-public class GetVehicleResponseDTO
+public class GetVehicleResponseDTO : BaseVehicleResponseDTO
 {
-    public Guid VehicleId { get; init; }
-    public Guid UserId { get; init; }
+    public required Guid UserId { get; init; }
     public required VehicleTypeDTO VehicleType { get; init; }
     public required string Vin { get; init; }
     public required string Plate { get; init; }
     public required string Make { get; init; }
     public required string Model { get; init; }
-    public int Year { get; init; }
-    public DateTime RegisteredDate { get; init; }
+    public required int Year { get; init; }
+    public required DateTime RegisteredDate { get; init; }
 }
