@@ -61,7 +61,7 @@ public class ListUserQueryHandlerTests
             Picture = x.Picture,
             Roles = x.Roles.Select(r => new RoleDTO
             {
-                RoleId = (byte)r.Id,
+                RoleId = r.Id,
                 Name = r.Name,
                 Description = r.Description
             }).ToList()

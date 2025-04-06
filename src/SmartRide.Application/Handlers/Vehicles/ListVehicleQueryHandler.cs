@@ -2,7 +2,6 @@ using AutoMapper;
 using Humanizer;
 using SmartRide.Application.DTOs.Vehicles;
 using SmartRide.Application.Interfaces;
-using SmartRide.Application.Queries;
 using SmartRide.Application.Queries.Vehicles;
 using SmartRide.Common.Extensions;
 using SmartRide.Domain.Entities.Base;

@@ -1,4 +1,3 @@
-using SmartRide.Application.Commands;
 using SmartRide.Application.Commands.Rides;
 using SmartRide.Application.DTOs.Rides;
 using SmartRide.Common.Exceptions;

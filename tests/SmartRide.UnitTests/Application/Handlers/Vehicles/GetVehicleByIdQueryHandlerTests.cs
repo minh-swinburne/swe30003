@@ -53,7 +53,7 @@ public class GetVehicleByIdQueryHandlerTests
             RegisteredDate = vehicle.RegisteredDate,
             VehicleType = new VehicleTypeDTO
             {
-                VehicleTypeId = (byte)vehicle.VehicleTypeId,
+                VehicleTypeId = vehicle.VehicleTypeId,
                 Name = vehicle.VehicleTypeId.ToString()
             },
         };

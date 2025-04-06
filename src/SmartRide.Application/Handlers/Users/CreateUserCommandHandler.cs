@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
-using SmartRide.Application.Commands;
 using SmartRide.Application.Commands.Users;
 using SmartRide.Application.DTOs.Users;
 using SmartRide.Domain.Entities.Base;

@@ -85,32 +85,25 @@ public static class RideGenerator
                 Destination = destinationLocation
             };
 
-            // Add payment if applicable
-            if (ride.Status == RideStatusEnum.Completed || faker.Random.Bool(0.3f))
+            var paymentMethod = faker.PickRandom<PaymentMethodEnum>();
+            var paymentStatus = ride.Status == RideStatusEnum.Cancelled
+                ? faker.PickRandom(PaymentStatusEnum.Refunded, PaymentStatusEnum.Failed)
+                : ride.Status == RideStatusEnum.Completed
+                    ? PaymentStatusEnum.Completed
+                    : paymentMethod == PaymentMethodEnum.PayPal
+                        ? faker.PickRandom(PaymentStatusEnum.Pending, PaymentStatusEnum.Completed)
+                        : PaymentStatusEnum.Pending;
+
+            ride.Payment = new Payment
             {
-                var paymentMethod = faker.PickRandom<PaymentMethodEnum>();
-                var paymentStatus = ride.Status == RideStatusEnum.Cancelled
-                    ? faker.PickRandom(PaymentStatusEnum.Refunded, PaymentStatusEnum.Failed)
-                    : ride.Status == RideStatusEnum.Completed
-                        ? PaymentStatusEnum.Completed
-                        : paymentMethod == PaymentMethodEnum.PayPal
-                            ? faker.PickRandom(PaymentStatusEnum.Pending, PaymentStatusEnum.Completed)
-                            : PaymentStatusEnum.Pending;
-                ride.Payment = new Payment
-                {
-                    Id = Guid.NewGuid(),
-                    RideId = ride.Id,
-                    Amount = ride.Fare,
-                    PaymentMethodId = ride.Status == RideStatusEnum.Completed
-                        ? faker.PickRandom<PaymentMethodEnum>()
-                        : PaymentMethodEnum.PayPal,
-                    Status = ride.Status == RideStatusEnum.Cancelled
-                        ? PaymentStatusEnum.Refunded
-                        : PaymentStatusEnum.Completed,
-                    TransactionTime = faker.Date.Recent(),
-                    Ride = ride
-                };
-            }
+                Id = Guid.NewGuid(),
+                RideId = ride.Id,
+                Amount = ride.Fare,
+                PaymentMethodId = paymentMethod,
+                Status = paymentStatus,
+                TransactionTime = faker.Date.Recent(),
+                Ride = ride
+            };
 
             // Add feedback for 50% of rides
             if (faker.Random.Bool(0.5f))

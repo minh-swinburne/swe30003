@@ -1,6 +1,7 @@
 using MediatR;
+using SmartRide.Application.Queries;
 
-namespace SmartRide.Application.Queries;
+namespace SmartRide.Application.Handlers;
 
 public abstract class BaseQueryHandler<TQuery, TResponse> : IRequestHandler<TQuery, TResponse>
     where TQuery : BaseQuery<TResponse>

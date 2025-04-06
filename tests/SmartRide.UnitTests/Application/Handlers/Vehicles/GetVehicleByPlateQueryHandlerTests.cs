@@ -47,7 +47,7 @@ public class GetVehicleByPlateQueryHandlerTests
             UserId = vehicle.UserId,
             VehicleType = new VehicleTypeDTO
             {
-                VehicleTypeId = (byte)vehicle.VehicleTypeId,
+                VehicleTypeId = vehicle.VehicleTypeId,
                 Name = vehicle.VehicleTypeId.ToString()
             },
             Vin = vehicle.Vin,

@@ -1,6 +1,7 @@
 using AutoMapper;
 using Moq;
 using SmartRide.Application.Commands.Vehicles;
+using SmartRide.Application.DTOs.Lookup;
 using SmartRide.Application.DTOs.Vehicles;
 using SmartRide.Application.Handlers.Vehicles;
 using SmartRide.Domain.Entities.Base;
@@ -29,7 +30,7 @@ public class CreateVehicleCommandHandlerTests
         var command = new CreateVehicleCommand
         {
             UserId = Guid.NewGuid(),
-            VehicleTypeId = 1,
+            VehicleTypeId = VehicleTypeEnum.SmallCar,
             Vin = "1HGCM82633A123456",
             Plate = "ABC123",
             Make = "Toyota",
@@ -41,7 +42,7 @@ public class CreateVehicleCommandHandlerTests
         {
             Id = Guid.NewGuid(),
             UserId = command.UserId,
-            VehicleTypeId = (VehicleTypeEnum)command.VehicleTypeId,
+            VehicleTypeId = command.VehicleTypeId,
             Vin = command.Vin,
             Plate = command.Plate,
             Make = command.Make,
@@ -53,13 +54,18 @@ public class CreateVehicleCommandHandlerTests
         {
             VehicleId = vehicle.Id,
             UserId = vehicle.UserId,
-            VehicleTypeId = (byte)vehicle.VehicleTypeId,
             Make = vehicle.Make,
             Model = vehicle.Model,
             Plate = vehicle.Plate,
             Vin = vehicle.Vin,
             Year = vehicle.Year,
-            RegisteredDate = vehicle.RegisteredDate
+            RegisteredDate = vehicle.RegisteredDate,
+            VehicleType = new VehicleTypeDTO
+            {
+                VehicleTypeId = vehicle.VehicleTypeId,
+                Name = vehicle.VehicleTypeId.ToString(),
+                Capacity = 4
+            }
         };
 
         _mockMapper.Setup(m => m.Map<Vehicle>(command)).Returns(vehicle);

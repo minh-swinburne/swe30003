@@ -1,7 +1,6 @@
 using AutoMapper;
 using SmartRide.Application.DTOs.Rides;
 using SmartRide.Application.Interfaces;
-using SmartRide.Application.Queries;
 using SmartRide.Application.Queries.Rides;
 using SmartRide.Common.Extensions;
 using SmartRide.Domain.Entities.Base;
