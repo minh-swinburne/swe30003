@@ -74,7 +74,7 @@ public class ListLocationQueryHandlerTests
             It.IsAny<int>(),
             It.IsAny<int>(),
             It.IsAny<CancellationToken>()
-        )).ReturnsAsync(new List<Location>());
+        )).ReturnsAsync([]);
 
         var query = new ListLocationQuery();
 

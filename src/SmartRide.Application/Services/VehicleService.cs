@@ -1,4 +1,5 @@
 using MediatR;
+using SmartRide.Application.Commands;
 using SmartRide.Application.Commands.Vehicles;
 using SmartRide.Application.DTOs;
 using SmartRide.Application.DTOs.Vehicles;
@@ -48,6 +49,7 @@ public class VehicleService(IMediator mediator) : IVehicleService
     {
         var command = MediatRFactory.CreateCommand<CreateVehicleCommand>(request);
         var result = await _mediator.Send(command);
+        await _mediator.Send(new SaveChangesCommand());
         return new ResponseDTO<CreateVehicleResponseDTO> { Data = result };
     }
 
@@ -55,6 +57,7 @@ public class VehicleService(IMediator mediator) : IVehicleService
     {
         var command = MediatRFactory.CreateCommand<UpdateVehicleCommand>(request);
         var result = await _mediator.Send(command);
+        await _mediator.Send(new SaveChangesCommand());
         return new ResponseDTO<UpdateVehicleResponseDTO> { Data = result };
     }
 
@@ -62,6 +65,7 @@ public class VehicleService(IMediator mediator) : IVehicleService
     {
         var command = MediatRFactory.CreateCommand<DeleteVehicleCommand>(request);
         var result = await _mediator.Send(command);
+        await _mediator.Send(new SaveChangesCommand());
         return new ResponseDTO<DeleteVehicleResponseDTO> { Data = result };
     }
 }

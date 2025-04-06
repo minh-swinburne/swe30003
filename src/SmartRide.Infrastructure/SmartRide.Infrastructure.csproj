@@ -27,11 +27,11 @@
   <ItemGroup>
     <ProjectReference Include="..\SmartRide.Common\SmartRide.Common.csproj" />
     <ProjectReference Include="..\SmartRide.Domain\SmartRide.Domain.csproj" />
+    <ProjectReference Include="..\SmartRide.Application\SmartRide.Application.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Map\" />
     <Folder Include="Migrations\" />
-    <Folder Include="Persistence\" />
     <Folder Include="Settings\" />
     <Folder Include="Transaction\" />
   </ItemGroup>

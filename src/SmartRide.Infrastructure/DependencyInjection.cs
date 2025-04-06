@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using SmartRide.Domain.Entities.Base;
+using SmartRide.Application.Commands;
 using SmartRide.Domain.Interfaces;
 using SmartRide.Infrastructure.Notification;
 using SmartRide.Infrastructure.Persistence;
@@ -41,6 +41,9 @@ public static class DependencyInjection
         // Register repositories of all entity types
         services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
         services.AddScoped(typeof(IEmailService), typeof(EmailService));
+
+        // Register SaveChangesCommandHandler
+        services.AddScoped<IRequestHandler<SaveChangesCommand>, SaveChangesCommandHandler>();
 
         return services;
     }

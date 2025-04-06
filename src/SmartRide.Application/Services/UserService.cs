@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using SmartRide.Application.Commands;
 using SmartRide.Application.Commands.Users;
 using SmartRide.Application.DTOs;
 using SmartRide.Application.DTOs.Users;
@@ -48,6 +49,7 @@ public class UserService(IMediator mediator) : IUserService
     {
         var command = MediatRFactory.CreateCommand<CreateUserCommand>(request);
         var result = await _mediator.Send(command);
+        await _mediator.Send(new SaveChangesCommand());
         return new ResponseDTO<CreateUserResponseDTO> { Data = result };
     }
 
@@ -55,6 +57,7 @@ public class UserService(IMediator mediator) : IUserService
     {
         var command = MediatRFactory.CreateCommand<UpdateUserCommand>(request);
         var result = await _mediator.Send(command);
+        await _mediator.Send(new SaveChangesCommand());
         return new ResponseDTO<UpdateUserResponseDTO> { Data = result };
     }
 
@@ -62,6 +65,7 @@ public class UserService(IMediator mediator) : IUserService
     {
         var command = MediatRFactory.CreateCommand<DeleteUserCommand>(request);
         var result = await _mediator.Send(command);
+        await _mediator.Send(new SaveChangesCommand());
         return new ResponseDTO<DeleteUserResponseDTO> { Data = result };
     }
 }

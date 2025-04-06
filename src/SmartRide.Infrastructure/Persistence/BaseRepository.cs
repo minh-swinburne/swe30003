@@ -8,7 +8,6 @@ namespace SmartRide.Infrastructure.Persistence;
 
 public class BaseRepository<T>(SmartRideDbContext dbContext) : IRepository<T> where T : BaseEntity
 {
-    private readonly SmartRideDbContext _dbContext = dbContext;
     private readonly DbSet<T> _dbSet = dbContext.Set<T>();
 
     public IQueryable<T> Query(CancellationToken cancellationToken = default)
