@@ -79,7 +79,7 @@ public class UpdateVehicleCommandHandlerTests
         Assert.NotNull(result);
         Assert.Equal(response.VehicleId, result.VehicleId);
         Assert.Equal(response.Make, result.Make);
-        _mockVehicleRepository.Verify(r => r.UpdateAsync(It.Is<Vehicle>(v => v.Make == command.Make), It.IsAny<CancellationToken>()), Times.Once);
+        _mockVehicleRepository.Verify(r => r.UpdateAsync(It.Is<Vehicle>(v => v.Id == command.VehicleId), It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]

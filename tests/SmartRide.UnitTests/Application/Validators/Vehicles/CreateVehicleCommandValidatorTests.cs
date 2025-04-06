@@ -2,6 +2,7 @@ using FluentValidation.TestHelper;
 using SmartRide.Application.Commands.Vehicles;
 using SmartRide.Application.Validators.Vehicles;
 using SmartRide.Common.Constants;
+using SmartRide.Domain.Enums;
 
 namespace SmartRide.UnitTests.Application.Validators.Vehicles;
 
@@ -68,7 +69,7 @@ public class CreateVehicleCommandValidatorTests
         var command = new CreateVehicleCommand
         {
             UserId = Guid.NewGuid(),
-            VehicleTypeId = 1,
+            VehicleTypeId = VehicleTypeEnum.SmallCar,
             Vin = "1HGCM82633A123456",
             Plate = "ABC123",
             Make = "Toyota",
