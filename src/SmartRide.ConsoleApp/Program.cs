@@ -42,9 +42,12 @@ internal class Program
         var dbContext = scope.ServiceProvider.GetRequiredService<SmartRideDbContext>();
         var passwordHasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher<User>>();
 
-        // Run the database seeder
-        await DatabaseSeeder.SeedAsync(dbContext, passwordHasher);
+        var csvFilePath = "user_credentials.csv"; // Specify the CSV file path
 
+        // Run the database seeder
+        await DatabaseSeeder.SeedAsync(dbContext, passwordHasher, csvFilePath);
+
+        Console.WriteLine($"User credentials saved to {csvFilePath}");
         Console.WriteLine("Database seeding completed.");
 
         int idx = 0;

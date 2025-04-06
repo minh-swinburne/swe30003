@@ -7,14 +7,14 @@ namespace SmartRide.Infrastructure.Seed;
 
 public static class DatabaseSeeder
 {
-    public static async Task SeedAsync(SmartRideDbContext dbContext, IPasswordHasher<User> passwordHasher, int userCount = 100, int rideCount = 50)
+    public static async Task SeedAsync(SmartRideDbContext dbContext, IPasswordHasher<User> passwordHasher, string csvFilePath, int userCount = 100, int rideCount = 50)
     {
         if (!dbContext.Set<User>().Any())
         {
             // Set a seed for random generator for reproducibility
             Randomizer.Seed = new Random(1508);
-            // Generate users
-            var users = UserGenerator.GenerateUsers(userCount, passwordHasher);
+            // Generate users and save credentials to CSV
+            var users = UserGenerator.GenerateUsers(userCount, passwordHasher, csvFilePath);
             await dbContext.Set<User>().AddRangeAsync(users);
             await dbContext.SaveChangesAsync();
 
