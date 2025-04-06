@@ -10,53 +10,53 @@ public class UpdateUserCommandValidator : AbstractValidator<UpdateUserCommand>
     {
         RuleFor(x => x.UserId)
             .NotEmpty()
-            .WithMessage(UserErrors.USER_ID_EMPTY.Message)
-            .WithErrorCode(UserErrors.USER_ID_EMPTY.Code);
+            .WithMessage(UserErrors.ID_EMPTY.Message)
+            .WithErrorCode(UserErrors.ID_EMPTY.Code);
 
         RuleFor(x => x.FirstName)
-            .MaximumLength(FieldLengths.NameMaxLength)
+            .MaximumLength(UserConstants.NameMaxLength)
             .WithMessage(UserErrors.FIRSTNAME_TOO_LONG.Message)
             .WithErrorCode(UserErrors.FIRSTNAME_TOO_LONG.Code)
-            .Matches(NamePattern.Regex)
+            .Matches(UserConstants.NamePattern)
             .WithMessage(UserErrors.FIRSTNAME_INVALID.Message)
             .WithErrorCode(UserErrors.FIRSTNAME_INVALID.Code)
             .When(x => !string.IsNullOrWhiteSpace(x.FirstName));
 
         RuleFor(x => x.LastName)
-            .MaximumLength(FieldLengths.NameMaxLength)
+            .MaximumLength(UserConstants.NameMaxLength)
             .WithMessage(UserErrors.LASTNAME_TOO_LONG.Message)
             .WithErrorCode(UserErrors.LASTNAME_TOO_LONG.Code)
-            .Matches(NamePattern.Regex)
+            .Matches(UserConstants.NamePattern)
             .WithMessage(UserErrors.LASTNAME_INVALID.Message)
             .WithErrorCode(UserErrors.LASTNAME_INVALID.Code)
             .When(x => !string.IsNullOrWhiteSpace(x.LastName));
 
         RuleFor(x => x.Email)
-            .MaximumLength(FieldLengths.EmailMaxLength)
+            .MaximumLength(UserConstants.EmailMaxLength)
             .WithMessage(UserErrors.EMAIL_TOO_LONG.Message)
             .WithErrorCode(UserErrors.EMAIL_TOO_LONG.Code)
-            .Matches(EmailPattern.Regex)
+            .Matches(UserConstants.EmailPattern)
             .WithMessage(UserErrors.EMAIL_INVALID.Message)
             .WithErrorCode(UserErrors.EMAIL_INVALID.Code)
             .When(x => !string.IsNullOrWhiteSpace(x.Email));
 
         RuleFor(x => x.Phone)
-            .MaximumLength(FieldLengths.PhoneMaxLength)
+            .MaximumLength(UserConstants.PhoneMaxLength)
             .WithMessage(UserErrors.PHONE_TOO_LONG.Message)
             .WithErrorCode(UserErrors.PHONE_TOO_LONG.Code)
-            .Matches(PhonePattern.Regex)
+            .Matches(UserConstants.PhonePattern)
             .WithMessage(UserErrors.PHONE_INVALID.Message)
             .WithErrorCode(UserErrors.PHONE_INVALID.Code)
             .When(x => !string.IsNullOrWhiteSpace(x.Phone));
 
         RuleFor(x => x.Password)
-            .MinimumLength(FieldLengths.PasswordMinLength)
+            .MinimumLength(UserConstants.PasswordMinLength)
             .WithMessage(UserErrors.PASSWORD_TOO_SHORT.Message)
             .WithErrorCode(UserErrors.PASSWORD_TOO_SHORT.Code)
-            .MaximumLength(FieldLengths.PasswordMaxLength)
+            .MaximumLength(UserConstants.PasswordMaxLength)
             .WithMessage(UserErrors.PASSWORD_TOO_LONG.Message)
             .WithErrorCode(UserErrors.PASSWORD_TOO_LONG.Code)
-            .Matches(PasswordPattern.Regex)
+            .Matches(UserConstants.PasswordPattern)
             .WithMessage(UserErrors.PASSWORD_INVALID.Message)
             .WithErrorCode(UserErrors.PASSWORD_INVALID.Code)
             .When(x => !string.IsNullOrWhiteSpace(x.Password));

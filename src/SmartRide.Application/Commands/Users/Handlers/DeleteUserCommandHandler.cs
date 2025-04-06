@@ -14,7 +14,7 @@ public class DeleteUserCommandHandler(IRepository<User> userRepository)
     public override async Task<DeleteUserResponseDTO> Handle(DeleteUserCommand command, CancellationToken cancellationToken)
     {
         var user = await _userRepository.GetByIdAsync(command.UserId, cancellationToken)
-            ?? throw new BaseException(UserErrors.Module, UserErrors.USER_NOT_FOUND.FormatMessage(("UserId", command.UserId)));
+            ?? throw new BaseException(UserErrors.Module, UserErrors.ID_NOT_FOUND.FormatMessage(("UserId", command.UserId)));
 
         await _userRepository.DeleteAsync(user.Id, cancellationToken);
 

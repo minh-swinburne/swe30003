@@ -1,4 +1,5 @@
 using AutoMapper;
+using SmartRide.Application.Commands.Vehicles;
 using SmartRide.Application.DTOs.Vehicles;
 using SmartRide.Domain.Entities.Base;
 
@@ -8,11 +9,16 @@ public class VehicleMappingProfile : Profile
 {
     public VehicleMappingProfile()
     {
-        CreateMap<Vehicle, GetVehicleByIdResponseDTO>()
-            .ForMember(dest => dest.VehicleId, opt => opt.MapFrom(src => src.Id));
-            // .ForMember(dest => dest.VehicleType, opt => opt.MapFrom(src => src.VehicleType));
+        CreateMap<CreateVehicleCommand, Vehicle>();
 
-        CreateMap<Vehicle, ListVehicleResponseDTO>()
+        // Common mapping for BaseVehicleResponseDTO
+        CreateMap<Vehicle, BaseVehicleResponseDTO>()
             .ForMember(dest => dest.VehicleId, opt => opt.MapFrom(src => src.Id));
+
+        // Derived DTOs inherit the mapping from BaseVehicleResponseDTO
+        CreateMap<Vehicle, CreateVehicleResponseDTO>();
+        CreateMap<Vehicle, UpdateVehicleResponseDTO>();
+        CreateMap<Vehicle, GetVehicleResponseDTO>();
+        CreateMap<Vehicle, ListVehicleResponseDTO>();
     }
 }
