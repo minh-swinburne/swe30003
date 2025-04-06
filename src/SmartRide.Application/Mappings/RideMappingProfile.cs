@@ -10,10 +10,11 @@ public class RideMappingProfile : Profile
     public RideMappingProfile()
     {
         CreateMap<CreateRideCommand, Ride>();
-        
-        // Only map non-null properties
+
+        // Only map non-null properties and ensure strings are not whitespace
         CreateMap<UpdateRideCommand, Ride>()
-            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
+                srcMember != null && (srcMember is not string str || !string.IsNullOrWhiteSpace(str))));
 
         // Common mapping for BaseRideResponseDTO
         CreateMap<Ride, BaseRideResponseDTO>()

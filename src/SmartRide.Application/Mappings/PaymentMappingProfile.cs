@@ -11,9 +11,10 @@ public class PaymentMappingProfile : Profile
     {
         CreateMap<CreatePaymentCommand, Payment>();
 
-        // Only map non-null properties
+        // Only map non-null properties and ensure strings are not whitespace
         CreateMap<UpdatePaymentCommand, Payment>()
-            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
+                srcMember != null && (srcMember is not string str || !string.IsNullOrWhiteSpace(str))));
 
         // Common mapping for BasePaymentResponseDTO
         CreateMap<Payment, BasePaymentResponseDTO>()

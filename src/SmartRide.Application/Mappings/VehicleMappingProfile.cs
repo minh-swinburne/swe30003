@@ -11,6 +11,11 @@ public class VehicleMappingProfile : Profile
     {
         CreateMap<CreateVehicleCommand, Vehicle>();
 
+        // Only map non-null properties and ensure strings are not whitespace
+        CreateMap<UpdateVehicleCommand, Vehicle>()
+            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
+                srcMember != null && (srcMember is not string str || !string.IsNullOrWhiteSpace(str))));
+
         // Common mapping for BaseVehicleResponseDTO
         CreateMap<Vehicle, BaseVehicleResponseDTO>()
             .ForMember(dest => dest.VehicleId, opt => opt.MapFrom(src => src.Id));

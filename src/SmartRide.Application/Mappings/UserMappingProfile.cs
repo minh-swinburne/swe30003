@@ -11,6 +11,11 @@ public class UserMappingProfile : Profile
     {
         CreateMap<CreateUserCommand, User>();
 
+        // Only map non-null properties and ensure strings are not whitespace
+        CreateMap<UpdateUserCommand, User>()
+            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
+                srcMember != null && (srcMember is not string str || !string.IsNullOrWhiteSpace(str))));
+
         // Common mapping for BaseUserResponseDTO
         CreateMap<User, BaseUserResponseDTO>()
             .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.Id));
