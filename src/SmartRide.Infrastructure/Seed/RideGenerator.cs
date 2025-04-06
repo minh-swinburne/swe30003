@@ -88,6 +88,14 @@ public static class RideGenerator
             // Add payment if applicable
             if (ride.Status == RideStatusEnum.Completed || faker.Random.Bool(0.3f))
             {
+                var paymentMethod = faker.PickRandom<PaymentMethodEnum>();
+                var paymentStatus = ride.Status == RideStatusEnum.Cancelled
+                    ? faker.PickRandom(PaymentStatusEnum.Refunded, PaymentStatusEnum.Failed)
+                    : ride.Status == RideStatusEnum.Completed
+                        ? PaymentStatusEnum.Completed
+                        : paymentMethod == PaymentMethodEnum.PayPal
+                            ? faker.PickRandom(PaymentStatusEnum.Pending, PaymentStatusEnum.Completed)
+                            : PaymentStatusEnum.Pending;
                 ride.Payment = new Payment
                 {
                     Id = Guid.NewGuid(),
@@ -99,7 +107,7 @@ public static class RideGenerator
                     Status = ride.Status == RideStatusEnum.Cancelled
                         ? PaymentStatusEnum.Refunded
                         : PaymentStatusEnum.Completed,
-                    Time = faker.Date.Recent(),
+                    TransactionTime = faker.Date.Recent(),
                     Ride = ride
                 };
             }

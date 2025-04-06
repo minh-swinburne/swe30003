@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SmartRide.Common.Constants;
 using SmartRide.Domain.Entities.Lookup;
 using SmartRide.Domain.Enums;
 using SmartRide.Domain.Events;
@@ -15,7 +16,7 @@ public class Payment : BaseEntity
     public Guid RideId { get; set; }
 
     [Required]
-    [Range(0, (double)decimal.MaxValue)]
+    [Range((double)PaymentConstants.MinAmount, (double)PaymentConstants.MaxAmount)]
     [Column(TypeName = "DECIMAL(18,2)")]
     public decimal Amount { get; set; }
 
@@ -27,9 +28,8 @@ public class Payment : BaseEntity
     [Column(TypeName = "TINYINT")]
     public PaymentStatusEnum Status { get; set; } = PaymentStatusEnum.Pending;
 
-    [Required]
     [Column(TypeName = "DATETIME")]
-    public DateTime Time { get; set; }
+    public DateTime? TransactionTime { get; set; }
 
     [Required]
     [ForeignKey(nameof(RideId))]
