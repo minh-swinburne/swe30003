@@ -29,6 +29,7 @@ public class UpdateUserCommandHandler(IRepository<User> userRepository, IPasswor
         }
 
         var updatedUser = await _userRepository.UpdateAsync(user, cancellationToken);
+        
         return _mapper.Map<UpdateUserResponseDTO>(updatedUser);
     }
 }

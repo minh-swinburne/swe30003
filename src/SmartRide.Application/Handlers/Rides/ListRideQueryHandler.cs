@@ -3,6 +3,7 @@ using SmartRide.Application.DTOs.Rides;
 using SmartRide.Application.Interfaces;
 using SmartRide.Application.Queries.Rides;
 using SmartRide.Common.Extensions;
+using SmartRide.Common.Helpers;
 using SmartRide.Domain.Entities.Base;
 using SmartRide.Domain.Interfaces;
 using System.Linq.Expressions;
@@ -17,11 +18,18 @@ public class ListRideQueryHandler(IRepository<Ride> rideRepository, IMapper mapp
 
     public override async Task<List<ListRideResponseDTO>> Handle(ListRideQuery query, CancellationToken cancellationToken)
     {
+        Expression<Func<Ride, object>>? orderBy = null;
         Expression<Func<Ride, bool>>? filter = BuildFilter(query);
+
+        if (!string.IsNullOrEmpty(query.OrderBy))
+        {
+            var propertyInfo = QueryHelper.GetProperty<Ride>(query.OrderBy);
+            orderBy = QueryHelper.GetSortExpression<Ride>(propertyInfo!);
+        }
 
         var rides = await _rideRepository.GetWithFilterAsync<ListRideResponseDTO>(
             filter,
-            orderBy: r => r.CreatedTime,
+            orderBy: orderBy,
             ascending: query.Ascending,
             skip: query.PageSize * (query.PageNo - 1),
             limit: query.PageSize,

@@ -4,6 +4,7 @@ using SmartRide.Application.DTOs.Vehicles;
 using SmartRide.Application.Interfaces;
 using SmartRide.Application.Queries.Vehicles;
 using SmartRide.Common.Extensions;
+using SmartRide.Common.Helpers;
 using SmartRide.Domain.Entities.Base;
 using SmartRide.Domain.Interfaces;
 using System.Linq.Expressions;
@@ -17,27 +18,23 @@ public class ListVehicleQueryHandler(IRepository<Vehicle> vehicleRepository, IMa
     private readonly IRepository<Vehicle> _vehicleRepository = vehicleRepository;
     private readonly IMapper _mapper = mapper;
 
-    public override async Task<List<ListVehicleResponseDTO>> Handle(ListVehicleQuery request, CancellationToken cancellationToken)
+    public override async Task<List<ListVehicleResponseDTO>> Handle(ListVehicleQuery query, CancellationToken cancellationToken)
     {
         Expression<Func<Vehicle, object>>? orderBy = null;
-        Expression<Func<Vehicle, bool>>? filter = BuildFilter(request);
+        Expression<Func<Vehicle, bool>>? filter = BuildFilter(query);
 
-        if (!string.IsNullOrEmpty(request.OrderBy))
+        if (!string.IsNullOrEmpty(query.OrderBy))
         {
-            var propertyInfo = typeof(Vehicle).GetProperty(request.OrderBy.Pascalize(), BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance)
-                ?? throw new InvalidFilterCriteriaException($"Property {request.OrderBy} does not exist in {nameof(Vehicle)}.");
-
-            var parameter = Expression.Parameter(typeof(Vehicle), "v");
-            var propertyAccess = Expression.Property(parameter, propertyInfo);
-            orderBy = (Expression<Func<Vehicle, object>>)Expression.Lambda(propertyAccess, parameter);
+            var propertyInfo = QueryHelper.GetProperty<Vehicle>(query.OrderBy);
+            orderBy = QueryHelper.GetSortExpression<Vehicle>(propertyInfo!);
         }
 
         List<Vehicle> result = await _vehicleRepository.GetWithFilterAsync<ListVehicleResponseDTO>(
             filter,
             orderBy: orderBy,
-            ascending: request.Ascending,
-            skip: request.PageSize * (request.PageNo - 1),
-            limit: request.PageSize,
+            ascending: query.Ascending,
+            skip: query.PageSize * (query.PageNo - 1),
+            limit: query.PageSize,
             cancellationToken: cancellationToken
         );
 
@@ -57,25 +54,11 @@ public class ListVehicleQueryHandler(IRepository<Vehicle> vehicleRepository, IMa
         if (query.Year.HasValue)
             filter = filter.AddFilter(vehicle => vehicle.Year == query.Year);
 
-        if (!string.IsNullOrWhiteSpace(query.Vin))
-            filter = filter.AddFilter(vehicle => vehicle.Vin.Contains(query.Vin, StringComparison.CurrentCultureIgnoreCase));
-
-        if (!string.IsNullOrWhiteSpace(query.Plate))
-            filter = filter.AddFilter(vehicle => vehicle.Plate.Contains(query.Plate, StringComparison.CurrentCultureIgnoreCase));
-
         if (query.RegisteredDateFrom.HasValue)
             filter = filter.AddFilter(vehicle => vehicle.RegisteredDate >= query.RegisteredDateFrom.Value);
 
         if (query.RegisteredDateTo.HasValue)
             filter = filter.AddFilter(vehicle => vehicle.RegisteredDate <= query.RegisteredDateTo.Value);
-
-        if (query.VehicleTypes is { Count: > 0 })
-        {
-            if (query.MatchAllVehicleTypes)
-                filter = filter.AddFilter(vehicle => query.VehicleTypes.All(type => vehicle.VehicleTypeId == type));
-            else
-                filter = filter.AddFilter(vehicle => query.VehicleTypes.Contains(vehicle.VehicleTypeId));
-        }
 
         return filter;
     }

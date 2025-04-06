@@ -22,6 +22,7 @@ public class UpdateVehicleCommandHandler(IRepository<Vehicle> vehicleRepository,
         _mapper.Map(command, vehicle);
 
         var updatedVehicle = await _vehicleRepository.UpdateAsync(vehicle, cancellationToken);
+        
         return _mapper.Map<UpdateVehicleResponseDTO>(updatedVehicle);
     }
 }

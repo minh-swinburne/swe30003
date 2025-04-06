@@ -24,6 +24,24 @@ public class PaymentErrors
         Message = "Payment with ID {PaymentId} not found."
     };
 
+    public static readonly ResponseInfo RIDE_ID_EMPTY = new()
+    {
+        Code = $"{Module}.RIDE_ID_EMPTY",
+        Message = "Ride ID cannot be empty."
+    };
+
+    public static readonly ResponseInfo RIDE_ID_INVALID = new()
+    {
+        Code = $"{Module}.RIDE_ID_INVALID",
+        Message = "Ride ID must be a valid GUID."
+    };
+
+    public static readonly ResponseInfo RIDE_ID_NOT_FOUND = new()
+    {
+        Code = $"{Module}.RIDE_ID_NOT_FOUND",
+        Message = "Payment for Ride with ID {RideId} not found."
+    };
+
     public static readonly ResponseInfo AMOUNT_INVALID = new()
     {
         Code = $"{Module}.AMOUNT_INVALID",
@@ -42,9 +60,9 @@ public class PaymentErrors
         Message = "Payment status is invalid."
     };
 
-    public static readonly ResponseInfo TIME_IN_FUTURE = new()
+    public static readonly ResponseInfo TRANSACTION_TIME_IN_FUTURE = new()
     {
-        Code = $"{Module}.TIME_IN_FUTURE",
-        Message = "Payment time must not be in the future."
+        Code = $"{Module}.TRANSACTION_TIME_IN_FUTURE",
+        Message = "Payment transaction time must not be in the future."
     };
 }

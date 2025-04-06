@@ -1,5 +1,6 @@
 using FluentValidation;
 using Humanizer;
+using SmartRide.Common.Helpers;
 using SmartRide.Common.Interfaces;
 using SmartRide.Common.Responses.Errors;
 using SmartRide.Domain.Entities.Base;
@@ -14,10 +15,10 @@ public abstract class BaseListQueryValidator<TQuery, TEntity> : AbstractValidato
     protected BaseListQueryValidator()
     {
         RuleFor(query => query.OrderBy)
-            .Must(orderBy => string.IsNullOrEmpty(orderBy) || IsValidProperty(orderBy))
+            .Must(orderBy => string.IsNullOrEmpty(orderBy) || QueryHelper.GetProperty<TEntity>(orderBy) != null)
             .WithMessage(QueryErrors.INVALID_ORDERBY.Message)
             .WithErrorCode(QueryErrors.INVALID_ORDERBY.Code);
-            
+
         RuleFor(x => x.PageSize)
             .GreaterThan(0)
             .WithMessage(QueryErrors.INVALID_PAGE_SIZE.Message)
@@ -27,10 +28,5 @@ public abstract class BaseListQueryValidator<TQuery, TEntity> : AbstractValidato
             .GreaterThan(0)
             .WithMessage(QueryErrors.INVALID_PAGE_NO.Message)
             .WithErrorCode(QueryErrors.INVALID_PAGE_NO.Code);
-    }
-
-    private static bool IsValidProperty(string propertyName)
-    {
-        return typeof(TEntity).GetProperty(propertyName.Pascalize(), BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance) != null;
     }
 }

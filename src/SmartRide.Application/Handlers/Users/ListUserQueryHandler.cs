@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
+using Humanizer;
 using SmartRide.Application.DTOs.Users;
 using SmartRide.Application.Interfaces;
 using SmartRide.Application.Queries.Users;
 using SmartRide.Common.Extensions;
+using SmartRide.Common.Helpers;
 using SmartRide.Domain.Entities.Base;
 using SmartRide.Domain.Interfaces;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace SmartRide.Application.Handlers.Users;
 
@@ -19,6 +22,12 @@ public class ListUserQueryHandler(IRepository<User> userRepository, IMapper mapp
     {
         Expression<Func<User, object>>? orderBy = null;
         Expression<Func<User, bool>>? filter = BuildFilter(query);
+
+        if (!string.IsNullOrEmpty(query.OrderBy))
+        {
+            var propertyInfo = QueryHelper.GetProperty<User>(query.OrderBy);
+            orderBy = QueryHelper.GetSortExpression<User>(propertyInfo!);
+        }
 
         List<User> result = await _userRepository.GetWithFilterAsync<ListUserResponseDTO>(
             filter,

@@ -20,7 +20,9 @@ public class UpdateRideCommandHandler(IRepository<Ride> rideRepository, IMapper 
             ?? throw new BaseException(RideErrors.Module, RideErrors.ID_NOT_FOUND.FormatMessage(("RideId", command.RideId)));
 
         _mapper.Map(command, ride);
+
         var updatedRide = await _rideRepository.UpdateAsync(ride, cancellationToken);
+
         return _mapper.Map<UpdateRideResponseDTO>(updatedRide);
     }
 }
