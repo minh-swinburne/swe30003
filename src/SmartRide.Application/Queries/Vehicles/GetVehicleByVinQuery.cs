@@ -4,5 +4,5 @@ namespace SmartRide.Application.Queries.Vehicles;
 
 public class GetVehicleByVinQuery : BaseQuery<GetVehicleResponseDTO>
 {
-    public required string Vin { get; init; }
+    public string Vin { get; init; } = string.Empty;
 }
