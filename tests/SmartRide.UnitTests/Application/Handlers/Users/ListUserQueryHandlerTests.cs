@@ -23,13 +23,30 @@ public class ListUserQueryHandlerTests
         _handler = new ListUserQueryHandler(_mockUserRepository.Object, _mockMapper.Object);
     }
 
-    private List<User> CreateMockUsers()
+    private static List<User> CreateMockUsers()
     {
-        return new List<User>
-        {
-            new() { Id = Guid.NewGuid(), FirstName = "John", LastName = "Doe", Email = "johndoe@example.com", Phone = "0123456789", Password = "secure-password-1" },
-            new() { Id = Guid.NewGuid(), FirstName = "Jane", LastName = "Smith", Email = "jsmith123@example.xyz", Phone = "0987654321", Password = "secure-password-2", Picture = "https://example.com/images/avatar_1.png" }
-        };
+        return
+        [
+            new()
+            {
+                Id = Guid.NewGuid(),
+                FirstName = "John",
+                LastName = "Doe",
+                Email = "johndoe@example.com",
+                Phone = "0123456789",
+                Password = "secure-password-1"
+            },
+            new()
+            {
+                Id = Guid.NewGuid(),
+                FirstName = "Jane",
+                LastName = "Smith",
+                Email = "jsmith123@example.xyz",
+                Phone = "0987654321",
+                Password = "secure-password-2",
+                Picture = "https://example.com/images/avatar_1.png"
+            }
+        ];
     }
 
     private List<ListUserResponseDTO> MapToResponseDTOs(List<User> users)

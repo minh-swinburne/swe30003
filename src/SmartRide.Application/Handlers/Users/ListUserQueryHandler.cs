@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Humanizer;
 using SmartRide.Application.DTOs.Users;
 using SmartRide.Application.Interfaces;
 using SmartRide.Application.Queries;
@@ -8,7 +7,6 @@ using SmartRide.Common.Extensions;
 using SmartRide.Domain.Entities.Base;
 using SmartRide.Domain.Interfaces;
 using System.Linq.Expressions;
-using System.Reflection;
 
 namespace SmartRide.Application.Handlers.Users;
 
@@ -22,30 +20,9 @@ public class ListUserQueryHandler(IRepository<User> userRepository, IMapper mapp
     {
         Expression<Func<User, object>>? orderBy = null;
         Expression<Func<User, bool>>? filter = BuildFilter(query);
-        //Expression<Func<User, ListUserResponseDTO>>? select = u => new ListUserResponseDTO
-        //{
-        //    Id = u.Id,
-        //    FirstName = u.FirstName,
-        //    LastName = u.LastName,
-        //    Email = u.Email,
-        //    Phone = u.Phone,
-        //    Picture = u.Picture,
-        //    Roles = u.Roles.Select(r => r.Id).ToList(),
-        //};
-
-        if (!string.IsNullOrEmpty(query.OrderBy))
-        {
-            var propertyInfo = typeof(User).GetProperty(query.OrderBy.Pascalize(), BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance)
-                ?? throw new InvalidFilterCriteriaException($"Property {query.OrderBy} does not exist in {nameof(User)}.");
-
-            var parameter = Expression.Parameter(typeof(User), "u");
-            var propertyAccess = Expression.Property(parameter, propertyInfo);
-            orderBy = (Expression<Func<User, object>>)Expression.Lambda(propertyAccess, parameter);
-        }
 
         List<User> result = await _userRepository.GetWithFilterAsync<ListUserResponseDTO>(
             filter,
-            //select,
             orderBy: orderBy,
             ascending: query.Ascending,
             skip: query.PageSize * (query.PageNo - 1),

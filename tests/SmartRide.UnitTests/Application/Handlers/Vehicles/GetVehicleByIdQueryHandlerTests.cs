@@ -34,10 +34,10 @@ public class GetVehicleByIdQueryHandlerTests
             Id = vehicleId,
             UserId = userId,
             VehicleTypeId = VehicleTypeEnum.SmallCar,
+            Vin = "1HGCM82633A123456",
+            Plate = "ABC123",
             Make = "Toyota",
             Model = "Corolla",
-            Plate = "ABC123",
-            Vin = "1HGCM82633A123456",
             Year = 2020,
             RegisteredDate = DateTime.UtcNow.AddYears(-1),
         };
@@ -45,10 +45,10 @@ public class GetVehicleByIdQueryHandlerTests
         {
             VehicleId = vehicleId,
             UserId = userId,
+            Vin = vehicle.Vin,
+            Plate = vehicle.Plate,
             Make = vehicle.Make,
             Model = vehicle.Model,
-            Plate = vehicle.Plate,
-            Vin = vehicle.Vin,
             Year = vehicle.Year,
             RegisteredDate = vehicle.RegisteredDate,
             VehicleType = new VehicleTypeDTO

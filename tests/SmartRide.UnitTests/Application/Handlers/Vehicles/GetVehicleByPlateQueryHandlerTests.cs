@@ -11,32 +11,30 @@ using SmartRide.Domain.Interfaces;
 
 namespace SmartRide.UnitTests.Application.Handlers.Vehicles;
 
-public class GetVehicleByVinQueryHandlerTests
+public class GetVehicleByPlateQueryHandlerTests
 {
     private readonly Mock<IRepository<Vehicle>> _mockVehicleRepository;
     private readonly Mock<IMapper> _mockMapper;
-    private readonly GetVehicleByVinQueryHandler _handler;
+    private readonly GetVehicleByPlateQueryHandler _handler;
 
-    public GetVehicleByVinQueryHandlerTests()
+    public GetVehicleByPlateQueryHandlerTests()
     {
         _mockVehicleRepository = new Mock<IRepository<Vehicle>>();
         _mockMapper = new Mock<IMapper>();
-        _handler = new GetVehicleByVinQueryHandler(_mockVehicleRepository.Object, _mockMapper.Object);
+        _handler = new GetVehicleByPlateQueryHandler(_mockVehicleRepository.Object, _mockMapper.Object);
     }
 
     [Fact]
-    public async Task Handle_Should_Return_Vehicle_When_Vin_Is_Found()
+    public async Task Handle_Should_Return_Vehicle_When_Plate_Is_Found()
     {
         // Arrange
-        var vin = "1HGCM82633A123456";
-        var userId = Guid.NewGuid();
-        var vehicleId = Guid.NewGuid();
+        var plate = "ABC123";
         var vehicle = new Vehicle
         {
-            Id = vehicleId,
-            UserId = userId,
+            Id = Guid.NewGuid(),
+            UserId = Guid.NewGuid(),
             VehicleTypeId = VehicleTypeEnum.SmallCar,
-            Vin = vin,
+            Vin = "1HGCM82633A123456",
             Plate = "ABC123",
             Make = "Toyota",
             Model = "Corolla",
@@ -45,45 +43,45 @@ public class GetVehicleByVinQueryHandlerTests
         };
         var responseDto = new GetVehicleResponseDTO
         {
-            VehicleId = vehicleId,
-            UserId = userId,
+            VehicleId = vehicle.Id,
+            UserId = vehicle.UserId,
+            VehicleType = new VehicleTypeDTO
+            {
+                VehicleTypeId = (byte)vehicle.VehicleTypeId,
+                Name = vehicle.VehicleTypeId.ToString()
+            },
             Vin = vehicle.Vin,
             Plate = vehicle.Plate,
             Make = vehicle.Make,
             Model = vehicle.Model,
             Year = vehicle.Year,
             RegisteredDate = vehicle.RegisteredDate,
-            VehicleType = new VehicleTypeDTO
-            {
-                VehicleTypeId = (byte)vehicle.VehicleTypeId,
-                Name = vehicle.VehicleTypeId.ToString()
-            },
         };
 
         _mockVehicleRepository.Setup(r => r.Query(It.IsAny<CancellationToken>()))
             .Returns(new List<Vehicle> { vehicle }.BuildMock());
         _mockMapper.Setup(m => m.Map<GetVehicleResponseDTO>(vehicle)).Returns(responseDto);
 
-        var query = new GetVehicleByVinQuery { Vin = vin };
+        var query = new GetVehicleByPlateQuery { Plate = plate };
 
         // Act
         var result = await _handler.Handle(query, CancellationToken.None);
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal(responseDto.Vin, result.Vin);
+        Assert.Equal(responseDto.Plate, result.Plate);
         _mockVehicleRepository.Verify(r => r.Query(It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
-    public async Task Handle_Should_Return_Null_When_Vin_Is_Not_Found()
+    public async Task Handle_Should_Return_Null_When_Plate_Is_Not_Found()
     {
         // Arrange
-        var vin = "INVALIDVIN@1234567";
+        var plate = "INVALID123";
         _mockVehicleRepository.Setup(r => r.Query(It.IsAny<CancellationToken>()))
             .Returns(new List<Vehicle>().BuildMock());
 
-        var query = new GetVehicleByVinQuery { Vin = vin };
+        var query = new GetVehicleByPlateQuery { Plate = plate };
 
         // Act
         var result = await _handler.Handle(query, CancellationToken.None);

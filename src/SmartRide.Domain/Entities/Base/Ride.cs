@@ -11,7 +11,7 @@ public class Ride : BaseEntity
 {
     [Required]
     [Column(TypeName = "BINARY(16)")]
-    public Guid PassengerId { get; init; }
+    public required Guid PassengerId { get; init; }
 
     [Column(TypeName = "BINARY(16)")]
     public Guid? DriverId { get; init; }
@@ -21,7 +21,7 @@ public class Ride : BaseEntity
 
     [Required]
     [Column(TypeName = "TINYINT")]
-    public RideTypeEnum Type { get; init; }
+    public required RideTypeEnum Type { get; init; }
 
     [Required]
     [Column(TypeName = "TINYINT")]
@@ -29,11 +29,11 @@ public class Ride : BaseEntity
 
     [Required]
     [Column(TypeName = "BINARY(16)")]
-    public Guid PickupLocationId { get; set; }
+    public required Guid PickupLocationId { get; set; }
 
     [Required]
     [Column(TypeName = "BINARY(16)")]
-    public Guid DestinationId { get; set; }
+    public required Guid DestinationId { get; set; }
 
     [Column(TypeName = "DATETIME")]
     public DateTime? PickupETA { get; set; }

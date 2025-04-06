@@ -54,7 +54,7 @@ public class UpdateUserCommandHandlerTests
         // Assert
         Assert.NotNull(result);
         Assert.Equal(userId, result.UserId);
-        _mockUserRepository.Verify(r => r.UpdateAsync(It.Is<User>(u => u.FirstName == command.FirstName), It.IsAny<CancellationToken>()), Times.Once);
+        _mockUserRepository.Verify(r => r.UpdateAsync(It.Is<User>(u => u.Id == command.UserId), It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]

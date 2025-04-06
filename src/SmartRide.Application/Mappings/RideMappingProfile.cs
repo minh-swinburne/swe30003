@@ -10,6 +10,7 @@ public class RideMappingProfile : Profile
     public RideMappingProfile()
     {
         CreateMap<CreateRideCommand, Ride>();
+        
         // Only map non-null properties
         CreateMap<UpdateRideCommand, Ride>()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));

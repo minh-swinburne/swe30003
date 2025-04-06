@@ -83,4 +83,28 @@ public class RideErrors
         Code = $"{Module}.INVALID_VEHICLE_OWNERSHIP",
         Message = "The specified VehicleId does not reference a Vehicle owned by the specified DriverId."
     };
+
+    public static readonly ResponseInfo PICKUP_ETA_IN_PAST = new()
+    {
+        Code = $"{Module}.PICKUP_ETA_IN_PAST",
+        Message = "Pickup ETA must not be in the past."
+    };
+
+    public static readonly ResponseInfo ARRIVAL_ETA_IN_PAST = new()
+    {
+        Code = $"{Module}.ARRIVAL_ETA_IN_PAST",
+        Message = "Arrival ETA must not be in the past."
+    };
+
+    public static readonly ResponseInfo PICKUP_ATA_IN_FUTURE = new()
+    {
+        Code = $"{Module}.PICKUP_ATA_IN_FUTURE",
+        Message = "Pickup ATA must not be in the future."
+    };
+
+    public static readonly ResponseInfo ARRIVAL_ATA_IN_FUTURE = new()
+    {
+        Code = $"{Module}.ARRIVAL_ATA_IN_FUTURE",
+        Message = "Arrival ATA must not be in the future."
+    };
 }
