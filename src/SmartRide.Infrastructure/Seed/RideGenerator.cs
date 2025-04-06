@@ -21,13 +21,35 @@ public static class RideGenerator
 
         for (int i = 0; i < rideCount; i++)
         {
-            // Select a random driver and their vehicle
-            var driver = faker.PickRandom(drivers);
-            var driverVehicles = vehicles.Where(v => v.UserId == driver.Id).ToList();
-            var vehicle = faker.PickRandom(driverVehicles);
+            var status = faker.Random.WeightedRandom(
+                [
+                    RideStatusEnum.Pending,
+                    RideStatusEnum.Picking,
+                    RideStatusEnum.Travelling,
+                    RideStatusEnum.Completed,
+                    RideStatusEnum.Cancelled
+                ],
+                [0.1f, 0.1f, 0.2f, 0.5f, 0.1f]
+            );
+
+            // Select a random driver and their vehicle if status is not Pending
+            User? driver = null;
+            Vehicle? vehicle = null;
+            if (status != RideStatusEnum.Pending)
+            {
+                driver = faker.PickRandom(drivers);
+                var driverVehicles = vehicles.Where(v => v.UserId == driver.Id).ToList();
+                vehicle = faker.PickRandom(driverVehicles);
+            }
 
             // Select a random passenger
             var passenger = faker.PickRandom(passengers);
+
+            // Ensure passenger is not the same as driver
+            while (driver != null && passenger.Id == driver.Id)
+            {
+                passenger = faker.PickRandom(passengers);
+            }
 
             // Select random pickup and destination locations
             var pickupLocation = faker.PickRandom(locations);
@@ -44,17 +66,10 @@ public static class RideGenerator
             {
                 Id = Guid.NewGuid(),
                 PassengerId = passenger.Id,
-                DriverId = driver.Id,
-                VehicleId = vehicle.Id,
+                DriverId = driver?.Id,
+                VehicleId = vehicle?.Id,
                 Type = faker.PickRandom<RideTypeEnum>(),
-                Status = faker.Random.WeightedRandom(
-                [
-                    RideStatusEnum.Pending,
-                    RideStatusEnum.Picking,
-                    RideStatusEnum.Travelling,
-                    RideStatusEnum.Completed,
-                    RideStatusEnum.Cancelled
-                ], [0.1f, 0.1f, 0.2f, 0.5f, 0.1f]),
+                Status = status,
                 PickupLocationId = pickupLocation.Id,
                 DestinationId = destinationLocation.Id,
                 PickupETA = faker.Date.Future(),

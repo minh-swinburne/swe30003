@@ -12,13 +12,11 @@ public class Ride : BaseEntity
     [Column(TypeName = "BINARY(16)")]
     public Guid PassengerId { get; init; }
 
-    [Required]
     [Column(TypeName = "BINARY(16)")]
-    public Guid DriverId { get; init; }
+    public Guid? DriverId { get; init; }
 
-    [Required]
     [Column(TypeName = "BINARY(16)")]
-    public Guid VehicleId { get; init; }
+    public Guid? VehicleId { get; init; }
 
     [Required]
     [Column(TypeName = "TINYINT")]
@@ -60,13 +58,11 @@ public class Ride : BaseEntity
     [ForeignKey(nameof(PassengerId))]
     public User Passenger { get; set; } = null!;
 
-    [Required]
     [ForeignKey(nameof(DriverId))]
-    public User Driver { get; set; } = null!;
+    public User? Driver { get; set; }
 
-    [Required]
     [ForeignKey(nameof(VehicleId))]
-    public Vehicle Vehicle { get; set; } = null!;
+    public Vehicle? Vehicle { get; set; }
 
     [Required]
     [ForeignKey(nameof(PickupLocationId))]
@@ -82,7 +78,7 @@ public class Ride : BaseEntity
 
     public void ValidateDriverRole()
     {
-        if (!Driver.IsDriver())
+        if (Driver != null && !Driver.IsDriver())
         {
             throw new InvalidOperationException("The specified DriverId does not reference a User with the Driver role.");
         }
@@ -98,7 +94,7 @@ public class Ride : BaseEntity
 
     public void ValidateVehicleOwnership()
     {
-        if (Vehicle.UserId != DriverId)
+        if (Vehicle != null && Vehicle.UserId != DriverId)
         {
             throw new InvalidOperationException("The specified VehicleId does not reference a Vehicle owned by the specified DriverId.");
         }

@@ -80,12 +80,16 @@ public class SmartRideDbContext : DbContext
         modelBuilder.Entity<Ride>()
             .HasOne(r => r.Driver)
             .WithMany()
-            .HasForeignKey(r => r.DriverId);
+            .HasForeignKey(r => r.DriverId)
+            .OnDelete(DeleteBehavior.Restrict)
+            .IsRequired(false); // Make the Driver relationship optional
 
         modelBuilder.Entity<Ride>()
             .HasOne(r => r.Vehicle)
             .WithMany()
-            .HasForeignKey(r => r.VehicleId);
+            .HasForeignKey(r => r.VehicleId)
+            .OnDelete(DeleteBehavior.Restrict)
+            .IsRequired(false); // Make the Vehicle relationship optional
 
         modelBuilder.Entity<Ride>()
             .HasOne(r => r.Payment)
