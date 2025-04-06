@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SmartRide.Common.Constants;
 using SmartRide.Domain.Entities.Join;
 using SmartRide.Domain.Entities.Lookup;
 using SmartRide.Domain.Enums;
@@ -14,25 +15,28 @@ public class User : BaseEntity
 {
     [Required]
     [Column(TypeName = "VARCHAR")]
-    [StringLength(50)]
+    [StringLength(UserConstants.NameMaxLength)]
     public required string FirstName { get; set; }
 
     [Column(TypeName = "VARCHAR")]
-    [StringLength(50)]
+    [StringLength(UserConstants.NameMaxLength)]
     public string? LastName { get; set; }
 
     [Required]
     [Column(TypeName = "VARCHAR")]
-    [StringLength(255)]
+    [StringLength(UserConstants.EmailMaxLength)]
+    [RegularExpression(UserConstants.EmailPattern)]
     public required string Email { get; set; }
 
     [Required]
     [Column(TypeName = "VARCHAR")]
-    [StringLength(45)]
+    [StringLength(UserConstants.PhoneMaxLength)]
+    [RegularExpression(UserConstants.PhonePattern)]
     public required string Phone { get; set; }
 
     [Column(TypeName = "VARCHAR")]
-    [StringLength(150)]
+    [StringLength(UserConstants.PasswordMaxLength, MinimumLength = UserConstants.PasswordMinLength)]
+    [RegularExpression(UserConstants.PasswordPattern)]
     public string? Password { get; set; }
 
     [Column(TypeName = "TEXT")]

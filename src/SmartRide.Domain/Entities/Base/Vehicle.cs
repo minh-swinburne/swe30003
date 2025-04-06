@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SmartRide.Common.Constants;
 using SmartRide.Domain.Entities.Lookup;
 using SmartRide.Domain.Enums;
 using SmartRide.Domain.Events;
@@ -21,22 +22,24 @@ public class Vehicle : BaseEntity
 
     [Required]
     [Column(TypeName = "CHAR")]
-    [StringLength(17)]
+    [StringLength(VehicleConstants.VinMaxLength)]
+    [RegularExpression(VehicleConstants.VinPattern)]
     public required string Vin { get; set; }
 
     [Required]
     [Column(TypeName = "VARCHAR")]
-    [StringLength(10)]
+    [StringLength(VehicleConstants.PlateMaxLength)]
+    [RegularExpression(VehicleConstants.PlatePattern)]
     public required string Plate { get; set; }
 
     [Required]
     [Column(TypeName = "VARCHAR")]
-    [StringLength(50)]
+    [StringLength(VehicleConstants.MakeMaxLength)]
     public required string Make { get; set; }
 
     [Required]
     [Column(TypeName = "VARCHAR")]
-    [StringLength(50)]
+    [StringLength(VehicleConstants.ModelMaxLength)]
     public required string Model { get; set; }
 
     [Required]

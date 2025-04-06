@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using SmartRide.Common.Constants;
 using SmartRide.Domain.Enums;
 using SmartRide.Domain.Events;
 using System.ComponentModel.DataAnnotations;
@@ -47,11 +48,12 @@ public class Ride : BaseEntity
     public DateTime? ArrivalATA { get; set; }
 
     [Required]
-    [Range(0, (double)decimal.MaxValue)]
+    [Range((double)RideConstants.MinFare, (double)RideConstants.MaxFare)]
     [Column(TypeName = "DECIMAL(18,2)")]
-    public decimal Fare { get; set; } // = .0f;
+    public decimal Fare { get; set; }
 
     [Column(TypeName = "TEXT")]
+    [StringLength(RideConstants.NotesMaxLength)]
     public string? Notes { get; set; }
 
     [Required]

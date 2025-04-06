@@ -1,6 +1,6 @@
 # Question
 
-how should I create ListUserQuery from ListUserRequestDTO (in the service layer)? I separate them because there may be some services that involve the combination of more than one handlers (though I haven't thought of what they are), though some will just be identical copies of each other. How can I solve this problem both efficiently and cleanly? 
+how should I create ListUserQuery from ListUserRequestDTO (in the service layer)? I separate them because there may be some services that involve the combination of more than one handlers (though I haven't thought of what they are), though some will just be identical copies of each other. How can I solve this problem both efficiently and cleanly?
 
 [*A copy-paste factory solution was suggested by chatGPT*]
 
@@ -15,13 +15,13 @@ Yes! A **generic factory using the Factory design pattern** is a **feasible and 
 ---
 
 ## **✅ Approach: A Generic DTO-to-Query/Command Factory**
-1. **Introduce Base Classes for DTOs & Queries/Commands**  
-   - `BaseRequestDTO` for all request DTOs.  
-   - `BaseQuery<TResponse>` and `BaseCommand<TResponse>` for all queries and commands.  
+1. **Introduce Base Classes for DTOs & Queries/Commands**
+   - `BaseRequestDTO` for all request DTOs.
+   - `BaseQuery<TResponse>` and `BaseCommand<TResponse>` for all queries and commands.
 
-2. **Create a Generic Factory (`RequestToMediatRFactory`)**  
-   - Uses reflection and generic constraints.  
-   - Automates DTO to Query/Command conversion.  
+2. **Create a Generic Factory (`RequestToMediatRFactory`)**
+   - Uses reflection and generic constraints.
+   - Automates DTO to Query/Command conversion.
    - Eliminates repetitive mapping.
 
 ---
@@ -56,7 +56,7 @@ public class ListUserRequestDTO : BaseRequestDTO
     public string? Email { get; set; }
     public string? Phone { get; set; }
     public string? OrderBy { get; set; }
-    public bool Ascending { get; set; }
+    public bool Ascending { get; set; } = true;
     public int PageSize { get; set; } = 10;
     public int PageNo { get; set; } = 1;
 }
@@ -140,9 +140,9 @@ public class UserService(IMediator mediator)
 ```
 ---
 ## **🚀 Why This is Better**
-✅ **Eliminates Duplicate Mapping Factories** → One factory for all DTO-to-Query/Command mappings.  
-✅ **Easy to Extend** → Just inherit from `BaseRequestDTO` and `BaseQuery<TResponse>` or `BaseCommand<TResponse>`.  
-✅ **Reduces Boilerplate** → No need to manually map properties in every service.  
+✅ **Eliminates Duplicate Mapping Factories** → One factory for all DTO-to-Query/Command mappings.
+✅ **Easy to Extend** → Just inherit from `BaseRequestDTO` and `BaseQuery<TResponse>` or `BaseCommand<TResponse>`.
+✅ **Reduces Boilerplate** → No need to manually map properties in every service.
 ✅ **More Maintainable** → Any DTO-to-Query/Command changes only affect the factory, not every service.
 
 This approach is both **efficient** and **clean** while staying **scalable** for future needs. 🚀🔥

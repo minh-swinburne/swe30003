@@ -1,0 +1,14 @@
+using SmartRide.Domain.Enums;
+
+namespace SmartRide.Application.DTOs.Rides;
+
+public class UpdateRideRequestDTO : BaseRequestDTO
+{
+    public required Guid RideId { get; set; }
+    public RideStatusEnum? RideStatus { get; set; }
+    public Guid? PickupLocationId { get; set; }
+    public Guid? DestinationId { get; set; }
+    public DateTime? PickupATA { get; set; }
+    public DateTime? ArrivalATA { get; set; }
+    public string? Notes { get; set; }
+}

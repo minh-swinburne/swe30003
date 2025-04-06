@@ -1,6 +1,6 @@
 using FluentValidation.TestHelper;
 using SmartRide.Application.Commands.Users;
-using SmartRide.Application.Commands.Users.Validators;
+using SmartRide.Application.Validators.Users;
 
 namespace SmartRide.UnitTests.Application.Validators.Users;
 

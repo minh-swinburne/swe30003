@@ -14,8 +14,8 @@ public class ListUserQuery : BaseQuery<List<ListUserResponseDTO>>, IPageable, IS
     public List<RoleEnum>? Roles { get; set; }
     public bool MatchAllRoles { get; set; } = false;
 
-    public int PageSize { get; set; }
-    public int PageNo { get; set; }
     public string? OrderBy { get; set; }
-    public bool Ascending { get; set; }
+    public bool Ascending { get; set; } = true;
+    public int PageSize { get; set; } = 10;
+    public int PageNo { get; set; } = 1;
 }

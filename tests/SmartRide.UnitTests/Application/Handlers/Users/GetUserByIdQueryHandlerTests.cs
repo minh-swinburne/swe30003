@@ -1,8 +1,8 @@
 using AutoMapper;
 using Moq;
 using SmartRide.Application.DTOs.Users;
+using SmartRide.Application.Handlers.Users;
 using SmartRide.Application.Queries.Users;
-using SmartRide.Application.Queries.Users.Handlers;
 using SmartRide.Domain.Entities.Base;
 using SmartRide.Domain.Interfaces;
 

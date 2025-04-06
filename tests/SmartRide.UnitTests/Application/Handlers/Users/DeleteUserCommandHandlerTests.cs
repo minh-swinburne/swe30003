@@ -1,7 +1,7 @@
 using Moq;
 using SmartRide.Application.Commands.Users;
-using SmartRide.Application.Commands.Users.Handlers;
 using SmartRide.Application.DTOs.Users;
+using SmartRide.Application.Handlers.Users;
 using SmartRide.Common.Exceptions;
 using SmartRide.Domain.Entities.Base;
 using SmartRide.Domain.Interfaces;
