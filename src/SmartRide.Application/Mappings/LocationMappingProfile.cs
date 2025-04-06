@@ -25,5 +25,9 @@ public class LocationMappingProfile : Profile
         CreateMap<Location, UpdateLocationResponseDTO>();
         CreateMap<Location, GetLocationResponseDTO>();
         CreateMap<Location, ListLocationResponseDTO>();
+
+        // Additional mappings
+        CreateMap<ListLocationResponseDTO, GetLocationResponseDTO>();
+        CreateMap<CreateLocationResponseDTO, GetLocationResponseDTO>();
     }
 }
