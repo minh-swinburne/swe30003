@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using SmartRide.Common.Constants;
 using SmartRide.Domain.Events;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -9,7 +10,7 @@ public class Location : BaseEntity
 {
     [Required]
     [Column(TypeName = "VARCHAR")]
-    [StringLength(255)]
+    [StringLength(LocationConstants.AddressMaxLength)]
     public required string Address { get; set; }
 
     [Column(TypeName = "DOUBLE")]
