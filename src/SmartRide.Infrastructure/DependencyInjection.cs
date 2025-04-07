@@ -45,7 +45,9 @@ public static class DependencyInjection
         // Register repositories of all entity types
         services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
         services.AddScoped(typeof(IEmailService), typeof(EmailService));
-        services.AddScoped(typeof(IMapService), typeof(GoogleMapsService));
+
+        // Register HttpClient for GoogleMapsService
+        services.AddHttpClient<IMapService, GoogleMapsService>();
 
         return services;
     }
