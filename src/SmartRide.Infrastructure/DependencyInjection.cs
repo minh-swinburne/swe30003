@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using SmartRide.Application.Commands;
 using SmartRide.Domain.Interfaces;
+using SmartRide.Infrastructure.Map;
 using SmartRide.Infrastructure.Notification;
 using SmartRide.Infrastructure.Persistence;
 using SmartRide.Infrastructure.Persistence.Strategies;
@@ -38,12 +39,13 @@ public static class DependencyInjection
             cfg.RegisterServicesFromAssembly(typeof(IDomainEvent).Assembly);
         });
 
+        // Register SaveChangesCommandHandler
+        services.AddScoped<IRequestHandler<SaveChangesCommand>, SaveChangesCommandHandler>();
+
         // Register repositories of all entity types
         services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
         services.AddScoped(typeof(IEmailService), typeof(EmailService));
-
-        // Register SaveChangesCommandHandler
-        services.AddScoped<IRequestHandler<SaveChangesCommand>, SaveChangesCommandHandler>();
+        services.AddScoped(typeof(IMapService), typeof(GoogleMapsService));
 
         return services;
     }

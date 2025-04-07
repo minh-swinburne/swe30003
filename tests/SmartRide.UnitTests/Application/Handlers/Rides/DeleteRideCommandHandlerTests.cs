@@ -29,7 +29,7 @@ public class DeleteRideCommandHandlerTests
         {
             Id = rideId,
             PassengerId = Guid.NewGuid(),
-            Type = RideTypeEnum.Private,
+            VehicleType = VehicleTypeEnum.SmallCar,
             PickupLocationId = Guid.NewGuid(),
             DestinationId = Guid.NewGuid(),
             Fare = 100,

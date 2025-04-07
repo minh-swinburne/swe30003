@@ -13,7 +13,7 @@ public class VehicleService(IMediator mediator) : IVehicleService
 {
     private readonly IMediator _mediator = mediator;
 
-    public async Task<ListResponseDTO<ListVehicleResponseDTO>> GetAllVehiclesAsync(ListVehicleRequestDTO request)
+    public async Task<ListResponseDTO<ListVehicleResponseDTO>> ListVehiclesAsync(ListVehicleRequestDTO request)
     {
         var query = MediatRFactory.CreateQuery<ListVehicleQuery>(request);
         var result = await _mediator.Send(query);

@@ -8,6 +8,7 @@ public class ListRideRequestDTO : BaseRequestDTO, ISortable, IPageable
     public Guid? PassengerId { get; set; }
     public Guid? DriverId { get; set; }
     public Guid? VehicleId { get; set; }
+    public VehicleTypeEnum? VehicleType { get; set; }
     public RideTypeEnum? RideType { get; set; }
     public RideStatusEnum? RideStatus { get; set; }
     public DateTime? PickupATAFrom { get; set; }

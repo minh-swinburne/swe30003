@@ -13,7 +13,7 @@ public class UserService(IMediator mediator) : IUserService
 {
     private readonly IMediator _mediator = mediator;
 
-    public async Task<ListResponseDTO<ListUserResponseDTO>> GetAllUsersAsync(ListUserRequestDTO request)
+    public async Task<ListResponseDTO<ListUserResponseDTO>> ListUsersAsync(ListUserRequestDTO request)
     {
         var query = MediatRFactory.CreateQuery<ListUserQuery>(request);
         var result = await _mediator.Send(query);

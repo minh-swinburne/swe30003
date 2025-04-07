@@ -1,27 +1,30 @@
+using AutoMapper;
 using MediatR;
 using SmartRide.Application.Commands;
-using SmartRide.Application.Commands.Rides;
 using SmartRide.Application.Commands.Locations;
 using SmartRide.Application.Commands.Payments;
+using SmartRide.Application.Commands.Rides;
 using SmartRide.Application.DTOs;
-using SmartRide.Application.DTOs.Rides;
-using SmartRide.Application.Interfaces;
-using SmartRide.Domain.Interfaces;
-using SmartRide.Application.Factories;
-using SmartRide.Application.Queries.Rides;
 using SmartRide.Application.DTOs.Locations;
+using SmartRide.Application.DTOs.Rides;
+using SmartRide.Application.Factories;
+using SmartRide.Application.Interfaces;
 using SmartRide.Application.Queries.Locations;
-using AutoMapper;
+using SmartRide.Application.Queries.Rides;
+using SmartRide.Common.Exceptions;
+using SmartRide.Common.Responses.Errors;
+using SmartRide.Domain.Interfaces;
 
 namespace SmartRide.Application.Services;
 
-public class RideService(IMediator mediator, IMapper mapper, IMapService mapService) : IRideService
+public class RideService(IMediator mediator, IMapper mapper, IMapService mapService, ILocationService locationService) : IRideService
 {
     private readonly IMediator _mediator = mediator;
     private readonly IMapper _mapper = mapper;
     private readonly IMapService _mapService = mapService;
+    private readonly ILocationService _locationService = locationService;
 
-    public async Task<ListResponseDTO<ListRideResponseDTO>> GetAllRidesAsync(ListRideRequestDTO request)
+    public async Task<ListResponseDTO<ListRideResponseDTO>> ListRidesAsync(ListRideRequestDTO request)
     {
         var query = MediatRFactory.CreateQuery<ListRideQuery>(request);
         var result = await _mediator.Send(query);
@@ -42,19 +45,19 @@ public class RideService(IMediator mediator, IMapper mapper, IMapService mapServ
     public async Task<ResponseDTO<CreateRideResponseDTO>> CreateRideAsync(CreateRideRequestDTO request)
     {
         // Step 1: Get or create locations for pickup and destination
-        var pickupLocation = await GetOrCreateLocationAsync(request.PickupLocation);
-        var destinationLocation = await GetOrCreateLocationAsync(request.Destination);
+        var pickupLocation = await _locationService.GetOrCreateLocationAsync(request.PickupAddress, request.PickupLatitude, request.PickupLongitude);
+        var destinationLocation = await _locationService.GetOrCreateLocationAsync(request.DestinationAddress, request.DestinationLatitude, request.DestinationLongitude);
 
-        // Step 2: Calculate distance, fare, and ETAs
-        var distance = _mapService.CalculateDistance(
+        // Step 2: Get distance and estimated time
+        var (distance, _) = await _mapService.CalculateDistanceAndTimeAsync(
             pickupLocation.Latitude!.Value,
             pickupLocation.Longitude!.Value,
             destinationLocation.Latitude!.Value,
             destinationLocation.Longitude!.Value
         );
+
         var fare = _mapService.CalculateFare(distance);
-        var pickupETA = DateTime.UtcNow.AddMinutes(_mapService.EstimatePickupTime(distance));
-        var arrivalETA = pickupETA.AddMinutes(_mapService.EstimateTravelTime(distance));
+        // var pickupETA = DateTime.UtcNow.AddMinutes(estimatedTime);
 
         // Step 3: Create the ride
         var rideCommand = new CreateRideCommand
@@ -63,8 +66,8 @@ public class RideService(IMediator mediator, IMapper mapper, IMapService mapServ
             RideType = request.RideType,
             PickupLocationId = pickupLocation.LocationId,
             DestinationId = destinationLocation.LocationId,
-            PickupETA = pickupETA,
-            ArrivalETA = arrivalETA,
+            // PickupETA = pickupETA,
+            // ArrivalETA = pickupETA.AddMinutes(estimatedTime),
             Fare = fare,
             Notes = request.Notes
         };
@@ -99,28 +102,5 @@ public class RideService(IMediator mediator, IMapper mapper, IMapService mapServ
         var result = await _mediator.Send(command);
         await _mediator.Send(new SaveChangesCommand());
         return new ResponseDTO<DeleteRideResponseDTO> { Data = result };
-    }
-
-    private async Task<GetLocationResponseDTO> GetOrCreateLocationAsync(string address)
-    {
-        // Check if the location already exists
-        var existingLocations = await _mediator.Send(new ListLocationQuery { Address = address });
-        if (existingLocations.Count != 0)
-        {
-            var existingLocation = existingLocations.First();
-            return _mapper.Map<GetLocationResponseDTO>(existingLocation);
-        }
-
-        // If not, create a new location using the map service
-        var (Latitude, Longitude) = await _mapService.GetCoordinatesAsync(address);
-        var createLocationCommand = new CreateLocationCommand
-        {
-            Address = address,
-            Latitude = Latitude,
-            Longitude = Longitude
-        };
-
-        var newLocation = await _mediator.Send(createLocationCommand);
-        return _mapper.Map<GetLocationResponseDTO>(newLocation);
     }
 }

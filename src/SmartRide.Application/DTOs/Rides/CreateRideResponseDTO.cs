@@ -5,6 +5,7 @@ namespace SmartRide.Application.DTOs.Rides;
 public class CreateRideResponseDTO : BaseRideResponseDTO
 {
     public required Guid PassengerId { get; set; }
+    public required VehicleTypeEnum VehicleType { get; set; }
     public required RideTypeEnum RideType { get; set; }
     public required RideStatusEnum RideStatus { get; set; }
     public required Guid PickupLocationId { get; set; }

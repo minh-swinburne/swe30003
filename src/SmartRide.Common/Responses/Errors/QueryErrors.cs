@@ -4,21 +4,21 @@ public class QueryErrors
 {
     public static readonly string Module = "Query";
 
-    public static readonly ResponseInfo INVALID_ORDERBY = new()
+    public static readonly ResponseInfo ORDERBY_INVALID = new()
     {
-        Code = $"{Module}.INVALID_ORDERBY",
+        Code = $"{Module}.ORDERBY_INVALID",
         Message = "The specified OrderBy property is invalid."
     };
 
-    public static readonly ResponseInfo INVALID_PAGE_SIZE = new()
+    public static readonly ResponseInfo PAGE_SIZE_INVALID = new()
     {
-        Code = $"{Module}.INVALID_PAGE_SIZE",
+        Code = $"{Module}.PAGE_SIZE_INVALID",
         Message = "PageSize must be greater than 0."
     };
 
-    public static readonly ResponseInfo INVALID_PAGE_NO = new()
+    public static readonly ResponseInfo PAGE_NO_INVALID = new()
     {
-        Code = $"{Module}.INVALID_PAGE_NO",
+        Code = $"{Module}.PAGE_NO_INVALID",
         Message = "PageNo must be greater than 0."
     };
 }

@@ -66,21 +66,21 @@ public class RideErrors
         Message = "Destination ID cannot be empty."
     };
 
-    public static readonly ResponseInfo INVALID_DRIVER_ROLE = new()
+    public static readonly ResponseInfo DRIVER_ROLE_INVALID = new()
     {
-        Code = $"{Module}.INVALID_DRIVER_ROLE",
+        Code = $"{Module}.DRIVER_ROLE_INVALID",
         Message = "The specified DriverId does not reference a User with the Driver role."
     };
 
-    public static readonly ResponseInfo INVALID_PASSENGER_ROLE = new()
+    public static readonly ResponseInfo PASSENGER_ROLE_INVALID = new()
     {
-        Code = $"{Module}.INVALID_PASSENGER_ROLE",
+        Code = $"{Module}.PASSENGER_ROLE_INVALID",
         Message = "The specified PassengerId does not reference a User with the Passenger role."
     };
 
-    public static readonly ResponseInfo INVALID_VEHICLE_OWNERSHIP = new()
+    public static readonly ResponseInfo VEHICLE_OWNERSHIP_INVALID = new()
     {
-        Code = $"{Module}.INVALID_VEHICLE_OWNERSHIP",
+        Code = $"{Module}.VEHICLE_OWNERSHIP_INVALID",
         Message = "The specified VehicleId does not reference a Vehicle owned by the specified DriverId."
     };
 

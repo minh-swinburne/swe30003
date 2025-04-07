@@ -30,7 +30,6 @@
     <ProjectReference Include="..\SmartRide.Application\SmartRide.Application.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Map\" />
     <Folder Include="Migrations\" />
     <Folder Include="Settings\" />
     <Folder Include="Transaction\" />

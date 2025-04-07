@@ -16,17 +16,17 @@ public abstract class BaseListQueryValidator<TQuery, TEntity> : AbstractValidato
     {
         RuleFor(query => query.OrderBy)
             .Must(orderBy => string.IsNullOrEmpty(orderBy) || QueryHelper.GetProperty<TEntity>(orderBy) != null)
-            .WithMessage(QueryErrors.INVALID_ORDERBY.Message)
-            .WithErrorCode(QueryErrors.INVALID_ORDERBY.Code);
+            .WithMessage(QueryErrors.ORDERBY_INVALID.Message)
+            .WithErrorCode(QueryErrors.ORDERBY_INVALID.Code);
 
         RuleFor(x => x.PageSize)
             .GreaterThan(0)
-            .WithMessage(QueryErrors.INVALID_PAGE_SIZE.Message)
-            .WithErrorCode(QueryErrors.INVALID_PAGE_SIZE.Code);
+            .WithMessage(QueryErrors.PAGE_SIZE_INVALID.Message)
+            .WithErrorCode(QueryErrors.PAGE_SIZE_INVALID.Code);
 
         RuleFor(x => x.PageNo)
             .GreaterThan(0)
-            .WithMessage(QueryErrors.INVALID_PAGE_NO.Message)
-            .WithErrorCode(QueryErrors.INVALID_PAGE_NO.Code);
+            .WithMessage(QueryErrors.PAGE_NO_INVALID.Message)
+            .WithErrorCode(QueryErrors.PAGE_NO_INVALID.Code);
     }
 }

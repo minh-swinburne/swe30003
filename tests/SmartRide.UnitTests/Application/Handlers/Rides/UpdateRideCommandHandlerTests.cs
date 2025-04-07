@@ -38,7 +38,8 @@ public class UpdateRideCommandHandlerTests
         {
             Id = rideId,
             PassengerId = Guid.NewGuid(),
-            Type = RideTypeEnum.Private,
+            VehicleType = VehicleTypeEnum.SmallCar,
+            RideType = RideTypeEnum.Private,
             PickupLocationId = Guid.NewGuid(),
             DestinationId = Guid.NewGuid(),
             Fare = 100,
@@ -48,7 +49,8 @@ public class UpdateRideCommandHandlerTests
         {
             Id = rideId,
             PassengerId = ride.PassengerId,
-            Type = ride.Type,
+            VehicleType = ride.VehicleType,
+            RideType = ride.RideType,
             PickupLocationId = ride.PickupLocationId,
             DestinationId = ride.DestinationId,
             Fare = command.Fare.Value,

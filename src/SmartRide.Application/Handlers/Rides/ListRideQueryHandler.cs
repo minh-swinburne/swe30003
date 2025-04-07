@@ -52,8 +52,11 @@ public class ListRideQueryHandler(IRepository<Ride> rideRepository, IMapper mapp
         if (query.VehicleId.HasValue)
             filter = filter.AddFilter(ride => ride.VehicleId == query.VehicleId.Value);
 
+        if (query.VehicleType.HasValue)
+            filter = filter.AddFilter(ride => ride.VehicleType == query.VehicleType.Value);
+
         if (query.RideType.HasValue)
-            filter = filter.AddFilter(ride => ride.Type == query.RideType.Value);
+            filter = filter.AddFilter(ride => ride.RideType == query.RideType.Value);
 
         if (query.RideStatus.HasValue)
             filter = filter.AddFilter(ride => ride.Status == query.RideStatus.Value);

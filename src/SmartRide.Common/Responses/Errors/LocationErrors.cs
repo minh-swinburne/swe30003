@@ -53,4 +53,16 @@ public class LocationErrors
         Code = $"{Module}.USER_ID_INVALID",
         Message = "User ID must be a valid GUID."
     };
+
+    public static readonly ResponseInfo USER_ID_NOT_FOUND = new()
+    {
+        Code = $"{Module}.USER_ID_NOT_FOUND",
+        Message = "User with ID {UserId} not found."
+    };
+
+    public static readonly ResponseInfo CREATE_REQUEST_INVALID = new()
+    {
+        Code = $"{Module}.CREATE_REQUEST_INVALID",
+        Message = "Either address or coordinates must be provided."
+    };
 }
