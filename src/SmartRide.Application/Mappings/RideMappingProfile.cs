@@ -19,6 +19,11 @@ public class RideMappingProfile : Profile
 
         // Common mapping for BaseRideResponseDTO
         CreateMap<Ride, BaseRideResponseDTO>()
+            .Include<Ride, CreateRideResponseDTO>()
+            .Include<Ride, UpdateRideResponseDTO>()
+            .Include<Ride, MatchRideResponseDTO>()
+            .Include<Ride, GetRideResponseDTO>()
+            .Include<Ride, ListRideResponseDTO>()
             .ForMember(dest => dest.RideId, opt => opt.MapFrom(src => src.Id));
 
         // Derived DTOs inherit the mapping from BaseRideResponseDTO

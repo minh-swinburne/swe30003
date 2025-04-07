@@ -47,7 +47,7 @@ public class ListLocationQueryHandler(IRepository<Location> locationRepository, 
             filter = filter.AddFilter(location => location.UserId == query.UserId.Value);
 
         if (!string.IsNullOrWhiteSpace(query.Address))
-            filter = filter.AddFilter(location => location.Address.Contains(query.Address, StringComparison.CurrentCultureIgnoreCase));
+            filter = filter.AddFilter(location => location.Address.Contains(query.Address));
 
         if (query.LatitudeFrom.HasValue)
             filter = filter.AddFilter(location => location.Latitude >= query.LatitudeFrom.Value);

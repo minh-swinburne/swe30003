@@ -18,6 +18,10 @@ public class VehicleMappingProfile : Profile
 
         // Common mapping for BaseVehicleResponseDTO
         CreateMap<Vehicle, BaseVehicleResponseDTO>()
+            .Include<Vehicle, CreateVehicleResponseDTO>()
+            .Include<Vehicle, UpdateVehicleResponseDTO>()
+            .Include<Vehicle, GetVehicleResponseDTO>()
+            .Include<Vehicle, ListVehicleResponseDTO>()
             .ForMember(dest => dest.VehicleId, opt => opt.MapFrom(src => src.Id));
 
         // Derived DTOs inherit the mapping from BaseVehicleResponseDTO

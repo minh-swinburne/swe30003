@@ -18,6 +18,10 @@ public class LocationMappingProfile : Profile
 
         // Common mapping for BaseLocationResponseDTO
         CreateMap<Location, BaseLocationResponseDTO>()
+            .Include<Location, CreateLocationResponseDTO>()
+            .Include<Location, UpdateLocationResponseDTO>()
+            .Include<Location, GetLocationResponseDTO>()
+            .Include<Location, ListLocationResponseDTO>()
             .ForMember(dest => dest.LocationId, opt => opt.MapFrom(src => src.Id));
 
         // Derived DTOs inherit the mapping from BaseLocationResponseDTO

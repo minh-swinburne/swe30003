@@ -18,6 +18,10 @@ public class UserMappingProfile : Profile
 
         // Common mapping for BaseUserResponseDTO
         CreateMap<User, BaseUserResponseDTO>()
+            .Include<User, CreateUserResponseDTO>()
+            .Include<User, UpdateUserResponseDTO>()
+            .Include<User, GetUserResponseDTO>()
+            .Include<User, ListUserResponseDTO>()
             .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.Id));
 
         // Derived DTOs inherit the mapping from BaseUserResponseDTO

@@ -18,6 +18,10 @@ public class PaymentMappingProfile : Profile
 
         // Common mapping for BasePaymentResponseDTO
         CreateMap<Payment, BasePaymentResponseDTO>()
+            .Include<Payment, CreatePaymentResponseDTO>()
+            .Include<Payment, UpdatePaymentResponseDTO>()
+            .Include<Payment, GetPaymentResponseDTO>()
+            .Include<Payment, ListPaymentResponseDTO>()
             .ForMember(dest => dest.PaymentId, opt => opt.MapFrom(src => src.Id));
 
         // Derived DTOs inherit the mapping from BasePaymentResponseDTO

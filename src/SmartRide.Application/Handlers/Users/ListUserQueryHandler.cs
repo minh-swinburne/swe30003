@@ -46,24 +46,24 @@ public class ListUserQueryHandler(IRepository<User> userRepository, IMapper mapp
         Expression<Func<User, bool>>? filter = null;
 
         if (!string.IsNullOrWhiteSpace(query.FirstName))
-            filter = filter.AddFilter(user => user.FirstName.Contains(query.FirstName, StringComparison.CurrentCultureIgnoreCase));
+            filter = filter.AddFilter(user => user.FirstName.Contains(query.FirstName));
 
         if (!string.IsNullOrWhiteSpace(query.LastName))
-            filter = filter.AddFilter(user => user.LastName != null && user.LastName.Contains(query.LastName, StringComparison.CurrentCultureIgnoreCase));
+            filter = filter.AddFilter(user => user.LastName != null && user.LastName.Contains(query.LastName));
 
         if (!string.IsNullOrWhiteSpace(query.Email))
-            filter = filter.AddFilter(user => user.Email != null && user.Email.Contains(query.Email, StringComparison.CurrentCultureIgnoreCase));
+            filter = filter.AddFilter(user => user.Email != null && user.Email.Contains(query.Email));
 
         if (!string.IsNullOrWhiteSpace(query.Phone))
-            filter = filter.AddFilter(user => user.Phone != null && user.Phone.Contains(query.Phone, StringComparison.CurrentCultureIgnoreCase));
+            filter = filter.AddFilter(user => user.Phone != null && user.Phone.Contains(query.Phone));
 
         if (query.Roles is { Count: > 0 })
         {
             if (query.MatchAllRoles)
-                // Ensure the user has *all* the queryed roles
+                // Ensure the user has *all* the queried roles
                 filter = filter.AddFilter(user => query.Roles.All(role => user.UserRoles.Any(ur => ur.RoleId == role)));
             else
-                // Ensure the user has *at least one* of the queryed roles
+                // Ensure the user has *at least one* of the queried roles
                 filter = filter.AddFilter(user => user.UserRoles.Any(ur => query.Roles.Contains(ur.RoleId)));
         }
 

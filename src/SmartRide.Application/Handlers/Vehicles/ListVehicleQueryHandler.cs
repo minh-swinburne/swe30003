@@ -46,10 +46,10 @@ public class ListVehicleQueryHandler(IRepository<Vehicle> vehicleRepository, IMa
         Expression<Func<Vehicle, bool>>? filter = null;
 
         if (!string.IsNullOrWhiteSpace(query.Make))
-            filter = filter.AddFilter(vehicle => vehicle.Make.Contains(query.Make, StringComparison.CurrentCultureIgnoreCase));
+            filter = filter.AddFilter(vehicle => vehicle.Make.Contains(query.Make));
 
         if (!string.IsNullOrWhiteSpace(query.Model))
-            filter = filter.AddFilter(vehicle => vehicle.Model.Contains(query.Model, StringComparison.CurrentCultureIgnoreCase));
+            filter = filter.AddFilter(vehicle => vehicle.Model.Contains(query.Model));
 
         if (query.Year.HasValue)
             filter = filter.AddFilter(vehicle => vehicle.Year == query.Year);
