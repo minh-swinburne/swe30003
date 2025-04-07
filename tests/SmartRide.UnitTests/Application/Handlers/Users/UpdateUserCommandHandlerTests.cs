@@ -46,7 +46,13 @@ public class UpdateUserCommandHandlerTests
         };
         _mockUserRepository.Setup(r => r.GetByIdAsync(userId, It.IsAny<CancellationToken>())).ReturnsAsync(user);
         _mockUserRepository.Setup(r => r.UpdateAsync(It.IsAny<User>(), It.IsAny<CancellationToken>())).ReturnsAsync(user);
-        _mockMapper.Setup(m => m.Map<UpdateUserResponseDTO>(It.IsAny<User>())).Returns(new UpdateUserResponseDTO { UserId = userId });
+        _mockMapper.Setup(m => m.Map<UpdateUserResponseDTO>(It.IsAny<User>())).Returns(new UpdateUserResponseDTO
+        {
+            UserId = userId,
+            FirstName = command.FirstName,
+            Email = command.Email,
+            Phone = command.Phone
+        });
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);

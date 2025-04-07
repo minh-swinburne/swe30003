@@ -23,14 +23,6 @@ public class UpdateRideCommandValidatorTests
     }
 
     [Fact]
-    public void Should_Have_Error_When_Fare_Is_Out_Of_Range()
-    {
-        var command = new UpdateRideCommand { Fare = RideConstants.MaxFare + 1 };
-        var result = _validator.TestValidate(command);
-        result.ShouldHaveValidationErrorFor(x => x.Fare);
-    }
-
-    [Fact]
     public void Should_Have_Error_When_Notes_Exceed_Max_Length()
     {
         var command = new UpdateRideCommand { Notes = new string('A', RideConstants.NotesMaxLength + 1) };
@@ -76,7 +68,6 @@ public class UpdateRideCommandValidatorTests
         var command = new UpdateRideCommand
         {
             RideId = Guid.NewGuid(),
-            Fare = 100,
             Notes = "Valid notes",
             PickupETA = DateTime.UtcNow.AddMinutes(10),
             ArrivalETA = DateTime.UtcNow.AddMinutes(20),

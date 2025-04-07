@@ -56,8 +56,7 @@ public class RideService(IMediator mediator, IMapper mapper, IMapService mapServ
             destinationLocation.Longitude!.Value
         );
 
-        var fare = _mapService.CalculateFare(distance);
-        // var pickupETA = DateTime.UtcNow.AddMinutes(estimatedTime);
+        var fare = CalculateFare(distance);
 
         // Step 3: Create the ride
         var rideCommand = new CreateRideCommand
@@ -88,12 +87,27 @@ public class RideService(IMediator mediator, IMapper mapper, IMapService mapServ
         return new ResponseDTO<CreateRideResponseDTO> { Data = rideResult };
     }
 
+    private static decimal CalculateFare(double distanceInKm)
+    {
+        const decimal baseFare = 2.50m;
+        const decimal perKmRate = 0.50m;
+        return baseFare + (decimal)distanceInKm * perKmRate;
+    }
+
     public async Task<ResponseDTO<UpdateRideResponseDTO>> UpdateRideAsync(UpdateRideRequestDTO request)
     {
         var command = MediatRFactory.CreateCommand<UpdateRideCommand>(request);
         var result = await _mediator.Send(command);
         await _mediator.Send(new SaveChangesCommand());
         return new ResponseDTO<UpdateRideResponseDTO> { Data = result };
+    }
+
+    public async Task<ResponseDTO<MatchRideResponseDTO>> MatchRideAsync(MatchRideRequestDTO request)
+    {
+        var command = MediatRFactory.CreateCommand<MatchRideCommand>(request);
+        var result = await _mediator.Send(command);
+        await _mediator.Send(new SaveChangesCommand());
+        return new ResponseDTO<MatchRideResponseDTO> { Data = result };
     }
 
     public async Task<ResponseDTO<DeleteRideResponseDTO>> DeleteRideAsync(DeleteRideRequestDTO request)

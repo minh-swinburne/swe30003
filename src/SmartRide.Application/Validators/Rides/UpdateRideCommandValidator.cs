@@ -14,12 +14,6 @@ public class UpdateRideCommandValidator : AbstractValidator<UpdateRideCommand>
             .WithMessage(RideErrors.ID_EMPTY.Message)
             .WithErrorCode(RideErrors.ID_EMPTY.Code);
 
-        RuleFor(x => x.Fare)
-            .InclusiveBetween(RideConstants.MinFare, RideConstants.MaxFare)
-            .WithMessage(RideErrors.FARE_INVALID.Message)
-            .WithErrorCode(RideErrors.FARE_INVALID.Code)
-            .When(x => x.Fare.HasValue);
-
         RuleFor(x => x.Notes)
             .MaximumLength(RideConstants.NotesMaxLength)
             .WithMessage(RideErrors.NOTES_TOO_LONG.Message)
@@ -32,12 +26,6 @@ public class UpdateRideCommandValidator : AbstractValidator<UpdateRideCommand>
             .WithErrorCode(RideErrors.PICKUP_ETA_IN_PAST.Code)
             .When(x => x.PickupETA.HasValue);
 
-        RuleFor(x => x.ArrivalETA)
-            .GreaterThanOrEqualTo(DateTime.UtcNow)
-            .WithMessage(RideErrors.ARRIVAL_ETA_IN_PAST.Message)
-            .WithErrorCode(RideErrors.ARRIVAL_ETA_IN_PAST.Code)
-            .When(x => x.ArrivalETA.HasValue);
-
         RuleFor(x => x.PickupATA)
             .LessThanOrEqualTo(DateTime.UtcNow)
             .WithMessage(RideErrors.PICKUP_ATA_IN_FUTURE.Message)
@@ -49,5 +37,11 @@ public class UpdateRideCommandValidator : AbstractValidator<UpdateRideCommand>
             .WithMessage(RideErrors.ARRIVAL_ATA_IN_FUTURE.Message)
             .WithErrorCode(RideErrors.ARRIVAL_ATA_IN_FUTURE.Code)
             .When(x => x.ArrivalATA.HasValue);
+
+        RuleFor(x => x.ArrivalETA)
+            .GreaterThanOrEqualTo(DateTime.UtcNow)
+            .WithMessage(RideErrors.ARRIVAL_ETA_IN_PAST.Message)
+            .WithErrorCode(RideErrors.ARRIVAL_ETA_IN_PAST.Code)
+            .When(x => x.ArrivalETA.HasValue);
     }
 }

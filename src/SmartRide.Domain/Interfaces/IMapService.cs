@@ -11,5 +11,4 @@ public interface IMapService
 
     Task<(double Latitude, double Longitude)> GetCoordinatesAsync(string address);
     Task<string> GetAddressAsync(double latitude, double longitude);
-    decimal CalculateFare(double distanceInKm);
 }

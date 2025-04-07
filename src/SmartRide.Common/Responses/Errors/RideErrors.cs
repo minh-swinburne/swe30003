@@ -30,16 +30,53 @@ public class RideErrors
         Message = "Passenger ID cannot be empty."
     };
 
+    public static readonly ResponseInfo PASSENGER_ID_INVALID = new()
+    {
+        Code = $"{Module}.PASSENGER_ID_INVALID",
+        Message = "Passenger ID must be a valid GUID."
+    };
+
+
+    public static readonly ResponseInfo PASSENGER_ID_NOT_FOUND = new()
+    {
+        Code = $"{Module}.PASSENGER_ID_NOT_FOUND",
+        Message = "Passenger with ID {UserId} not found."
+    };
+
+    public static readonly ResponseInfo DRIVER_ID_EMPTY = new()
+    {
+        Code = $"{Module}.DRIVER_ID_EMPTY",
+        Message = "Driver ID cannot be empty."
+    };
+
     public static readonly ResponseInfo DRIVER_ID_INVALID = new()
     {
         Code = $"{Module}.DRIVER_ID_INVALID",
         Message = "Driver ID must be a valid GUID."
     };
 
+    public static readonly ResponseInfo DRIVER_ID_NOT_FOUND = new()
+    {
+        Code = $"{Module}.DRIVER_ID_NOT_FOUND",
+        Message = "Driver with ID {UserId} not found."
+    };
+
+    public static readonly ResponseInfo VEHICLE_ID_EMPTY = new()
+    {
+        Code = $"{Module}.VEHICLE_ID_EMPTY",
+        Message = "Vehicle ID cannot be empty."
+    };
+
     public static readonly ResponseInfo VEHICLE_ID_INVALID = new()
     {
         Code = $"{Module}.VEHICLE_ID_INVALID",
         Message = "Vehicle ID must be a valid GUID."
+    };
+
+    public static readonly ResponseInfo VEHICLE_ID_NOT_FOUND = new()
+    {
+        Code = $"{Module}.VEHICLE_ID_NOT_FOUND",
+        Message = "Vehicle with ID {VehicleId} not found."
     };
 
     public static readonly ResponseInfo FARE_INVALID = new()

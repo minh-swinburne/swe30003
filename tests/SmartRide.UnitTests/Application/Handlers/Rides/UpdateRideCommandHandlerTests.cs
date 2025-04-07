@@ -31,7 +31,6 @@ public class UpdateRideCommandHandlerTests
         var command = new UpdateRideCommand
         {
             RideId = rideId,
-            Fare = 150,
             Notes = "Updated notes"
         };
         var ride = new Ride
@@ -53,13 +52,12 @@ public class UpdateRideCommandHandlerTests
             RideType = ride.RideType,
             PickupLocationId = ride.PickupLocationId,
             DestinationId = ride.DestinationId,
-            Fare = command.Fare.Value,
             Notes = command.Notes
         };
         var response = new UpdateRideResponseDTO
         {
             RideId = rideId,
-            Fare = command.Fare,
+            RideStatus = RideStatusEnum.Pending,
             Notes = command.Notes
         };
 
@@ -73,7 +71,6 @@ public class UpdateRideCommandHandlerTests
         // Assert
         Assert.NotNull(result);
         Assert.Equal(response.RideId, result.RideId);
-        Assert.Equal(response.Fare, result.Fare);
         _mockRideRepository.Verify(r => r.UpdateAsync(It.Is<Ride>(r => r.Id == command.RideId), It.IsAny<CancellationToken>()), Times.Once);
     }
 

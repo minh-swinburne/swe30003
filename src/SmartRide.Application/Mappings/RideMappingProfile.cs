@@ -10,6 +10,7 @@ public class RideMappingProfile : Profile
     public RideMappingProfile()
     {
         CreateMap<CreateRideCommand, Ride>();
+        CreateMap<MatchRideCommand, Ride>();
 
         // Only map non-null properties and ensure strings are not whitespace
         CreateMap<UpdateRideCommand, Ride>()
@@ -23,6 +24,7 @@ public class RideMappingProfile : Profile
         // Derived DTOs inherit the mapping from BaseRideResponseDTO
         CreateMap<Ride, CreateRideResponseDTO>();
         CreateMap<Ride, UpdateRideResponseDTO>();
+        CreateMap<Ride, MatchRideResponseDTO>();
         CreateMap<Ride, GetRideResponseDTO>();
         CreateMap<Ride, ListRideResponseDTO>();
     }

@@ -57,27 +57,6 @@ public class GoogleMapsService : IMapService
         // Implementation for calculating distance using Google Maps API
         throw new NotImplementedException();
     }
-
-    public decimal CalculateFare(double distanceInKm)
-    {
-        // Implementation for calculating fare based on distance
-        // Example: $2.50 base fare + $0.50 per km
-        decimal baseFare = 2.50m;
-        decimal perKmRate = 0.50m;
-        return baseFare + (decimal)distanceInKm * perKmRate;
-    }
-
-    public int EstimatePickupTime(double distanceInKm)
-    {
-        // Implementation for estimating pickup time based on distance
-        throw new NotImplementedException();
-    }
-
-    public int EstimateTravelTime(double distanceInKm)
-    {
-        // Implementation for estimating travel time based on distance
-        throw new NotImplementedException();
-    }
 }
 
 // Helper classes for deserializing Google Maps API response
