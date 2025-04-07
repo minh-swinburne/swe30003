@@ -16,7 +16,7 @@ public class VehicleController(IVehicleService vehicleService) : BaseController
     [HttpGet]
     public async Task<IActionResult> GetAllVehicles([FromQuery] ListVehicleRequestDTO request)
     {
-        var result = await _vehicleService.GetAllVehiclesAsync(request);
+        var result = await _vehicleService.ListVehiclesAsync(request);
         return Respond(result);
     }
 

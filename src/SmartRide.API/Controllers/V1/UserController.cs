@@ -16,7 +16,7 @@ public class UserController(IUserService userService) : BaseController
     [HttpGet]
     public async Task<IActionResult> GetAllUsers([FromQuery] ListUserRequestDTO request)
     {
-        var result = await _userService.GetAllUsersAsync(request);
+        var result = await _userService.ListUsersAsync(request);
         return Respond(result);
     }
 
