@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using SmartRide.API.Controllers.Attributes;
 using SmartRide.Application.DTOs.Users;
 using SmartRide.Application.Interfaces;
@@ -7,6 +8,7 @@ namespace SmartRide.API.Controllers.V1;
 
 [Area("v1")]
 [Pluralize]
+[Authorize] // Require authentication for all actions in this controller
 public class UserController(IUserService userService) : BaseController
 {
     private readonly IUserService _userService = userService;

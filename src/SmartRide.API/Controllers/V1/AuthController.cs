@@ -1,41 +1,67 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using SmartRide.Application.DTOs.Auth;
+using SmartRide.Application.DTOs.Users;
+using SmartRide.Application.Interfaces;
+using SmartRide.Domain.Interfaces;
+using System.Security.Claims;
 
 namespace SmartRide.API.Controllers.V1;
 
 [Area("v1")]
-public class AuthController : BaseController
+[AllowAnonymous]
+public class AuthController(IUserService userService, IJwtService jwtService) : BaseController
 {
-    // GET: api/<AuthController>
-    [HttpGet]
-    public IEnumerable<string> Get()
+    private readonly IUserService _userService = userService;
+    private readonly IJwtService _jwtService = jwtService;
+
+    // POST: api/v1/auth/login
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] LoginRequestDTO request)
     {
-        return new string[] { "value1", "value2" };
+        var userResponse = await _userService.GetUserByEmailAsync(new GetUserByEmailRequestDTO { Email = request.Email });
+
+        if (userResponse.Data == null || userResponse.Data.Password != request.Password)
+        {
+            return Unauthorized(new { Message = "Invalid email or password." });
+        }
+
+        var user = userResponse.Data;
+        var roles = user.Roles.Select(r => r.Name).ToList();
+
+        var token = _jwtService.GenerateToken(
+            [
+                new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Name, user.FirstName),
+                new Claim(ClaimTypes.Role, string.Join(",", roles))
+            ],
+            expiration: TimeSpan.FromMinutes(60)
+        );
+
+        return Ok(new { AccessToken = token });
     }
 
-    // GET api/<AuthController>/5
-    [HttpGet("{id}")]
-    public string Get(int id)
+    // POST: api/v1/auth/register
+    [HttpPost("register")]
+    public async Task<IActionResult> Register([FromBody] CreateUserRequestDTO request)
     {
-        return "value";
+        var userResponse = await _userService.CreateUserAsync(request);
+        return CreatedAtAction(nameof(Login), new { email = userResponse.Data.Email }, userResponse.Data);
     }
 
-    // POST api/<AuthController>
-    [HttpPost]
-    public void Post([FromBody] string value)
+    // POST: api/v1/auth/validate
+    [HttpPost("validate")]
+    public IActionResult ValidateToken([FromBody] ValidateTokenRequestDTO request)
     {
-    }
+        var principal = _jwtService.ValidateToken(request.Token);
 
-    // PUT api/<AuthController>/5
-    [HttpPut("{id}")]
-    public void Put(int id, [FromBody] string value)
-    {
-    }
+        if (principal == null)
+        {
+            return Unauthorized(new { Message = "Invalid or expired token." });
+        }
 
-    // DELETE api/<AuthController>/5
-    [HttpDelete("{id}")]
-    public void Delete(int id)
-    {
+        var claims = principal.Claims.Select(c => new { c.Type, c.Value }).ToList();
+        return Ok(new { Valid = true, Claims = claims });
     }
 }
