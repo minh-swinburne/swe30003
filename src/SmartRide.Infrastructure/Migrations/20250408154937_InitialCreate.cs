@@ -18,6 +18,23 @@ namespace SmartRide.Infrastructure.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "payment_methods",
+                columns: table => new
+                {
+                    id = table.Column<sbyte>(type: "TINYINT", nullable: false),
+                    is_enabled = table.Column<ulong>(type: "BIT", nullable: false),
+                    name = table.Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    description = table.Column<string>(type: "VARCHAR(255)", maxLength: 255, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_payment_methods", x => x.id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "roles",
                 columns: table => new
                 {
@@ -50,7 +67,6 @@ namespace SmartRide.Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     picture = table.Column<string>(type: "TEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    identity_id = table.Column<byte[]>(type: "BINARY(16)", nullable: true),
                     created_time = table.Column<DateTime>(type: "TIMESTAMP", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
                     updated_time = table.Column<DateTime>(type: "TIMESTAMP", nullable: false)
@@ -121,9 +137,13 @@ namespace SmartRide.Infrastructure.Migrations
                 {
                     id = table.Column<byte[]>(type: "BINARY(16)", nullable: false),
                     user_id = table.Column<byte[]>(type: "BINARY(16)", nullable: false),
+                    number = table.Column<string>(type: "VARCHAR(50)", maxLength: 50, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     type = table.Column<sbyte>(type: "TINYINT", nullable: false),
                     status = table.Column<sbyte>(type: "TINYINT", nullable: false),
                     issued_date = table.Column<DateTime>(type: "DATE", nullable: false),
+                    issued_country = table.Column<string>(type: "VARCHAR(100)", maxLength: 100, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     created_time = table.Column<DateTime>(type: "TIMESTAMP", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
                     updated_time = table.Column<DateTime>(type: "TIMESTAMP", nullable: false)
@@ -163,8 +183,7 @@ namespace SmartRide.Infrastructure.Migrations
                         name: "FK_locations_users_user_id",
                         column: x => x.user_id,
                         principalTable: "users",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.SetNull);
+                        principalColumn: "id");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -239,9 +258,10 @@ namespace SmartRide.Infrastructure.Migrations
                 {
                     id = table.Column<byte[]>(type: "BINARY(16)", nullable: false),
                     passenger_id = table.Column<byte[]>(type: "BINARY(16)", nullable: false),
-                    driver_id = table.Column<byte[]>(type: "BINARY(16)", nullable: false),
-                    vehicle_id = table.Column<byte[]>(type: "BINARY(16)", nullable: false),
-                    type = table.Column<sbyte>(type: "TINYINT", nullable: false),
+                    driver_id = table.Column<byte[]>(type: "BINARY(16)", nullable: true),
+                    vehicle_id = table.Column<byte[]>(type: "BINARY(16)", nullable: true),
+                    vehicle_type_id = table.Column<sbyte>(type: "TINYINT", nullable: false),
+                    ride_type = table.Column<sbyte>(type: "TINYINT", nullable: false),
                     status = table.Column<sbyte>(type: "TINYINT", nullable: false),
                     pickup_location_id = table.Column<byte[]>(type: "BINARY(16)", nullable: false),
                     destination_id = table.Column<byte[]>(type: "BINARY(16)", nullable: false),
@@ -249,9 +269,10 @@ namespace SmartRide.Infrastructure.Migrations
                     pickup_ata = table.Column<DateTime>(type: "DATETIME", nullable: true),
                     arrival_eta = table.Column<DateTime>(type: "DATETIME", nullable: true),
                     arrival_ata = table.Column<DateTime>(type: "DATETIME", nullable: true),
-                    fare = table.Column<float>(type: "FLOAT", nullable: false),
-                    notes = table.Column<string>(type: "TEXT", nullable: true)
+                    fare = table.Column<decimal>(type: "DECIMAL(18,2)", nullable: false),
+                    notes = table.Column<string>(type: "TEXT", maxLength: 1000, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
+                    user_id = table.Column<byte[]>(type: "BINARY(16)", nullable: true),
                     created_time = table.Column<DateTime>(type: "TIMESTAMP", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
                     updated_time = table.Column<DateTime>(type: "TIMESTAMP", nullable: false)
@@ -277,7 +298,7 @@ namespace SmartRide.Infrastructure.Migrations
                         column: x => x.driver_id,
                         principalTable: "users",
                         principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_rides_users_passenger_id",
                         column: x => x.passenger_id,
@@ -285,23 +306,119 @@ namespace SmartRide.Infrastructure.Migrations
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
+                        name: "FK_rides_users_user_id",
+                        column: x => x.user_id,
+                        principalTable: "users",
+                        principalColumn: "id");
+                    table.ForeignKey(
+                        name: "FK_rides_vehicle_types_vehicle_type_id",
+                        column: x => x.vehicle_type_id,
+                        principalTable: "vehicle_types",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_rides_vehicles_vehicle_id",
                         column: x => x.vehicle_id,
                         principalTable: "vehicles",
                         principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "feedbacks",
+                columns: table => new
+                {
+                    id = table.Column<byte[]>(type: "BINARY(16)", nullable: false),
+                    ride_id = table.Column<byte[]>(type: "BINARY(16)", nullable: false),
+                    rating = table.Column<sbyte>(type: "TINYINT", nullable: false),
+                    comment = table.Column<string>(type: "TEXT", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    created_time = table.Column<DateTime>(type: "TIMESTAMP", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
+                    updated_time = table.Column<DateTime>(type: "TIMESTAMP", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_feedbacks", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_feedbacks_rides_ride_id",
+                        column: x => x.ride_id,
+                        principalTable: "rides",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "payments",
+                columns: table => new
+                {
+                    id = table.Column<byte[]>(type: "BINARY(16)", nullable: false),
+                    ride_id = table.Column<byte[]>(type: "BINARY(16)", nullable: false),
+                    amount = table.Column<decimal>(type: "DECIMAL(18,2)", nullable: false),
+                    payment_method_id = table.Column<sbyte>(type: "TINYINT", nullable: false),
+                    status = table.Column<sbyte>(type: "TINYINT", nullable: false),
+                    transaction_time = table.Column<DateTime>(type: "DATETIME", nullable: true),
+                    created_time = table.Column<DateTime>(type: "TIMESTAMP", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
+                    updated_time = table.Column<DateTime>(type: "TIMESTAMP", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_payments", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_payments_payment_methods_payment_method_id",
+                        column: x => x.payment_method_id,
+                        principalTable: "payment_methods",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_payments_rides_ride_id",
+                        column: x => x.ride_id,
+                        principalTable: "rides",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.InsertData(
+                table: "payment_methods",
+                columns: new[] { "id", "description", "is_enabled", "name" },
+                values: new object[,]
+                {
+                    { (sbyte)1, "Cash payment", 1ul, "Cash" },
+                    { (sbyte)2, "Credit card payment", 1ul, "CreditCard" },
+                    { (sbyte)3, "PayPal payment", 1ul, "PayPal" }
+                });
 
             migrationBuilder.InsertData(
                 table: "roles",
                 columns: new[] { "id", "description", "name" },
                 values: new object[,]
                 {
-                    { (sbyte)1, null, "Passenger" },
-                    { (sbyte)2, null, "Driver" },
-                    { (sbyte)3, null, "Manager" }
+                    { (sbyte)1, "User who books rides", "Passenger" },
+                    { (sbyte)2, "User who provides rides", "Driver" },
+                    { (sbyte)3, "User who manages the system", "Manager" }
                 });
+
+            migrationBuilder.InsertData(
+                table: "vehicle_types",
+                columns: new[] { "id", "capacity", "description", "name" },
+                values: new object[,]
+                {
+                    { (sbyte)1, (sbyte)2, "Two-wheeled vehicle with only one seat", "Motorbike" },
+                    { (sbyte)2, (sbyte)4, "Compact car with 4 seats", "SmallCar" },
+                    { (sbyte)3, (sbyte)7, "Spacious car with 7 seats", "LargeCar" }
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_feedbacks_ride_id",
+                table: "feedbacks",
+                column: "ride_id",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_identities_national_id",
@@ -316,6 +433,12 @@ namespace SmartRide.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_licenses_number",
+                table: "licenses",
+                column: "number",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_licenses_user_id",
                 table: "licenses",
                 column: "user_id");
@@ -324,6 +447,17 @@ namespace SmartRide.Infrastructure.Migrations
                 name: "IX_locations_user_id",
                 table: "locations",
                 column: "user_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_payments_payment_method_id",
+                table: "payments",
+                column: "payment_method_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_payments_ride_id",
+                table: "payments",
+                column: "ride_id",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_rides_destination_id",
@@ -346,9 +480,19 @@ namespace SmartRide.Infrastructure.Migrations
                 column: "pickup_location_id");
 
             migrationBuilder.CreateIndex(
+                name: "IX_rides_user_id",
+                table: "rides",
+                column: "user_id");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_rides_vehicle_id",
                 table: "rides",
                 column: "vehicle_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_rides_vehicle_type_id",
+                table: "rides",
+                column: "vehicle_type_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_user_roles_role_id",
@@ -394,25 +538,34 @@ namespace SmartRide.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "feedbacks");
+
+            migrationBuilder.DropTable(
                 name: "identities");
 
             migrationBuilder.DropTable(
                 name: "licenses");
 
             migrationBuilder.DropTable(
-                name: "rides");
+                name: "payments");
 
             migrationBuilder.DropTable(
                 name: "user_roles");
+
+            migrationBuilder.DropTable(
+                name: "payment_methods");
+
+            migrationBuilder.DropTable(
+                name: "rides");
+
+            migrationBuilder.DropTable(
+                name: "roles");
 
             migrationBuilder.DropTable(
                 name: "locations");
 
             migrationBuilder.DropTable(
                 name: "vehicles");
-
-            migrationBuilder.DropTable(
-                name: "roles");
 
             migrationBuilder.DropTable(
                 name: "users");

@@ -12,8 +12,8 @@ using SmartRide.Infrastructure.Persistence;
 namespace SmartRide.Infrastructure.Migrations
 {
     [DbContext(typeof(SmartRideDbContext))]
-    [Migration("20250407170720_RideVehicleType")]
-    partial class RideVehicleType
+    [Migration("20250408154937_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -385,9 +385,9 @@ namespace SmartRide.Infrastructure.Migrations
                         .HasColumnType("BINARY(16)")
                         .HasColumnName("vehicle_id");
 
-                    b.Property<sbyte>("VehicleType")
+                    b.Property<sbyte>("VehicleTypeId")
                         .HasColumnType("TINYINT")
-                        .HasColumnName("vehicle_type");
+                        .HasColumnName("vehicle_type_id");
 
                     b.HasKey("Id");
 
@@ -402,6 +402,8 @@ namespace SmartRide.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.HasIndex("VehicleId");
+
+                    b.HasIndex("VehicleTypeId");
 
                     b.ToTable("rides", (string)null);
                 });
@@ -803,6 +805,12 @@ namespace SmartRide.Infrastructure.Migrations
                         .HasForeignKey("VehicleId")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("SmartRide.Domain.Entities.Lookup.VehicleType", "VehicleType")
+                        .WithMany()
+                        .HasForeignKey("VehicleTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Destination");
 
                     b.Navigation("Driver");
@@ -812,6 +820,8 @@ namespace SmartRide.Infrastructure.Migrations
                     b.Navigation("PickupLocation");
 
                     b.Navigation("Vehicle");
+
+                    b.Navigation("VehicleType");
                 });
 
             modelBuilder.Entity("SmartRide.Domain.Entities.Base.Vehicle", b =>
