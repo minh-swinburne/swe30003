@@ -1,0 +1,89 @@
+@inherits LayoutComponentBase
+
+<div class="flex min-h-screen flex-col">
+    <!-- Header -->
+    <header class="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div class="container flex h-16 items-center justify-between">
+            <div class="flex items-center gap-2">
+                <a href="/" class="flex items-center gap-2">
+                    <i class="oi oi-car text-yellow-500" style="font-size: 1.5rem;"></i>
+                    <span class="text-xl font-bold">SmartRide</span>
+                </a>
+            </div>
+            <nav class="hidden md:flex items-center gap-6">
+                <a href="/" class="text-sm font-medium hover:underline">Home</a>
+                <a href="#services" class="text-sm font-medium hover:underline">Services</a>
+                <a href="#booking" class="text-sm font-medium hover:underline">Book Now</a>
+                <a href="#testimonials" class="text-sm font-medium hover:underline">Testimonials</a>
+                <a href="#contact" class="text-sm font-medium hover:underline">Contact</a>
+            </nav>
+            <div class="flex items-center gap-4">
+                <a href="tel:+1234567890" class="hidden md:flex items-center gap-2">
+                    <i class="oi oi-phone" style="font-size: 1rem;"></i>
+                    <span class="text-sm font-medium">123-456-7890</span>
+                </a>
+                <div class="flex items-center gap-2">
+                    <a href="/login" class="text-sm font-medium hover:underline px-3 py-2">Login</a>
+                    <a href="/register" class="inline-flex items-center justify-center rounded-md bg-yellow-500 px-4 py-2 text-sm font-medium text-black hover:bg-yellow-600">
+                        Register
+                    </a>
+                </div>
+                <button class="md:hidden inline-flex items-center justify-center rounded-md border border-input p-2 text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground">
+                    <i class="oi oi-menu" style="font-size: 1.25rem;"></i>
+                    <span class="sr-only">Toggle menu</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    @Body
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center gap-2 mb-4">
+                        <i class="oi oi-car text-yellow-500" style="font-size: 1.5rem;"></i>
+                        <span class="text-xl font-bold">SmartRide</span>
+                    </div>
+                    <p class="text-gray-400">
+                        Providing reliable taxi services since 2005. Your trusted transportation partner.
+                    </p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-medium mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="/" class="text-gray-400 hover:text-white">Home</a></li>
+                        <li><a href="#services" class="text-gray-400 hover:text-white">Services</a></li>
+                        <li><a href="#booking" class="text-gray-400 hover:text-white">Book Now</a></li>
+                        <li><a href="#contact" class="text-gray-400 hover:text-white">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-medium mb-4">Services</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Standard Taxi</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Business Class</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Airport Transfer</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Group Travel</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-medium mb-4">Account</h3>
+                    <ul class="space-y-2">
+                        <li><a href="/login" class="text-gray-400 hover:text-white">Login</a></li>
+                        <li><a href="/register" class="text-gray-400 hover:text-white">Register</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">My Rides</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Profile</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>© @DateTime.Now.Year SmartRide. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</div>
+

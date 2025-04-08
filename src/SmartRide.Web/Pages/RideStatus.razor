@@ -1,0 +1,144 @@
+﻿@page "/ride-status"
+@inject NavigationManager NavigationManager
+
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-4xl mx-auto">
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+            <!-- Header -->
+            <div class="bg-yellow-500 p-4 text-black">
+                <div class="flex justify-between items-center">
+                    <h1 class="text-2xl font-bold">Your Ride Status</h1>
+                    <div class="bg-black text-white px-3 py-1 rounded-full text-sm font-medium">
+                        @rideStatus
+                    </div>
+                </div>
+            </div>
+
+            <!-- Map -->
+            <div class="h-[300px] md:h-[400px] w-full bg-gray-200 relative">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d12345.67890!2d-73.9852!3d40.7484!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e0!4m5!1s0x89c259a9b3117469%3A0xd134e199a405a163!2sEmpire%20State%20Building%2C%20New%20York%2C%20NY!3m2!1d40.748817!2d-73.985428!4m5!1s0x89c25903e017e63f%3A0x61067bb0a5b61285!2sTimes%20Square%2C%20New%20York%2C%20NY!3m2!1d40.7579747!2d-73.9855426!5e0!3m2!1sen!2sus!4v1712356789012!5m2!1sen!2sus" 
+                    width="100%" 
+                    height="100%" 
+                    style="border:0;" 
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+                
+                <!-- Map overlay with ETA -->
+                <div class="absolute bottom-4 left-4 bg-white p-3 rounded-lg shadow-md">
+                    <div class="text-sm text-gray-500">Estimated arrival</div>
+                    <div class="text-xl font-bold">@estimatedArrival</div>
+                </div>
+            </div>
+
+            <!-- Ride Details -->
+            <div class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Left Column -->
+                    <div>
+                        <h2 class="text-xl font-bold mb-4">Ride Details</h2>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <div class="text-sm text-gray-500">Pickup Location</div>
+                                <div class="font-medium">@pickupLocation</div>
+                            </div>
+                            
+                            <div>
+                                <div class="text-sm text-gray-500">Destination</div>
+                                <div class="font-medium">@destination</div>
+                            </div>
+                            
+                            <div>
+                                <div class="text-sm text-gray-500">Ride Type</div>
+                                <div class="font-medium">@rideType</div>
+                            </div>
+                            
+                            <div>
+                                <div class="text-sm text-gray-500">Estimated Waiting Time</div>
+                                <div class="font-medium">@waitingTime</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Right Column -->
+                    <div>
+                        <h2 class="text-xl font-bold mb-4">Payment & Driver</h2>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <div class="text-sm text-gray-500">Estimated Fare</div>
+                                <div class="text-2xl font-bold text-yellow-600">@estimatedFare</div>
+                            </div>
+                            
+                            <div>
+                                <div class="text-sm text-gray-500">Payment Method</div>
+                                <div class="font-medium">@paymentMethod</div>
+                            </div>
+                            
+                            <div class="border-t pt-4">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-12 h-12 bg-gray-200 rounded-full overflow-hidden">
+                                        <img src="/placeholder.svg?height=48&width=48" alt="Driver" class="w-full h-full object-cover" />
+                                    </div>
+                                    <div>
+                                        <div class="font-bold">@driverName</div>
+                                        <div class="text-sm text-gray-500">⭐ 4.9 (523 rides)</div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="text-sm text-gray-500">Vehicle</div>
+                                    <div class="font-medium">@vehicleDetails</div>
+                                </div>
+                                <div>
+                                    <div class="text-sm text-gray-500">License Plate</div>
+                                    <div class="font-medium">@licensePlate</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="p-6 pt-0 flex flex-col sm:flex-row gap-3">
+                <button class="flex-1 bg-yellow-500 hover:bg-yellow-600 text-black font-medium py-2 px-4 rounded-md">
+                    <i class="oi oi-phone mr-2"></i> Contact Driver
+                </button>
+                <button class="flex-1 border border-gray-300 hover:bg-gray-100 font-medium py-2 px-4 rounded-md">
+                    <i class="oi oi-x mr-2"></i> Cancel Ride
+                </button>
+            </div>
+        </div>
+        
+        <!-- Back Button -->
+        <div class="mt-6 text-center">
+            <button @onclick="GoBack" class="text-gray-600 hover:text-gray-900">
+                <i class="oi oi-arrow-left mr-2"></i> Back to Home
+            </button>
+        </div>
+    </div>
+</div>
+
+@code {
+    // Ride details - these would come from a service in a real application
+    private string rideStatus = "Driver on the way";
+    private string estimatedArrival = "5 min";
+    private string pickupLocation = "123 Main Street, New York, NY";
+    private string destination = "456 Broadway, New York, NY";
+    private string rideType = "Business Class";
+    private string waitingTime = "3-5 minutes";
+    private string estimatedFare = "$35.50";
+    private string paymentMethod = "Credit Card (Visa •••• 4567)";
+    private string driverName = "Michael Johnson";
+    private string vehicleDetails = "Toyota Camry, Black";
+    private string licensePlate = "ABC 1234";
+    
+    private void GoBack()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+}
+

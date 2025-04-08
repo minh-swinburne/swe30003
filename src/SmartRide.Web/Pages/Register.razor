@@ -1,0 +1,124 @@
+@page "/register"
+@inject NavigationManager NavigationManager
+@inject ApiClient Api
+
+<div class="container mx-auto px-4 py-12">
+    <div class="max-w-md mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
+        <div class="bg-yellow-500 p-6 text-black">
+            <div class="flex items-center justify-center">
+                <i class="oi oi-car text-black mr-2" style="font-size: 1.5rem;"></i>
+                <h1 class="text-2xl font-bold">Create an Account</h1>
+            </div>
+        </div>
+        
+        <div class="p-6">
+            <EditForm Model="@registerModel" OnValidSubmit="@HandleRegister">
+                <DataAnnotationsValidator />
+                
+                @if (!string.IsNullOrEmpty(errorMessage))
+                {
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                        @errorMessage
+                    </div>
+                }
+                
+                <div class="space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label for="firstName" class="block text-sm font-medium text-gray-700">First Name</label>
+                            <InputText id="firstName" @bind-Value="registerModel.FirstName" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="First name" />
+                            <ValidationMessage For="@(() => registerModel.FirstName)" class="text-red-600 text-sm" />
+                        </div>
+                        
+                        <div>
+                            <label for="lastName" class="block text-sm font-medium text-gray-700">Last Name</label>
+                            <InputText id="lastName" @bind-Value="registerModel.LastName" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Last name" />
+                            <ValidationMessage For="@(() => registerModel.LastName)" class="text-red-600 text-sm" />
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                        <InputText id="email" @bind-Value="registerModel.Email" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Enter your email" />
+                        <ValidationMessage For="@(() => registerModel.Email)" class="text-red-600 text-sm" />
+                    </div>
+                    
+                    <div>
+                        <label for="phone" class="block text-sm font-medium text-gray-700">Phone Number</label>
+                        <InputText id="phone" @bind-Value="registerModel.Phone" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Enter your phone number" />
+                        <ValidationMessage For="@(() => registerModel.Phone)" class="text-red-600 text-sm" />
+                    </div>
+                    
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                        <InputText id="password" type="password" @bind-Value="registerModel.Password" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Create a password" />
+                        <ValidationMessage For="@(() => registerModel.Password)" class="text-red-600 text-sm" />
+                    </div>
+                    
+                    <div class="flex items-start">
+                        <div class="flex items-center h-5">
+                            <InputCheckbox id="terms" @bind-Value="registerModel.AcceptTerms" class="h-4 w-4 text-yellow-500 border-gray-300 rounded" />
+                        </div>
+                        <div class="ml-3 text-sm">
+                            <label for="terms" class="text-gray-700">
+                                I agree to the <a href="#" class="text-yellow-600 hover:underline">Terms of Service</a> and <a href="#" class="text-yellow-600 hover:underline">Privacy Policy</a>
+                            </label>
+                            <ValidationMessage For="@(() => registerModel.AcceptTerms)" class="text-red-600 text-sm" />
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <button type="submit" class="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-medium py-2 px-4 rounded-md" disabled="@isRegistering">
+                            @(isRegistering ? "Creating Account..." : "Create Account")
+                        </button>
+                    </div>
+                    
+                    <div class="text-center text-sm text-gray-600 pt-4 border-t">
+                        Already have an account? 
+                        <a href="/login" class="text-yellow-600 hover:underline font-medium">Login</a>
+                    </div>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@code {
+    private CreateUserRequestDTO registerModel = new CreateUserRequestDTO
+    {
+        FirstName = "",
+        Email = "",
+        Phone = ""
+    };
+    private bool isRegistering = false;
+    private string errorMessage = "";
+    
+    private async Task HandleRegister()
+    {
+        try
+        {
+            isRegistering = true;
+            errorMessage = "";
+            
+            // Call the API using our ApiClient
+            var result = await Api.User.CreateUserAsync(registerModel);
+            
+            // Navigate to login page after successful registration
+            NavigationManager.NavigateTo("/login");
+        }
+        catch (ApiException ex)
+        {
+            errorMessage = ex.Response ?? "Registration failed. Please try again.";
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "An unexpected error occurred. Please try again later.";
+            Console.WriteLine($"Registration error: {ex.Message}");
+        }
+        finally
+        {
+            isRegistering = false;
+        }
+    }
+}
+
