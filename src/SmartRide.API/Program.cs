@@ -29,6 +29,17 @@ public class Program
             options.Conventions.Add(new KebaberizeConvention());
         });
 
+        // Add CORS policy
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowAll", policy =>
+            {
+                policy.AllowAnyOrigin()
+                      .AllowAnyMethod()
+                      .AllowAnyHeader();
+            });
+        });
+
         // Add authentication
         var jwtSettings = builder.Configuration.GetSection(nameof(JwtSettings)).Get<JwtSettings>();
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -60,6 +71,7 @@ public class Program
         }
 
         app.UseHttpsRedirection();
+        app.UseCors("AllowAll");
         app.UseAuthentication(); // Add authentication middleware
         app.UseAuthorization();
         app.MapControllers();
