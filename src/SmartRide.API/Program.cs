@@ -1,7 +1,11 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using SmartRide.API.Controllers.Conventions;
 using SmartRide.Application;
 using SmartRide.Common.Extensions;
 using SmartRide.Infrastructure;
+using SmartRide.Infrastructure.Settings;
+using System.Text;
 
 namespace SmartRide.API;
 
@@ -25,6 +29,23 @@ public class Program
             options.Conventions.Add(new KebaberizeConvention());
         });
 
+        // Add authentication
+        var jwtSettings = builder.Configuration.GetSection(nameof(JwtSettings)).Get<JwtSettings>();
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = jwtSettings!.Issuer,
+                    ValidAudience = jwtSettings.Audience,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey))
+                };
+            });
+
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
@@ -39,8 +60,8 @@ public class Program
         }
 
         app.UseHttpsRedirection();
+        app.UseAuthentication(); // Add authentication middleware
         app.UseAuthorization();
-
         app.MapControllers();
         app.Run();
     }

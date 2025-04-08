@@ -1,6 +1,6 @@
 using SmartRide.Domain.Interfaces;
 
-namespace SmartRide.Infrastructure.Notification;
+namespace SmartRide.Infrastructure.Services;
 
 public class EmailService : IEmailService
 {

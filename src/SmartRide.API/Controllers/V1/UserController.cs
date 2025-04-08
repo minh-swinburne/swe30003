@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SmartRide.API.Controllers.Attributes;
-using SmartRide.API.Controllers.Base;
 using SmartRide.Application.DTOs.Users;
 using SmartRide.Application.Interfaces;
 

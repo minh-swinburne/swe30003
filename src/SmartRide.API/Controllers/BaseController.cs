@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SmartRide.Application.DTOs;
 
-namespace SmartRide.API.Controllers.Base;
+namespace SmartRide.API.Controllers;
 
 [Route("api/[area]/[controller]")]
 [ApiController]

@@ -2,7 +2,7 @@ using System.Net.Http;
 using System.Text.Json;
 using SmartRide.Domain.Interfaces;
 
-namespace SmartRide.Infrastructure.Map;
+namespace SmartRide.Infrastructure.Services;
 
 public class GoogleMapsService : IMapService
 {
