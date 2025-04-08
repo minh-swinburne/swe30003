@@ -74,7 +74,7 @@ public class GetVehicleByIdQueryHandlerTests
         _mockVehicleRepository.Setup(r => r.GetByIdAsync(vehicleId, It.IsAny<List<string>>(), It.IsAny<CancellationToken>())).ReturnsAsync(vehicle);
         _mockMapper.Setup(m => m.Map<GetVehicleResponseDTO>(vehicle)).Returns(responseDto);
 
-        var query = new GetVehicleByIdQuery { Id = vehicleId };
+        var query = new GetVehicleByIdQuery { VehicleId = vehicleId };
 
         // Act
         var result = await _handler.Handle(query, CancellationToken.None);
@@ -93,7 +93,7 @@ public class GetVehicleByIdQueryHandlerTests
         var vehicleId = Guid.NewGuid();
         _mockVehicleRepository.Setup(r => r.GetByIdAsync(vehicleId, It.IsAny<List<string>>(), It.IsAny<CancellationToken>())).ReturnsAsync(null as Vehicle);
 
-        var query = new GetVehicleByIdQuery { Id = vehicleId };
+        var query = new GetVehicleByIdQuery { VehicleId = vehicleId };
 
         // Act
         var result = await _handler.Handle(query, CancellationToken.None);
