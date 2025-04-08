@@ -46,7 +46,7 @@ public class AuthService(IUserService userService, IJwtService jwtService, IPass
             expiration: TimeSpan.FromMinutes(60)
         );
 
-        return new ResponseDTO<string> { Data = "" };
+        return new ResponseDTO<string> { Data = token };
     }
 
     public async Task<ResponseDTO<CreateUserResponseDTO>> RegisterAsync(CreateUserRequestDTO request)
