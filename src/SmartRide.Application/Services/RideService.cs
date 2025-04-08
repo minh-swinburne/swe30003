@@ -1,18 +1,13 @@
 using AutoMapper;
 using MediatR;
 using SmartRide.Application.Commands;
-using SmartRide.Application.Commands.Locations;
 using SmartRide.Application.Commands.Payments;
 using SmartRide.Application.Commands.Rides;
 using SmartRide.Application.DTOs;
-using SmartRide.Application.DTOs.Locations;
 using SmartRide.Application.DTOs.Rides;
 using SmartRide.Application.Factories;
 using SmartRide.Application.Interfaces;
-using SmartRide.Application.Queries.Locations;
 using SmartRide.Application.Queries.Rides;
-using SmartRide.Common.Exceptions;
-using SmartRide.Common.Responses.Errors;
 using SmartRide.Domain.Interfaces;
 
 namespace SmartRide.Application.Services;

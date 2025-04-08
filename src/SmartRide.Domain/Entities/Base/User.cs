@@ -54,10 +54,18 @@ public class User : BaseEntity
     private ICollection<License>? _licenses { get; set; } = [];
 
     [BackingField(nameof(_vehicles))]
-    public ICollection<Vehicle>? Vehicles => IsDriver() ? _vehicles : null;
+    public ICollection<Vehicle>? Vehicles
+    {
+        get => IsDriver() ? _vehicles : null;
+        private set => _vehicles = value;
+    }
 
     [BackingField(nameof(_licenses))]
-    public ICollection<License>? Licenses => IsDriver() ? _licenses : null;
+    public ICollection<License>? Licenses
+    {
+        get => IsDriver() ? _licenses : null;
+        private set => _licenses = value;
+    }
 
     public bool IsDriver()
     {
