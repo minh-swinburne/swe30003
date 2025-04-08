@@ -33,6 +33,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Events\" />
+    <Folder Include="Migrations\" />
     <Folder Include="Persistence\" />
     <Folder Include="Seed\" />
     <Folder Include="Services\" />
