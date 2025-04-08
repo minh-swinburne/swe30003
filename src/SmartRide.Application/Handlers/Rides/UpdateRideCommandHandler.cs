@@ -16,7 +16,7 @@ public class UpdateRideCommandHandler(IRepository<Ride> rideRepository, IMapper 
 
     public override async Task<UpdateRideResponseDTO> Handle(UpdateRideCommand command, CancellationToken cancellationToken)
     {
-        var ride = await _rideRepository.GetByIdAsync(command.RideId, cancellationToken)
+        var ride = await _rideRepository.GetByIdAsync(command.RideId, cancellationToken: cancellationToken)
             ?? throw new BaseException(RideErrors.Module, RideErrors.ID_NOT_FOUND.FormatMessage(("RideId", command.RideId)));
 
         _mapper.Map(command, ride);

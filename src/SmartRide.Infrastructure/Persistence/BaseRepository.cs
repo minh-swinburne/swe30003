@@ -46,14 +46,34 @@ public class BaseRepository<T>(SmartRideDbContext dbContext) : IRepository<T> wh
         return result.Entity;
     }
 
-    public async Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task<T?> GetByIdAsync(Guid id, List<string>? includes = null, CancellationToken cancellationToken = default)
     {
-        return await _dbSet.FindAsync([id], cancellationToken: cancellationToken);
+        var query = _dbSet.AsQueryable();
+
+        if (includes != null)
+        {
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+        }
+
+        return await query.FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
     }
 
-    public async Task<List<T>> GetAllAsync(CancellationToken cancellationToken = default)
+    public async Task<List<T>> GetAllAsync(List<string>? includes = null, CancellationToken cancellationToken = default)
     {
-        return await _dbSet.ToListAsync(cancellationToken);
+        var query = _dbSet.AsQueryable();
+
+        if (includes != null)
+        {
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+        }
+
+        return await query.ToListAsync(cancellationToken);
     }
 
     public async Task<List<T>> GetWithFilterAsync<TDto>(
@@ -63,10 +83,19 @@ public class BaseRepository<T>(SmartRideDbContext dbContext) : IRepository<T> wh
         bool ascending = true,
         int skip = 0,
         int limit = 0,
+        List<string>? includes = null,
         CancellationToken cancellationToken = default
-        )
+    )
     {
         var query = _dbSet.AsQueryable();
+
+        if (includes != null)
+        {
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+        }
 
         if (filter != null)
             query = query.Where(filter);

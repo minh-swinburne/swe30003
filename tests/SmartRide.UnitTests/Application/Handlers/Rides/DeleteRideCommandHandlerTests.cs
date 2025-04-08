@@ -29,13 +29,13 @@ public class DeleteRideCommandHandlerTests
         {
             Id = rideId,
             PassengerId = Guid.NewGuid(),
-            VehicleType = VehicleTypeEnum.SmallCar,
+            VehicleTypeId = VehicleTypeEnum.SmallCar,
             PickupLocationId = Guid.NewGuid(),
             DestinationId = Guid.NewGuid(),
             Fare = 100,
             Notes = "Test ride"
         };
-        _mockRideRepository.Setup(r => r.GetByIdAsync(rideId, It.IsAny<CancellationToken>())).ReturnsAsync(ride);
+        _mockRideRepository.Setup(r => r.GetByIdAsync(rideId, It.IsAny<List<string>>(), It.IsAny<CancellationToken>())).ReturnsAsync(ride);
         _mockRideRepository.Setup(r => r.DeleteAsync(rideId, It.IsAny<CancellationToken>())).ReturnsAsync(ride);
 
         var command = new DeleteRideCommand { RideId = rideId };
@@ -55,7 +55,7 @@ public class DeleteRideCommandHandlerTests
     {
         // Arrange
         var command = new DeleteRideCommand { RideId = Guid.NewGuid() };
-        _mockRideRepository.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(null as Ride);
+        _mockRideRepository.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<List<string>>(), It.IsAny<CancellationToken>())).ReturnsAsync(null as Ride);
 
         // Act & Assert
         await Assert.ThrowsAsync<BaseException>(() => _handler.Handle(command, CancellationToken.None));

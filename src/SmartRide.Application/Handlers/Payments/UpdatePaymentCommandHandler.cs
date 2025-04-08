@@ -16,13 +16,13 @@ public class UpdatePaymentCommandHandler(IRepository<Payment> paymentRepository,
 
     public override async Task<UpdatePaymentResponseDTO> Handle(UpdatePaymentCommand command, CancellationToken cancellationToken)
     {
-        var payment = await _paymentRepository.GetByIdAsync(command.PaymentId, cancellationToken)
+        var payment = await _paymentRepository.GetByIdAsync(command.PaymentId, cancellationToken: cancellationToken)
             ?? throw new BaseException(PaymentErrors.Module, PaymentErrors.ID_NOT_FOUND.FormatMessage(("PaymentId", command.PaymentId)));
 
         _mapper.Map(command, payment);
 
         var updatedPayment = await _paymentRepository.UpdateAsync(payment, cancellationToken);
-        
+
         return _mapper.Map<UpdatePaymentResponseDTO>(updatedPayment);
     }
 }

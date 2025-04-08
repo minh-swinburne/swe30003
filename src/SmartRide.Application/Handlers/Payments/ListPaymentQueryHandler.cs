@@ -33,6 +33,7 @@ public class ListPaymentQueryHandler(IRepository<Payment> paymentRepository, IMa
             ascending: query.Ascending,
             skip: query.PageSize * (query.PageNo - 1),
             limit: query.PageSize,
+            includes: ["PaymentMethod"],
             cancellationToken: cancellationToken
         );
 

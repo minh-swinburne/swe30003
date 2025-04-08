@@ -1,5 +1,7 @@
 # Terminal Command
 
+Note: You should clear the database before migration, and use data seeder to generate them again later.
+
 ## Add New Migration
 
 ```

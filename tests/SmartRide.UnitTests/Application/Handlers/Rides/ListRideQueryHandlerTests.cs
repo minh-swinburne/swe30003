@@ -33,7 +33,7 @@ public class ListRideQueryHandlerTests
                 PassengerId = Guid.NewGuid(),
                 DriverId = Guid.NewGuid(),
                 VehicleId = Guid.NewGuid(),
-                VehicleType = VehicleTypeEnum.SmallCar,
+                VehicleTypeId = VehicleTypeEnum.SmallCar,
                 RideType = RideTypeEnum.Private,
                 Status = RideStatusEnum.Completed,
                 PickupLocationId = Guid.NewGuid(),
@@ -51,7 +51,7 @@ public class ListRideQueryHandlerTests
                 PassengerId = Guid.NewGuid(),
                 DriverId = Guid.NewGuid(),
                 VehicleId = Guid.NewGuid(),
-                VehicleType = VehicleTypeEnum.LargeCar,
+                VehicleTypeId = VehicleTypeEnum.LargeCar,
                 RideType = RideTypeEnum.Shared,
                 Status = RideStatusEnum.Picking,
                 PickupLocationId = Guid.NewGuid(),
@@ -70,7 +70,7 @@ public class ListRideQueryHandlerTests
         {
             RideId = r.Id,
             PassengerId = r.PassengerId,
-            VehicleType = r.VehicleType,
+            VehicleType = r.VehicleTypeId,
             DriverId = r.DriverId,
             VehicleId = r.VehicleId,
             RideType = r.RideType,
@@ -93,6 +93,7 @@ public class ListRideQueryHandlerTests
             It.IsAny<bool>(),
             It.IsAny<int>(),
             It.IsAny<int>(),
+            It.IsAny<List<string>>(),
             It.IsAny<CancellationToken>()
         )).ReturnsAsync(rides);
 

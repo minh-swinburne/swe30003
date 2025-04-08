@@ -15,7 +15,9 @@ public class GetUserByEmailQueryHandler(IRepository<User> userRepository, IMappe
 
     public override async Task<GetUserResponseDTO> Handle(GetUserByEmailQuery query, CancellationToken cancellationToken)
     {
-        var user = await _userRepository.Query(cancellationToken)
+        var user = await _userRepository
+            .Query(cancellationToken)
+            .Include(u => u.Roles)
             .FirstOrDefaultAsync(u => u.Email == query.Email, cancellationToken);
 
         return _mapper.Map<GetUserResponseDTO>(user);

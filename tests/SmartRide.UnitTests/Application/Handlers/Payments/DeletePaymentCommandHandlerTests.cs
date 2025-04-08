@@ -30,7 +30,7 @@ public class DeletePaymentCommandHandlerTests
             RideId = Guid.NewGuid(),
             Amount = 100
         };
-        _mockPaymentRepository.Setup(r => r.GetByIdAsync(paymentId, It.IsAny<CancellationToken>())).ReturnsAsync(payment);
+        _mockPaymentRepository.Setup(r => r.GetByIdAsync(paymentId, It.IsAny<List<string>>(), It.IsAny<CancellationToken>())).ReturnsAsync(payment);
         _mockPaymentRepository.Setup(r => r.DeleteAsync(paymentId, It.IsAny<CancellationToken>())).ReturnsAsync(payment);
 
         var command = new DeletePaymentCommand { PaymentId = paymentId };
@@ -50,7 +50,7 @@ public class DeletePaymentCommandHandlerTests
     {
         // Arrange
         var command = new DeletePaymentCommand { PaymentId = Guid.NewGuid() };
-        _mockPaymentRepository.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(null as Payment);
+        _mockPaymentRepository.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<List<string>>(), It.IsAny<CancellationToken>())).ReturnsAsync(null as Payment);
 
         // Act & Assert
         await Assert.ThrowsAsync<BaseException>(() => _handler.Handle(command, CancellationToken.None));

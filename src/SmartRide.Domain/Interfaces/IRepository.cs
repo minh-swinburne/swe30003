@@ -11,8 +11,8 @@ public interface IRepository<T> where T : BaseEntity
     Task<T> CreateAsync(T entity, CancellationToken cancellationToken = default);
     Task<T> UpdateAsync(T entity, CancellationToken cancellationToken = default);
     Task<T> DeleteAsync(Guid id, CancellationToken cancellationToken = default);
-    Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
-    Task<List<T>> GetAllAsync(CancellationToken cancellationToken = default);
+    Task<T?> GetByIdAsync(Guid id, List<string>? includes = null, CancellationToken cancellationToken = default);
+    Task<List<T>> GetAllAsync(List<string>? includes = null, CancellationToken cancellationToken = default);
     Task<List<T>> GetWithFilterAsync<TDto>(
         Expression<Func<T, bool>>? filter,
         Expression<Func<T, TDto>>? select = null,
@@ -20,6 +20,7 @@ public interface IRepository<T> where T : BaseEntity
         bool ascending = true,
         int skip = 0,
         int limit = 0,
+        List<string>? includes = null,
         CancellationToken cancellationToken = default
         );
 }

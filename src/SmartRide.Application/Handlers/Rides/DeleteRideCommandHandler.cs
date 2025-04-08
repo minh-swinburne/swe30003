@@ -14,7 +14,7 @@ public class DeleteRideCommandHandler(IRepository<Ride> rideRepository)
 
     public override async Task<DeleteRideResponseDTO> Handle(DeleteRideCommand command, CancellationToken cancellationToken)
     {
-        var ride = await _rideRepository.GetByIdAsync(command.RideId, cancellationToken)
+        var ride = await _rideRepository.GetByIdAsync(command.RideId, cancellationToken: cancellationToken)
             ?? throw new BaseException(RideErrors.Module, RideErrors.ID_NOT_FOUND.FormatMessage(("RideId", command.RideId)));
 
         await _rideRepository.DeleteAsync(command.RideId, cancellationToken);

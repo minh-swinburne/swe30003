@@ -46,6 +46,7 @@ public class ListLocationQueryHandlerTests
             It.IsAny<bool>(),
             It.IsAny<int>(),
             It.IsAny<int>(),
+            It.IsAny<List<string>>(),
             It.IsAny<CancellationToken>()
         )).ReturnsAsync(locations);
 
@@ -73,6 +74,7 @@ public class ListLocationQueryHandlerTests
             It.IsAny<bool>(),
             It.IsAny<int>(),
             It.IsAny<int>(),
+            It.IsAny<List<string>>(),
             It.IsAny<CancellationToken>()
         )).ReturnsAsync([]);
 

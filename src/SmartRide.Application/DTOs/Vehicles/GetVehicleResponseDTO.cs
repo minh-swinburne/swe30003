@@ -1,10 +1,11 @@
 using SmartRide.Application.DTOs.Lookup;
+using SmartRide.Application.DTOs.Users;
 
 namespace SmartRide.Application.DTOs.Vehicles;
 
 public class GetVehicleResponseDTO : BaseVehicleResponseDTO
 {
-    public required Guid UserId { get; init; }
+    public required GetUserResponseDTO User { get; init; }
     public required VehicleTypeDTO VehicleType { get; init; }
     public required string Vin { get; init; }
     public required string Plate { get; init; }

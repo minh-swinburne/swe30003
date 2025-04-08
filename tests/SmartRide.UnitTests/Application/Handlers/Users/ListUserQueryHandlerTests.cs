@@ -5,6 +5,8 @@ using SmartRide.Application.DTOs.Users;
 using SmartRide.Application.Handlers.Users;
 using SmartRide.Application.Queries.Users;
 using SmartRide.Domain.Entities.Base;
+using SmartRide.Domain.Entities.Lookup;
+using SmartRide.Domain.Enums;
 using SmartRide.Domain.Interfaces;
 using System.Linq.Expressions;
 
@@ -34,7 +36,11 @@ public class ListUserQueryHandlerTests
                 LastName = "Doe",
                 Email = "johndoe@example.com",
                 Phone = "0123456789",
-                Password = "secure-password-1"
+                Password = "secure-password-1",
+                Roles =
+                [
+                    new() { Id = RoleEnum.Passenger, Name = "Passenger", Description = "Passenger role" }
+                ],
             },
             new()
             {
@@ -44,7 +50,12 @@ public class ListUserQueryHandlerTests
                 Email = "jsmith123@example.xyz",
                 Phone = "0987654321",
                 Password = "secure-password-2",
-                Picture = "https://example.com/images/avatar_1.png"
+                Picture = "https://example.com/images/avatar_1.png",
+                Roles =
+                [
+                    new() { Id = RoleEnum.Passenger, Name = "Passenger", Description = "Passenger role" },
+                    new() { Id = RoleEnum.Manager, Name = "Manager", Description = "Manager role" }
+                ],
             }
         ];
     }
@@ -77,6 +88,7 @@ public class ListUserQueryHandlerTests
             It.IsAny<bool>(),
             It.IsAny<int>(),
             It.IsAny<int>(),
+            It.IsAny<List<string>>(),
             It.IsAny<CancellationToken>()
         )).ReturnsAsync(users);
 
@@ -115,5 +127,37 @@ public class ListUserQueryHandlerTests
 
         // Assert
         Assert.DoesNotContain(result, x => x.GetType().GetProperty("Password") != null);
+    }
+
+    [Fact]
+    public async Task Handle_Should_Return_Empty_List_When_No_Users_Found()
+    {
+        // Arrange
+        var query = new ListUserQuery();
+        var users = new List<User>();
+        var expected = new List<ListUserResponseDTO>();
+        SetupMocks(users, expected);
+
+        // Act
+        var result = await _handler.Handle(query, CancellationToken.None);
+
+        // Assert
+        Assert.Empty(result);
+    }
+
+    [Fact]
+    public async Task Handle_Should_Return_Users_With_Correct_Roles()
+    {
+        // Arrange
+        var query = new ListUserQuery();
+        var users = CreateMockUsers();
+        var expected = MapToResponseDTOs(users);
+        SetupMocks(users, expected);
+
+        // Act
+        var result = await _handler.Handle(query, CancellationToken.None);
+
+        // Assert
+        Assert.All(result, user => Assert.NotEmpty(user.Roles));
     }
 }

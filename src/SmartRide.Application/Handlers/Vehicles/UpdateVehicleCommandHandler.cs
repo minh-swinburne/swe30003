@@ -16,13 +16,13 @@ public class UpdateVehicleCommandHandler(IRepository<Vehicle> vehicleRepository,
 
     public override async Task<UpdateVehicleResponseDTO> Handle(UpdateVehicleCommand command, CancellationToken cancellationToken)
     {
-        var vehicle = await _vehicleRepository.GetByIdAsync(command.VehicleId, cancellationToken)
+        var vehicle = await _vehicleRepository.GetByIdAsync(command.VehicleId, cancellationToken: cancellationToken)
             ?? throw new BaseException(VehicleErrors.Module, VehicleErrors.ID_NOT_FOUND.FormatMessage(("VehicleId", command.VehicleId)));
 
         _mapper.Map(command, vehicle);
 
         var updatedVehicle = await _vehicleRepository.UpdateAsync(vehicle, cancellationToken);
-        
+
         return _mapper.Map<UpdateVehicleResponseDTO>(updatedVehicle);
     }
 }

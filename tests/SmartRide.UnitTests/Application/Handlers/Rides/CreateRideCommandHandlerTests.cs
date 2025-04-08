@@ -39,7 +39,7 @@ public class CreateRideCommandHandlerTests
         {
             Id = Guid.NewGuid(),
             PassengerId = command.PassengerId,
-            VehicleType = VehicleTypeEnum.SmallCar,
+            VehicleTypeId = VehicleTypeEnum.SmallCar,
             PickupLocationId = Guid.NewGuid(),
             DestinationId = Guid.NewGuid(),
             Fare = command.Fare,
@@ -49,7 +49,7 @@ public class CreateRideCommandHandlerTests
         {
             RideId = ride.Id,
             PassengerId = ride.PassengerId,
-            VehicleType = ride.VehicleType,
+            VehicleType = ride.VehicleTypeId,
             RideType = ride.RideType,
             RideStatus = RideStatusEnum.Pending,
             PickupLocationId = ride.PickupLocationId,

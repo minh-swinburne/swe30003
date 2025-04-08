@@ -31,7 +31,7 @@ public class DeleteLocationCommandHandlerTests
             Latitude = 45.0,
             Longitude = -93.0
         };
-        _mockLocationRepository.Setup(r => r.GetByIdAsync(locationId, It.IsAny<CancellationToken>())).ReturnsAsync(location);
+        _mockLocationRepository.Setup(r => r.GetByIdAsync(locationId, It.IsAny<List<string>>(), It.IsAny<CancellationToken>())).ReturnsAsync(location);
         _mockLocationRepository.Setup(r => r.DeleteAsync(locationId, It.IsAny<CancellationToken>())).ReturnsAsync(location);
 
         var command = new DeleteLocationCommand { LocationId = locationId };
@@ -51,7 +51,7 @@ public class DeleteLocationCommandHandlerTests
     {
         // Arrange
         var command = new DeleteLocationCommand { LocationId = Guid.NewGuid() };
-        _mockLocationRepository.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(null as Location);
+        _mockLocationRepository.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<List<string>>(), It.IsAny<CancellationToken>())).ReturnsAsync(null as Location);
 
         // Act & Assert
         await Assert.ThrowsAsync<BaseException>(() => _handler.Handle(command, CancellationToken.None));

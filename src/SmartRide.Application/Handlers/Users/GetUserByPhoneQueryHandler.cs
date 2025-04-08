@@ -15,7 +15,9 @@ public class GetUserByPhoneQueryHandler(IRepository<User> userRepository, IMappe
 
     public override async Task<GetUserResponseDTO> Handle(GetUserByPhoneQuery query, CancellationToken cancellationToken)
     {
-        var user = await _userRepository.Query(cancellationToken)
+        var user = await _userRepository
+            .Query(cancellationToken)
+            .Include(u => u.Roles)
             .FirstOrDefaultAsync(u => u.Phone == query.Phone, cancellationToken);
 
         return _mapper.Map<GetUserResponseDTO>(user);

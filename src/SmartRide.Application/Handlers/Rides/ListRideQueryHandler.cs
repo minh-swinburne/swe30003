@@ -33,6 +33,7 @@ public class ListRideQueryHandler(IRepository<Ride> rideRepository, IMapper mapp
             ascending: query.Ascending,
             skip: query.PageSize * (query.PageNo - 1),
             limit: query.PageSize,
+            includes: ["VehicleType"],
             cancellationToken: cancellationToken
         );
 
@@ -53,7 +54,7 @@ public class ListRideQueryHandler(IRepository<Ride> rideRepository, IMapper mapp
             filter = filter.AddFilter(ride => ride.VehicleId == query.VehicleId.Value);
 
         if (query.VehicleType.HasValue)
-            filter = filter.AddFilter(ride => ride.VehicleType == query.VehicleType.Value);
+            filter = filter.AddFilter(ride => ride.VehicleTypeId == query.VehicleType.Value);
 
         if (query.RideType.HasValue)
             filter = filter.AddFilter(ride => ride.RideType == query.RideType.Value);

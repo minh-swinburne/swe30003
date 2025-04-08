@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SmartRide.Common.Constants;
+using SmartRide.Domain.Entities.Lookup;
 using SmartRide.Domain.Enums;
 using SmartRide.Domain.Events;
 using System.ComponentModel.DataAnnotations;
@@ -21,7 +22,7 @@ public class Ride : BaseEntity
 
     [Required]
     [Column(TypeName = "TINYINT")]
-    public required VehicleTypeEnum VehicleType { get; set; }
+    public required VehicleTypeEnum VehicleTypeId { get; set; }
 
     [Required]
     [Column(TypeName = "TINYINT")]
@@ -69,6 +70,9 @@ public class Ride : BaseEntity
 
     [ForeignKey(nameof(VehicleId))]
     public Vehicle? Vehicle { get; set; }
+
+    [Required]
+    public VehicleType VehicleType { get; set; } = null!;
 
     [Required]
     [ForeignKey(nameof(PickupLocationId))]

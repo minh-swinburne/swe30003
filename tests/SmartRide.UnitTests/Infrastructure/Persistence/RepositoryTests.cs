@@ -8,9 +8,6 @@ using SmartRide.Domain.Entities.Lookup;
 using SmartRide.Domain.Enums;
 using SmartRide.Infrastructure.Persistence;
 using SmartRide.Infrastructure.Settings;
-using System;
-using System.Threading.Tasks;
-using Xunit;
 
 namespace SmartRide.UnitTests.Infrastructure.Persistence;
 
@@ -153,6 +150,37 @@ public class RepositoryTests : IDisposable
         Assert.NotNull(deletedUser);
         Assert.Equal(userId, deletedUser.Id);
         Assert.False(await _userRepository.ExistsAsync(userId));
+    }
+
+    [Fact]
+    public async Task Can_List_Entities()
+    {
+        // Arrange
+        var userId = Guid.Parse("12345678-abcd-1234-ef12-34567890abcd");
+
+        // Act
+        var users = await _userRepository.GetAllAsync();
+
+        // Assert
+        Assert.NotNull(users);
+        Assert.Contains(users, u => u.Id == userId);
+    }
+
+    [Fact]
+    public async Task Can_Get_User_With_Roles()
+    {
+        // Arrange
+        var userId = Guid.Parse("12345678-abcd-1234-ef12-34567890abcd");
+
+        // Act
+        var userWithRoles = await _userRepository.GetByIdAsync(userId);
+
+        // Assert
+        Assert.NotNull(userWithRoles);
+        Assert.Equal(userId, userWithRoles.Id);
+        Assert.NotEmpty(userWithRoles.UserRoles);
+        Assert.NotEmpty(userWithRoles.Roles);
+        Assert.Contains(userWithRoles.Roles, r => r.Id == RoleEnum.Driver);
     }
 
     [Fact]

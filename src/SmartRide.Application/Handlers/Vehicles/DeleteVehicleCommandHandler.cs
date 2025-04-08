@@ -14,7 +14,7 @@ public class DeleteVehicleCommandHandler(IRepository<Vehicle> vehicleRepository)
 
     public override async Task<DeleteVehicleResponseDTO> Handle(DeleteVehicleCommand command, CancellationToken cancellationToken)
     {
-        var vehicle = await _vehicleRepository.GetByIdAsync(command.VehicleId, cancellationToken)
+        var vehicle = await _vehicleRepository.GetByIdAsync(command.VehicleId, cancellationToken: cancellationToken)
             ?? throw new BaseException(VehicleErrors.Module, VehicleErrors.ID_NOT_FOUND.FormatMessage(("VehicleId", command.VehicleId)));
 
         await _vehicleRepository.DeleteAsync(vehicle.Id, cancellationToken);

@@ -19,18 +19,18 @@ public class MatchRideCommandHandler(IRepository<Ride> rideRepository, IReposito
 
     public override async Task<MatchRideResponseDTO> Handle(MatchRideCommand command, CancellationToken cancellationToken)
     {
-        var ride = await _rideRepository.GetByIdAsync(command.RideId, cancellationToken)
+        var ride = await _rideRepository.GetByIdAsync(command.RideId, cancellationToken: cancellationToken)
             ?? throw new BaseException(RideErrors.Module, RideErrors.ID_NOT_FOUND.FormatMessage(("RideId", command.RideId)));
 
-        var driver = await _userRepository.GetByIdAsync(command.DriverId, cancellationToken)
+        var driver = await _userRepository.GetByIdAsync(command.DriverId, cancellationToken: cancellationToken)
             ?? throw new BaseException(RideErrors.Module, RideErrors.DRIVER_ID_NOT_FOUND.FormatMessage(("UserId", command.DriverId)));
 
-        var vehicle = await _vehicleRepository.GetByIdAsync(command.VehicleId, cancellationToken)
+        var vehicle = await _vehicleRepository.GetByIdAsync(command.VehicleId, cancellationToken: cancellationToken)
             ?? throw new BaseException(RideErrors.Module, RideErrors.VEHICLE_ID_NOT_FOUND.FormatMessage(("VehicleId", command.VehicleId)));
 
         _mapper.Map(command, ride);
         ride.Status = RideStatusEnum.Picking;
-        
+
         var updatedRide = await _rideRepository.UpdateAsync(ride, cancellationToken);
 
         return _mapper.Map<MatchRideResponseDTO>(updatedRide);

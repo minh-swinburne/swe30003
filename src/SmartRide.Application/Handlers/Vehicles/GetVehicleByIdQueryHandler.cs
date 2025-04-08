@@ -14,7 +14,7 @@ public class GetVehicleByIdQueryHandler(IRepository<Vehicle> vehicleRepository, 
 
     public override async Task<GetVehicleResponseDTO> Handle(GetVehicleByIdQuery request, CancellationToken cancellationToken)
     {
-        var vehicle = await _vehicleRepository.GetByIdAsync(request.Id, cancellationToken);
+        var vehicle = await _vehicleRepository.GetByIdAsync(request.Id, ["User", "VehicleType"], cancellationToken);
         return _mapper.Map<GetVehicleResponseDTO>(vehicle);
     }
 }

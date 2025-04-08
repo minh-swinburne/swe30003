@@ -14,7 +14,7 @@ public class DeletePaymentCommandHandler(IRepository<Payment> paymentRepository)
 
     public override async Task<DeletePaymentResponseDTO> Handle(DeletePaymentCommand command, CancellationToken cancellationToken)
     {
-        var payment = await _paymentRepository.GetByIdAsync(command.PaymentId, cancellationToken)
+        var payment = await _paymentRepository.GetByIdAsync(command.PaymentId, cancellationToken: cancellationToken)
             ?? throw new BaseException(PaymentErrors.Module, PaymentErrors.ID_NOT_FOUND.FormatMessage(("PaymentId", command.PaymentId)));
 
         await _paymentRepository.DeleteAsync(command.PaymentId, cancellationToken);

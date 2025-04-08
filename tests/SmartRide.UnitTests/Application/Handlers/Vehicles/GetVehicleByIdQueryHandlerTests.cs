@@ -1,6 +1,7 @@
 using AutoMapper;
 using Moq;
 using SmartRide.Application.DTOs.Lookup;
+using SmartRide.Application.DTOs.Users;
 using SmartRide.Application.DTOs.Vehicles;
 using SmartRide.Application.Handlers.Vehicles;
 using SmartRide.Application.Queries.Vehicles;
@@ -41,10 +42,22 @@ public class GetVehicleByIdQueryHandlerTests
             Year = 2020,
             RegisteredDate = DateTime.UtcNow.AddYears(-1),
         };
+        var user = new GetUserResponseDTO
+        {
+            UserId = userId,
+            FirstName = "John",
+            LastName = "Doe",
+            Email = "john.doe@example.com",
+            Phone = "1234567890",
+            Roles = [new() {
+                RoleId = RoleEnum.Driver,
+                Name = "User"
+            }]
+        };
         var responseDto = new GetVehicleResponseDTO
         {
             VehicleId = vehicleId,
-            UserId = userId,
+            User = user,
             Vin = vehicle.Vin,
             Plate = vehicle.Plate,
             Make = vehicle.Make,
@@ -58,7 +71,7 @@ public class GetVehicleByIdQueryHandlerTests
             },
         };
 
-        _mockVehicleRepository.Setup(r => r.GetByIdAsync(vehicleId, It.IsAny<CancellationToken>())).ReturnsAsync(vehicle);
+        _mockVehicleRepository.Setup(r => r.GetByIdAsync(vehicleId, It.IsAny<List<string>>(), It.IsAny<CancellationToken>())).ReturnsAsync(vehicle);
         _mockMapper.Setup(m => m.Map<GetVehicleResponseDTO>(vehicle)).Returns(responseDto);
 
         var query = new GetVehicleByIdQuery { Id = vehicleId };
@@ -70,7 +83,7 @@ public class GetVehicleByIdQueryHandlerTests
         Assert.NotNull(result);
         Assert.Equal(responseDto.VehicleId, result.VehicleId);
         Assert.Equal(responseDto.Make, result.Make);
-        _mockVehicleRepository.Verify(r => r.GetByIdAsync(vehicleId, It.IsAny<CancellationToken>()), Times.Once);
+        _mockVehicleRepository.Verify(r => r.GetByIdAsync(vehicleId, It.IsAny<List<string>>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -78,7 +91,7 @@ public class GetVehicleByIdQueryHandlerTests
     {
         // Arrange
         var vehicleId = Guid.NewGuid();
-        _mockVehicleRepository.Setup(r => r.GetByIdAsync(vehicleId, It.IsAny<CancellationToken>())).ReturnsAsync(null as Vehicle);
+        _mockVehicleRepository.Setup(r => r.GetByIdAsync(vehicleId, It.IsAny<List<string>>(), It.IsAny<CancellationToken>())).ReturnsAsync(null as Vehicle);
 
         var query = new GetVehicleByIdQuery { Id = vehicleId };
 
@@ -87,6 +100,6 @@ public class GetVehicleByIdQueryHandlerTests
 
         // Assert
         Assert.Null(result);
-        _mockVehicleRepository.Verify(r => r.GetByIdAsync(vehicleId, It.IsAny<CancellationToken>()), Times.Once);
+        _mockVehicleRepository.Verify(r => r.GetByIdAsync(vehicleId, It.IsAny<List<string>>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 }

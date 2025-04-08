@@ -37,7 +37,7 @@ public class DeleteVehicleCommandHandlerTests
             Year = 2020,
             RegisteredDate = DateTime.UtcNow.AddYears(-1),
         };
-        _mockVehicleRepository.Setup(r => r.GetByIdAsync(vehicleId, It.IsAny<CancellationToken>())).ReturnsAsync(vehicle);
+        _mockVehicleRepository.Setup(r => r.GetByIdAsync(vehicleId, It.IsAny<List<string>>(), It.IsAny<CancellationToken>())).ReturnsAsync(vehicle);
         _mockVehicleRepository.Setup(r => r.DeleteAsync(vehicleId, It.IsAny<CancellationToken>())).ReturnsAsync(vehicle);
 
         var command = new DeleteVehicleCommand { VehicleId = vehicleId };
@@ -57,7 +57,7 @@ public class DeleteVehicleCommandHandlerTests
     {
         // Arrange
         var command = new DeleteVehicleCommand { VehicleId = Guid.NewGuid() };
-        _mockVehicleRepository.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(null as Vehicle);
+        _mockVehicleRepository.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<List<string>>(), It.IsAny<CancellationToken>())).ReturnsAsync(null as Vehicle);
 
         // Act & Assert
         await Assert.ThrowsAsync<BaseException>(() => _handler.Handle(command, CancellationToken.None));

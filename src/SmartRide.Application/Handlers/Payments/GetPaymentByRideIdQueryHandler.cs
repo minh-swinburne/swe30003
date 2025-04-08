@@ -17,7 +17,10 @@ public class GetPaymentByRideIdQueryHandler(IRepository<Payment> paymentReposito
 
     public override async Task<GetPaymentResponseDTO> Handle(GetPaymentByRideIdQuery query, CancellationToken cancellationToken)
     {
-        var payment = await _paymentRepository.Query(cancellationToken)
+        var payment = await _paymentRepository
+            .Query(cancellationToken)
+            .Include(p => p.Ride)
+            .Include(p => p.PaymentMethod)
             .FirstOrDefaultAsync(p => p.RideId == query.RideId, cancellationToken)
             ?? throw new BaseException(PaymentErrors.Module, PaymentErrors.RIDE_ID_NOT_FOUND.FormatMessage(("RideId", query.RideId)));
 

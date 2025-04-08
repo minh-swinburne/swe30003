@@ -16,7 +16,7 @@ public class UpdateLocationCommandHandler(IRepository<Location> locationReposito
 
     public override async Task<UpdateLocationResponseDTO> Handle(UpdateLocationCommand command, CancellationToken cancellationToken)
     {
-        var location = await _locationRepository.GetByIdAsync(command.LocationId, cancellationToken)
+        var location = await _locationRepository.GetByIdAsync(command.LocationId, cancellationToken: cancellationToken)
             ?? throw new BaseException(LocationErrors.Module, LocationErrors.ID_NOT_FOUND.FormatMessage(("LocationId", command.LocationId)));
 
         _mapper.Map(command, location);

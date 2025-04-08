@@ -29,8 +29,12 @@ public class RideMappingProfile : Profile
         // Derived DTOs inherit the mapping from BaseRideResponseDTO
         CreateMap<Ride, CreateRideResponseDTO>();
         CreateMap<Ride, UpdateRideResponseDTO>();
-        CreateMap<Ride, MatchRideResponseDTO>();
-        CreateMap<Ride, GetRideResponseDTO>();
-        CreateMap<Ride, ListRideResponseDTO>();
+        CreateMap<Ride, MatchRideResponseDTO>()
+            .ForMember(dest => dest.RideStatus, opt => opt.MapFrom(src => src.Status));
+        CreateMap<Ride, GetRideResponseDTO>()
+            .ForMember(dest => dest.RideStatus, opt => opt.MapFrom(src => src.Status));
+        CreateMap<Ride, ListRideResponseDTO>()
+            .ForMember(dest => dest.RideStatus, opt => opt.MapFrom(src => src.Status))
+            .ForMember(dest => dest.VehicleType, opt => opt.MapFrom(src => src.VehicleTypeId)); ;
     }
 }

@@ -28,6 +28,7 @@ public class UserMappingProfile : Profile
         CreateMap<User, CreateUserResponseDTO>();
         CreateMap<User, UpdateUserResponseDTO>();
         CreateMap<User, GetUserResponseDTO>();
-        CreateMap<User, ListUserResponseDTO>();
+        CreateMap<User, ListUserResponseDTO>()
+            .ForMember(dest => dest.Roles, opt => opt.MapFrom(src => src.Roles));
     }
 }

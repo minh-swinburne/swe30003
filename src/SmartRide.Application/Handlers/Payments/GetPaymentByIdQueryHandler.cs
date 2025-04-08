@@ -16,7 +16,7 @@ public class GetPaymentByIdQueryHandler(IRepository<Payment> paymentRepository, 
 
     public override async Task<GetPaymentResponseDTO> Handle(GetPaymentByIdQuery query, CancellationToken cancellationToken)
     {
-        var payment = await _paymentRepository.GetByIdAsync(query.PaymentId, cancellationToken)
+        var payment = await _paymentRepository.GetByIdAsync(query.PaymentId, ["Ride", "PaymentMethod"], cancellationToken)
             ?? throw new BaseException(PaymentErrors.Module, PaymentErrors.ID_NOT_FOUND.FormatMessage(("PaymentId", query.PaymentId)));
 
         return _mapper.Map<GetPaymentResponseDTO>(payment);

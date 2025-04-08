@@ -2,6 +2,7 @@ using AutoMapper;
 using MockQueryable;
 using Moq;
 using SmartRide.Application.DTOs.Lookup;
+using SmartRide.Application.DTOs.Users;
 using SmartRide.Application.DTOs.Vehicles;
 using SmartRide.Application.Handlers.Vehicles;
 using SmartRide.Application.Queries.Vehicles;
@@ -43,10 +44,22 @@ public class GetVehicleByVinQueryHandlerTests
             Year = 2020,
             RegisteredDate = DateTime.UtcNow.AddYears(-1),
         };
+        var user = new GetUserResponseDTO
+        {
+            UserId = Guid.NewGuid(),
+            FirstName = "John",
+            LastName = "Doe",
+            Email = "john.doe@example.com",
+            Phone = "1234567890",
+            Roles = [ new() {
+                RoleId = RoleEnum.Driver,
+                Name = "User"
+            }]
+        };
         var responseDto = new GetVehicleResponseDTO
         {
             VehicleId = vehicleId,
-            UserId = userId,
+            User = user,
             Vin = vehicle.Vin,
             Plate = vehicle.Plate,
             Make = vehicle.Make,

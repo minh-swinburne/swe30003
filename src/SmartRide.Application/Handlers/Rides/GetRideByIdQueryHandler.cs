@@ -14,7 +14,7 @@ public class GetRideByIdQueryHandler(IRepository<Ride> rideRepository, IMapper m
 
     public override async Task<GetRideResponseDTO> Handle(GetRideByIdQuery query, CancellationToken cancellationToken)
     {
-        var ride = await _rideRepository.GetByIdAsync(query.RideId, cancellationToken)
+        var ride = await _rideRepository.GetByIdAsync(query.RideId, ["Passenger", "Driver", "Vehicle", "VehicleType", "PickupLocation", "Destination"], cancellationToken)
             ?? throw new KeyNotFoundException($"Ride with ID {query.RideId} not found.");
 
         return _mapper.Map<GetRideResponseDTO>(ride);

@@ -68,7 +68,7 @@ public class UpdateVehicleCommandHandlerTests
             RegisteredDate = vehicle.RegisteredDate,
         };
 
-        _mockVehicleRepository.Setup(r => r.GetByIdAsync(vehicleId, It.IsAny<CancellationToken>())).ReturnsAsync(vehicle);
+        _mockVehicleRepository.Setup(r => r.GetByIdAsync(vehicleId, It.IsAny<List<string>>(), It.IsAny<CancellationToken>())).ReturnsAsync(vehicle);
         _mockVehicleRepository.Setup(r => r.UpdateAsync(It.IsAny<Vehicle>(), It.IsAny<CancellationToken>())).ReturnsAsync(updatedVehicle);
         _mockMapper.Setup(m => m.Map<UpdateVehicleResponseDTO>(updatedVehicle)).Returns(response);
 
@@ -87,7 +87,7 @@ public class UpdateVehicleCommandHandlerTests
     {
         // Arrange
         var command = new UpdateVehicleCommand { VehicleId = Guid.NewGuid() };
-        _mockVehicleRepository.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(null as Vehicle);
+        _mockVehicleRepository.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<List<string>>(), It.IsAny<CancellationToken>())).ReturnsAsync(null as Vehicle);
 
         // Act & Assert
         await Assert.ThrowsAsync<BaseException>(() => _handler.Handle(command, CancellationToken.None));
