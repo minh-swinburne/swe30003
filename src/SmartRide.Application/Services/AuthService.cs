@@ -5,6 +5,7 @@ using SmartRide.Application.DTOs;
 using SmartRide.Application.DTOs.Auth;
 using SmartRide.Application.DTOs.Users;
 using SmartRide.Application.Interfaces;
+using SmartRide.Common.Responses;
 using SmartRide.Domain.Entities.Base;
 using SmartRide.Domain.Interfaces;
 
@@ -19,52 +20,92 @@ public class AuthService(IUserService userService, IJwtService jwtService, IPass
 
     public async Task<ResponseDTO<string>> LoginAsync(LoginRequestDTO request)
     {
-        var userResponse = await _userService.GetUserByEmailAsync(new GetUserByEmailRequestDTO { Email = request.Email });
-
-        if (userResponse.Data == null)
+        try
         {
-            return new ResponseDTO<string> { Data = "" };
+            var userResponse = await _userService.GetUserByEmailAsync(new GetUserByEmailRequestDTO { Email = request.Email });
+
+            if (userResponse.Data == null)
+            {
+                return new ResponseDTO<string>
+                {
+                    Info = new ResponseInfo { Code = "USER_NOT_FOUND", Message = "User not found." }
+                };
+            }
+
+            var user = _mapper.Map<User>(userResponse.Data);
+            var passwordVerificationResult = _passwordHasher.VerifyHashedPassword(user, user.Password!, request.Password);
+
+            if (passwordVerificationResult != PasswordVerificationResult.Success)
+            {
+                return new ResponseDTO<string>
+                {
+                    Data = null,
+                    Info = new ResponseInfo { Code = "INVALID_PASSWORD", Message = "Invalid password." }
+                };
+            }
+
+            var roles = user.Roles.Select(r => r.Name).ToList();
+
+            var token = _jwtService.GenerateToken(
+                [
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                    new Claim(ClaimTypes.Email, user.Email),
+                    new Claim(ClaimTypes.Name, user.FirstName),
+                    new Claim(ClaimTypes.Role, string.Join(",", roles))
+                ],
+                expiration: TimeSpan.FromMinutes(60)
+            );
+
+            return new ResponseDTO<string> { Data = token };
         }
-
-        var user = _mapper.Map<User>(userResponse.Data);
-        var passwordVerificationResult = _passwordHasher.VerifyHashedPassword(user, user.Password!, request.Password);
-
-        if (passwordVerificationResult != PasswordVerificationResult.Success)
+        catch (Exception ex)
         {
-            return new ResponseDTO<string> { Data = "" };
+            return new ResponseDTO<string>
+            {
+                Info = new ResponseInfo { Code = "LOGIN_ERROR", Message = ex.Message }
+            };
         }
-
-        var roles = user.Roles.Select(r => r.Name).ToList();
-
-        var token = _jwtService.GenerateToken(
-            [
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Name, user.FirstName),
-                new Claim(ClaimTypes.Role, string.Join(",", roles))
-            ],
-            expiration: TimeSpan.FromMinutes(60)
-        );
-
-        return new ResponseDTO<string> { Data = token };
     }
 
     public async Task<ResponseDTO<CreateUserResponseDTO>> RegisterAsync(CreateUserRequestDTO request)
     {
-        var userResponse = await _userService.CreateUserAsync(request);
-        return new ResponseDTO<CreateUserResponseDTO> { Data = userResponse.Data };
+        try
+        {
+            var userResponse = await _userService.CreateUserAsync(request);
+            return new ResponseDTO<CreateUserResponseDTO> { Data = userResponse.Data };
+        }
+        catch (Exception ex)
+        {
+            return new ResponseDTO<CreateUserResponseDTO>
+            {
+                Info = new ResponseInfo { Code = "REGISTER_ERROR", Message = ex.Message }
+            };
+        }
     }
 
     public ResponseDTO<List<Claim>> ValidateToken(ValidateTokenRequestDTO request)
     {
-        var principal = _jwtService.ValidateToken(request.Token);
-
-        if (principal == null)
+        try
         {
-            return new ResponseDTO<List<Claim>> { Data = [] };
-        }
+            var principal = _jwtService.ValidateToken(request.Token);
 
-        var claims = principal.Claims.ToList();
-        return new ResponseDTO<List<Claim>> { Data = claims };
+            if (principal == null)
+            {
+                return new ResponseDTO<List<Claim>>
+                {
+                    Info = new ResponseInfo { Code = "INVALID_TOKEN", Message = "Token validation failed." }
+                };
+            }
+
+            var claims = principal.Claims.ToList();
+            return new ResponseDTO<List<Claim>> { Data = claims };
+        }
+        catch (Exception ex)
+        {
+            return new ResponseDTO<List<Claim>>
+            {
+                Info = new ResponseInfo { Code = "TOKEN_VALIDATION_ERROR", Message = ex.Message }
+            };
+        }
     }
 }

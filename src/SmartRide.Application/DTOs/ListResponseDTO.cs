@@ -4,11 +4,9 @@ namespace SmartRide.Application.DTOs;
 
 public class ListResponseDTO<T>
 {
-    public required List<T> Data { get; set; }
+    public List<T>? Data { get; set; }
     public int Count { get; set; }
-    public string? Code { get; set; }
-    public string? Module { get; set; }
-    public string? Message { get; set; }
+    public ResponseInfo? Info { get; set; }
     public List<ResponseInfo>? Warnings { get; set; } = [];
     public Dictionary<string, object>? Metadata { get; set; } = new Dictionary<string, object> { { "timestamp", DateTime.UtcNow } };
 }

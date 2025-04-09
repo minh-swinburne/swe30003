@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartRide.API.Controllers.Attributes;
 using SmartRide.Application.DTOs.Locations;
@@ -7,6 +8,7 @@ namespace SmartRide.API.Controllers.V1;
 
 [Area("v1")]
 [Pluralize]
+[Authorize] // Require authentication for all actions in this controller
 public class LocationController(ILocationService locationService) : BaseController
 {
     private readonly ILocationService _locationService = locationService;
