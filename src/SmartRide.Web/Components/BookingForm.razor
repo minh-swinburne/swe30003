@@ -1,4 +1,5 @@
 @inject NavigationManager NavigationManager
+@using Microsoft.AspNetCore.Components.Forms
 
 <div class="bg-white text-black p-6 rounded-lg shadow-lg">
     <EditForm Model="@bookingModel" OnValidSubmit="@HandleValidSubmit">
@@ -12,7 +13,7 @@
                     <InputText id="pickup" @bind-Value="bookingModel.PickupLocation" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Enter pickup address" />
                     <ValidationMessage For="@(() => bookingModel.PickupLocation)" />
                 </div>
-                
+
                 <div>
                     <label for="destination" class="block text-sm font-medium text-gray-700">Destination</label>
                     <InputText id="destination" @bind-Value="bookingModel.Destination" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Enter destination address" />
@@ -26,7 +27,7 @@
                     <InputDate id="pickupDate" @bind-Value="bookingModel.PickupDate" class="w-full px-3 py-2 border border-gray-300 rounded-md" />
                     <ValidationMessage For="@(() => bookingModel.PickupDate)" />
                 </div>
-                
+
                 <div>
                     <label for="pickupTime" class="block text-sm font-medium text-gray-700">Pickup Time</label>
                     <InputSelect id="pickupTime" @bind-Value="bookingModel.PickupTime" class="w-full px-3 py-2 border border-gray-300 rounded-md">
@@ -58,7 +59,7 @@
                     <InputText id="name" @bind-Value="bookingModel.FullName" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Your name" />
                     <ValidationMessage For="@(() => bookingModel.FullName)" />
                 </div>
-                
+
                 <div>
                     <label for="phone" class="block text-sm font-medium text-gray-700">Phone Number</label>
                     <InputText id="phone" @bind-Value="bookingModel.PhoneNumber" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Your phone number" />
@@ -85,55 +86,54 @@
     private async Task HandleValidSubmit()
     {
         isSubmitting = true;
-        
+
         // Simulate API call
         await Task.Delay(1500);
-        
+
         isSubmitting = false;
-        
+
         // Navigate to ride status page
         NavigationManager.NavigateTo("/ride-status");
     }
-    
+
     private List<string> GetTimeOptions()
     {
         var times = new List<string>();
         for (int i = 0; i < 24; i++)
         {
-            string timeStr = i == 0 ? "12:00 AM" : 
-                             i < 12 ? $"{i}:00 AM" : 
-                             i == 12 ? "12:00 PM" : 
+            string timeStr = i == 0 ? "12:00 AM" :
+                             i < 12 ? $"{i}:00 AM" :
+                             i == 12 ? "12:00 PM" :
                              $"{i - 12}:00 PM";
             times.Add(timeStr);
         }
         return times;
     }
-    
+
     public class BookingModel
     {
         [Required(ErrorMessage = "Pickup location is required")]
         public string PickupLocation { get; set; } = "";
-        
+
         [Required(ErrorMessage = "Destination is required")]
         public string Destination { get; set; } = "";
-        
+
         [Required(ErrorMessage = "Pickup date is required")]
         public DateTime? PickupDate { get; set; } = DateTime.Today;
-        
+
         [Required(ErrorMessage = "Pickup time is required")]
         public string PickupTime { get; set; } = "";
-        
+
         [Required(ErrorMessage = "Service type is required")]
         public string ServiceType { get; set; } = "";
-        
+
         [Required(ErrorMessage = "Full name is required")]
         public string FullName { get; set; } = "";
-        
+
         [Required(ErrorMessage = "Phone number is required")]
         [Phone(ErrorMessage = "Invalid phone number format")]
         public string PhoneNumber { get; set; } = "";
-        
+
         public string SpecialInstructions { get; set; } = "";
     }
 }
-

@@ -1,6 +1,7 @@
 @page "/login"
 @inject NavigationManager NavigationManager
 @inject ApiClient Api
+@using Microsoft.AspNetCore.Components.Forms
 
 <div class="container mx-auto px-4 py-12">
     <div class="max-w-md mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
@@ -10,48 +11,48 @@
                 <h1 class="text-2xl font-bold">SmartRide Login</h1>
             </div>
         </div>
-        
+
         <div class="p-6">
             <EditForm Model="@loginModel" OnValidSubmit="@HandleLogin">
                 <DataAnnotationsValidator />
-                
+
                 @if (!string.IsNullOrEmpty(errorMessage))
                 {
                     <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
                         @errorMessage
                     </div>
                 }
-                
+
                 <div class="space-y-4">
                     <div>
                         <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
                         <InputText id="email" @bind-Value="loginModel.Email" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Enter your email" />
                         <ValidationMessage For="@(() => loginModel.Email)" class="text-red-600 text-sm" />
                     </div>
-                    
+
                     <div>
                         <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
                         <InputText id="password" type="password" @bind-Value="loginModel.Password" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Enter your password" />
                         <ValidationMessage For="@(() => loginModel.Password)" class="text-red-600 text-sm" />
                     </div>
-                    
+
                     <div class="flex items-center">
                         <InputCheckbox id="remember" @bind-Value="loginModel.RememberMe" class="h-4 w-4 text-yellow-500 border-gray-300 rounded" />
                         <label for="remember" class="ml-2 block text-sm text-gray-700">Remember me</label>
                     </div>
-                    
+
                     <div>
                         <button type="submit" class="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-medium py-2 px-4 rounded-md" disabled="@isLoggingIn">
                             @(isLoggingIn ? "Logging in..." : "Login")
                         </button>
                     </div>
-                    
+
                     <div class="text-center text-sm text-gray-600">
                         <a href="#" class="hover:underline">Forgot your password?</a>
                     </div>
-                    
+
                     <div class="text-center text-sm text-gray-600 pt-4 border-t">
-                        Don't have an account? 
+                        Don't have an account?
                         <a href="/register" class="text-yellow-600 hover:underline font-medium">Register now</a>
                     </div>
                 </div>
@@ -64,17 +65,17 @@
     private LoginModel loginModel = new LoginModel();
     private bool isLoggingIn = false;
     private string errorMessage = "";
-    
+
     private async Task HandleLogin()
     {
         try
         {
             isLoggingIn = true;
             errorMessage = "";
-            
+
             // Call the API using our ApiClient
             var token = await Api.User.LoginAsync(loginModel.Email, loginModel.Password);
-            
+
             // Navigate to home page after successful login
             NavigationManager.NavigateTo("/");
         }
@@ -92,18 +93,17 @@
             isLoggingIn = false;
         }
     }
-    
+
     public class LoginModel
     {
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "Invalid email format")]
         public string Email { get; set; } = "";
-        
+
         [Required(ErrorMessage = "Password is required")]
         [MinLength(6, ErrorMessage = "Password must be at least 6 characters")]
         public string Password { get; set; } = "";
-        
+
         public bool RememberMe { get; set; } = false;
     }
 }
-
