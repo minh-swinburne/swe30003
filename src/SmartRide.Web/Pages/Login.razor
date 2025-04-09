@@ -1,6 +1,7 @@
 @page "/login"
 @inject NavigationManager NavigationManager
 @inject ApiClient Api
+@using Microsoft.AspNetCore.Components.Forms
 
 <div class="container mx-auto px-4 py-12">
     <div class="max-w-md mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
@@ -51,7 +52,7 @@
                     </div>
 
                     <div class="text-center text-sm text-gray-600 pt-4 border-t">
-                        Don't have an account? 
+                        Don't have an account?
                         <a href="/register" class="text-yellow-600 hover:underline font-medium">Register now</a>
                     </div>
                 </div>
