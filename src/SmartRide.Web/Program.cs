@@ -13,6 +13,9 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 
 // Register services
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ILocalStorageService, LocalStorageService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 // Register ApiClient as the main entry point for API calls
 builder.Services.AddScoped<ApiClient>();

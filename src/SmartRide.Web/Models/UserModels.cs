@@ -249,17 +249,23 @@ namespace SmartRide.Web.Models
     // API Response wrapper
     public class ApiResponse<T>
     {
-        [JsonPropertyName("success")]
-        public bool Success { get; set; }
-
-        [JsonPropertyName("message")]
-        public string? Message { get; set; }
-
         [JsonPropertyName("data")]
         public T? Data { get; set; }
 
-        [JsonPropertyName("errors")]
-        public Dictionary<string, List<string>>? Errors { get; set; }
+        [JsonPropertyName("info")]
+        public string? Info { get; set; }
+
+        [JsonPropertyName("warnings")]
+        public List<string>? Warnings { get; set; } = [];
+
+        [JsonPropertyName("metadata")]
+        public ApiMetadata? Metadata { get; set; }
+    }
+
+    public class ApiMetadata
+    {
+        [JsonPropertyName("timestamp")]
+        public DateTime Timestamp { get; set; }
     }
 
     // Pagination response
