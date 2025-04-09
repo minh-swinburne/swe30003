@@ -7,6 +7,8 @@ using SmartRide.Common.Extensions;
 using SmartRide.Infrastructure;
 using SmartRide.Infrastructure.Settings;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SmartRide.API;
 
@@ -31,7 +33,9 @@ public class Program
         })
         .AddJsonOptions(options =>
         {
-            options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+            options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+            options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
+            options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
             options.JsonSerializerOptions.WriteIndented = true; // Optional: Makes JSON output more readable
         });
 
