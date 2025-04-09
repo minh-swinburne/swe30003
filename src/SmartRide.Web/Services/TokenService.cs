@@ -71,9 +71,10 @@ namespace SmartRide.Web.Services
                 if (!response.IsSuccessStatusCode)
                     return false;
 
-                var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<bool>>();
+                var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<List<object>>>(); // if you don't care about parsing claims
 
-                return apiResponse?.Data ?? false;
+                // Check if Data is not null (means token is valid)
+                return apiResponse?.Data != null;
             }
             catch
             {

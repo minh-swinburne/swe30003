@@ -29,17 +29,17 @@
                 <div class="flex items-center gap-2">
                     @if (isAuthenticated)
                     {
-                            <div class="flex items-center gap-2">
-                                <span class="text-sm font-medium">Welcome, Minh</span>
-                                <button @onclick="HandleLogout" class="text-sm font-medium hover:underline px-3 py-2">Logout</button>
-                            </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-sm font-medium">Welcome, Minh</span>
+                            <button @onclick="HandleLogout" class="text-sm font-medium hover:underline px-3 py-2">Logout</button>
+                        </div>
                     }
                     else
                     {
-                            <a href="/login" class="text-sm font-medium hover:underline px-3 py-2">Login</a>
-                            <a href="/register" class="inline-flex items-center justify-center rounded-md bg-yellow-500 px-4 py-2 text-sm font-medium text-black hover:bg-yellow-600">
-                                Register
-                            </a>
+                        <a href="/login" class="text-sm font-medium hover:underline px-3 py-2">Login</a>
+                        <a href="/register" class="inline-flex items-center justify-center rounded-md bg-yellow-500 px-4 py-2 text-sm font-medium text-black hover:bg-yellow-600">
+                            Register
+                        </a>
                     }
                 </div>
                 <button class="md:hidden inline-flex items-center justify-center rounded-md border border-input p-2 text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground">
@@ -126,7 +126,7 @@
     {
         await Api.Auth.LogoutAsync();
         isAuthenticated = false;
-        NavigationManager.NavigateTo("/");
+        NavigationManager.NavigateTo("/", forceLoad: true);
     }
 
     public void Dispose()

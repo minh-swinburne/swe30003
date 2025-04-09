@@ -100,7 +100,7 @@
         // Check if user is already authenticated
         if (await Api.IsAuthenticated())
         {
-            NavigationManager.NavigateTo("/");
+            NavigationManager.NavigateTo("/", forceLoad: true);
         }
     }
 
