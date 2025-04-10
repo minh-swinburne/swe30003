@@ -26,36 +26,6 @@ namespace SmartRide.Web.Services
             }
         }
 
-        public async Task<CreateUserResponseDTO> CreateUserAsync(CreateUserRequestDTO request)
-        {
-            var response = await _httpClient.PostAsJsonAsync($"{BaseUrl}", request);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                var errorContent = await response.Content.ReadAsStringAsync();
-                throw new ApiException(
-                    $"Failed to create user. Status code: {(int)response.StatusCode}",
-                    (int)response.StatusCode,
-                    errorContent,
-                    null
-                );
-            }
-
-            var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<CreateUserResponseDTO>>();
-
-            if (apiResponse == null || !apiResponse.Success || apiResponse.Data == null)
-            {
-                throw new ApiException(
-                    "Failed to create user. Invalid response from server.",
-                    (int)response.StatusCode,
-                    apiResponse?.Message ?? "Unknown error",
-                    null
-                );
-            }
-
-            return apiResponse.Data;
-        }
-
         public async Task<GetUserResponseDTO> GetUserByIdAsync(Guid userId)
         {
             var response = await _httpClient.GetAsync($"{BaseUrl}/{userId}");
@@ -73,12 +43,12 @@ namespace SmartRide.Web.Services
 
             var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<GetUserResponseDTO>>();
 
-            if (apiResponse == null || !apiResponse.Success || apiResponse.Data == null)
+            if (apiResponse == null || apiResponse.Data == null)
             {
                 throw new ApiException(
                     "Failed to get user. Invalid response from server.",
                     (int)response.StatusCode,
-                    apiResponse?.Message ?? "Unknown error",
+                    apiResponse?.Info ?? "Unknown error",
                     null
                 );
             }
@@ -105,12 +75,12 @@ namespace SmartRide.Web.Services
 
             var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<GetUserResponseDTO>>();
 
-            if (apiResponse == null || !apiResponse.Success || apiResponse.Data == null)
+            if (apiResponse == null || apiResponse.Data == null)
             {
                 throw new ApiException(
                     "Failed to get user by email. Invalid response from server.",
                     (int)response.StatusCode,
-                    apiResponse?.Message ?? "Unknown error",
+                    apiResponse?.Info ?? "Unknown error",
                     null
                 );
             }
@@ -137,12 +107,12 @@ namespace SmartRide.Web.Services
 
             var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<GetUserResponseDTO>>();
 
-            if (apiResponse == null || !apiResponse.Success || apiResponse.Data == null)
+            if (apiResponse == null || apiResponse.Data == null)
             {
                 throw new ApiException(
                     "Failed to get user by phone. Invalid response from server.",
                     (int)response.StatusCode,
-                    apiResponse?.Message ?? "Unknown error",
+                    apiResponse?.Info ?? "Unknown error",
                     null
                 );
             }
@@ -168,12 +138,12 @@ namespace SmartRide.Web.Services
 
             var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<UpdateUserResponseDTO>>();
 
-            if (apiResponse == null || !apiResponse.Success || apiResponse.Data == null)
+            if (apiResponse == null || apiResponse.Data == null)
             {
                 throw new ApiException(
                     "Failed to update user. Invalid response from server.",
                     (int)response.StatusCode,
-                    apiResponse?.Message ?? "Unknown error",
+                    apiResponse?.Info ?? "Unknown error",
                     null
                 );
             }
@@ -208,12 +178,12 @@ namespace SmartRide.Web.Services
 
             var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<DeleteUserResponseDTO>>();
 
-            if (apiResponse == null || !apiResponse.Success || apiResponse.Data == null)
+            if (apiResponse == null || apiResponse.Data == null)
             {
                 throw new ApiException(
                     "Failed to delete user. Invalid response from server.",
                     (int)response.StatusCode,
-                    apiResponse?.Message ?? "Unknown error",
+                    apiResponse?.Info ?? "Unknown error",
                     null
                 );
             }
@@ -239,103 +209,17 @@ namespace SmartRide.Web.Services
 
             var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<PaginatedResponse<ListUserResponseDTO>>>();
 
-            if (apiResponse == null || !apiResponse.Success || apiResponse.Data == null)
+            if (apiResponse == null || apiResponse.Data == null)
             {
                 throw new ApiException(
                     "Failed to list users. Invalid response from server.",
                     (int)response.StatusCode,
-                    apiResponse?.Message ?? "Unknown error",
+                    apiResponse?.Info ?? "Unknown error",
                     null
                 );
             }
 
             return apiResponse.Data;
-        }
-
-        public async Task<string> LoginAsync(string email, string password)
-        {
-            var loginRequest = new
-            {
-                Email = email,
-                Password = password
-            };
-
-            var content = new StringContent(JsonSerializer.Serialize(loginRequest), Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync("auth/login", content);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                var errorContent = await response.Content.ReadAsStringAsync();
-                throw new ApiException(
-                    $"Login failed. Status code: {(int)response.StatusCode}",
-                    (int)response.StatusCode,
-                    errorContent,
-                    null
-                );
-            }
-
-            var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<string>>();
-
-            if (apiResponse == null || !apiResponse.Success)
-            {
-                throw new ApiException(
-                    "Login failed. Invalid response from server.",
-                    (int)response.StatusCode,
-                    apiResponse?.Message ?? "Unknown error",
-                    null
-                );
-            }
-
-            // Return the token
-            return apiResponse.Data ?? string.Empty;
-        }
-
-        public async Task<bool> LogoutAsync()
-        {
-            var response = await _httpClient.PostAsync("auth/logout", null);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                var errorContent = await response.Content.ReadAsStringAsync();
-                throw new ApiException(
-                    $"Logout failed. Status code: {(int)response.StatusCode}",
-                    (int)response.StatusCode,
-                    errorContent,
-                    null
-                );
-            }
-
-            var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<bool>>();
-
-            return apiResponse?.Success ?? false;
-        }
-
-        public async Task<bool> ChangePasswordAsync(Guid userId, string currentPassword, string newPassword)
-        {
-            var changePasswordRequest = new
-            {
-                UserId = userId,
-                CurrentPassword = currentPassword,
-                NewPassword = newPassword
-            };
-
-            var content = new StringContent(JsonSerializer.Serialize(changePasswordRequest), Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync("auth/change-password", content);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                var errorContent = await response.Content.ReadAsStringAsync();
-                throw new ApiException(
-                    $"Change password failed. Status code: {(int)response.StatusCode}",
-                    (int)response.StatusCode,
-                    errorContent,
-                    null
-                );
-            }
-
-            var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<bool>>();
-
-            return apiResponse?.Success ?? false;
         }
     }
 }

@@ -7,9 +7,6 @@ namespace SmartRide.Web.Services.Interfaces
 {
     public interface IUserService
     {
-        // Create a new user
-        Task<CreateUserResponseDTO> CreateUserAsync(CreateUserRequestDTO request);
-
         // Get user by ID
         Task<GetUserResponseDTO> GetUserByIdAsync(Guid userId);
 
@@ -27,10 +24,5 @@ namespace SmartRide.Web.Services.Interfaces
 
         // List users with pagination and filtering
         Task<PaginatedResponse<ListUserResponseDTO>> ListUsersAsync(ListUserRequestDTO request);
-
-        // Authentication methods (these would connect to your auth endpoints)
-        Task<string> LoginAsync(string email, string password);
-        Task<bool> LogoutAsync();
-        Task<bool> ChangePasswordAsync(Guid userId, string currentPassword, string newPassword);
     }
 }

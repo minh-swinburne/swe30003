@@ -1,11 +1,7 @@
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Net.Http.Json;
-using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
 using SmartRide.Web.Services.Interfaces;
 
 namespace SmartRide.Web.Services
@@ -13,45 +9,57 @@ namespace SmartRide.Web.Services
     public class ApiClient
     {
         private readonly HttpClient _httpClient;
+        private readonly ITokenService _tokenService;
 
         // API domain services
         public IUserService User { get; }
+        public IAuthService Auth { get; }
 
         public ApiClient(
             HttpClient httpClient,
-            IUserService userService)
+            IUserService userService,
+            ITokenService tokenService,
+            IAuthService authService)
         {
             _httpClient = httpClient;
+            _tokenService = tokenService;
 
             // Set base address
             _httpClient.BaseAddress = new Uri("http://localhost:5275/api/v1/");
 
             // Assign services
             User = userService;
+            Auth = authService;
 
             // Initialize the client
             InitializeClient();
         }
 
-        private void InitializeClient()
+        private async void InitializeClient()
         {
             // Set default headers
             _httpClient.DefaultRequestHeaders.Accept.Clear();
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-            // Get token from local storage if you have a mechanism for that
-            var token = GetStoredToken();
+            // Get token from local storage
+            var token = await _tokenService.GetTokenAsync();
             if (!string.IsNullOrEmpty(token))
             {
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                // Validate the token
+                var isValid = await _tokenService.ValidateTokenAsync(token);
+                if (!isValid)
+                {
+                    // If token is invalid, remove it
+                    await _tokenService.RemoveTokenAsync();
+                }
             }
         }
 
-        private string GetStoredToken()
+        public async Task<bool> IsAuthenticated()
         {
-            // Implement your token storage mechanism here
-            // For example, you might get it from a cookie, local storage, or session storage
-            return null;
+            return await _tokenService.IsTokenValidAsync();
         }
     }
 

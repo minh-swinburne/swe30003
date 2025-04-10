@@ -18,9 +18,9 @@
 
                 @if (!string.IsNullOrEmpty(errorMessage))
                 {
-                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
                         @errorMessage
-                    </div>
+                        </div>
                 }
 
                 <div class="space-y-4">
@@ -66,6 +66,15 @@
     private bool isLoggingIn = false;
     private string errorMessage = "";
 
+    protected override async Task OnInitializedAsync()
+    {
+        // Check if user is already authenticated
+        if (await Api.IsAuthenticated())
+        {
+            NavigationManager.NavigateTo("/", forceLoad: true);
+        }
+    }
+
     private async Task HandleLogin()
     {
         try
@@ -74,10 +83,10 @@
             errorMessage = "";
 
             // Call the API using our ApiClient
-            var token = await Api.User.LoginAsync(loginModel.Email, loginModel.Password);
+            var token = await Api.Auth.LoginAsync(loginModel.Email, loginModel.Password);
 
             // Navigate to home page after successful login
-            NavigationManager.NavigateTo("/");
+            NavigationManager.NavigateTo("/", forceLoad: true);
         }
         catch (ApiException ex)
         {

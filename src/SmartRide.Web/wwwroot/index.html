@@ -1,67 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SmartRide - Online Ride-Sharing Platform</title>
+    <title>SmartRide - Fast & Reliable Taxi Service</title>
     <base href="/" />
     <link href="css/app.css" rel="stylesheet" />
     <link href="SmartRide.Web.styles.css" rel="stylesheet" />
-    <link
-      href="https://cdn.jsdelivr.net/npm/open-iconic/font/css/open-iconic-bootstrap.min.css"
-      rel="stylesheet"
-    />
+    <link href="https://cdn.jsdelivr.net/npm/open-iconic/font/css/open-iconic-bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              primary: {
-                DEFAULT: "#3b82f6",
-                foreground: "#ffffff",
-              },
-              muted: {
-                foreground: "#6b7280",
-              },
-              card: {
-                DEFAULT: "#ffffff",
-                foreground: "#000000",
-              },
-              background: "#ffffff",
-              yellow: {
-                100: "#fef9c3",
-                500: "#eab308",
-                600: "#ca8a04",
-              },
-              gray: {
-                50: "#f9fafb",
-                200: "#e5e7eb",
-                300: "#d1d5db",
-                400: "#9ca3af",
-                600: "#4b5563",
-                700: "#374151",
-                800: "#1f2937",
-                900: "#111827",
-              },
-            },
-            container: {
-              center: true,
-              padding: "1.5rem",
-            },
-          },
-        },
-      };
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            DEFAULT: '#3b82f6',
+                            foreground: '#ffffff',
+                        },
+                        muted: {
+                            foreground: '#6b7280',
+                        },
+                        card: {
+                            DEFAULT: '#ffffff',
+                            foreground: '#000000',
+                        },
+                        background: '#ffffff',
+                        yellow: {
+                            100: '#fef9c3',
+                            500: '#eab308',
+                            600: '#ca8a04',
+                        },
+                        gray: {
+                            50: '#f9fafb',
+                            200: '#e5e7eb',
+                            300: '#d1d5db',
+                            400: '#9ca3af',
+                            600: '#4b5563',
+                            700: '#374151',
+                            800: '#1f2937',
+                            900: '#111827',
+                        }
+                    },
+                    container: {
+                        center: true,
+                        padding: '1.5rem',
+                    }
+                }
+            }
+        }
     </script>
-  </head>
-  <body>
+</head>
+<body>
     <div id="app">Loading...</div>
 
-    <div id="blazor-error-ui" style="display: none">
-      An unhandled error has occurred.
-      <a href="" class="reload">Reload</a>
-      <a class="dismiss">🗙</a>
+    <div id="blazor-error-ui" style="display:none;">
+        An unhandled error has occurred.
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
     </div>
     <script src="_framework/blazor.webassembly.js"></script>
-  </body>
+    <script src="js/localStorage.js"></script>
+</body>
 </html>

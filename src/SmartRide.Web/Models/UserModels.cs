@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace SmartRide.Web.Models
@@ -249,17 +250,62 @@ namespace SmartRide.Web.Models
     // API Response wrapper
     public class ApiResponse<T>
     {
-        [JsonPropertyName("success")]
-        public bool Success { get; set; }
-
-        [JsonPropertyName("message")]
-        public string? Message { get; set; }
-
         [JsonPropertyName("data")]
         public T? Data { get; set; }
 
-        [JsonPropertyName("errors")]
-        public Dictionary<string, List<string>>? Errors { get; set; }
+        [JsonPropertyName("info")]
+        public string? Info { get; set; }
+
+        [JsonPropertyName("warnings")]
+        [JsonConverter(typeof(StringOrArrayConverter))]
+        public List<string>? Warnings { get; set; } = [];
+
+        [JsonPropertyName("metadata")]
+        public ApiMetadata? Metadata { get; set; }
+    }
+
+    public class ApiMetadata
+    {
+        [JsonPropertyName("timestamp")]
+        public DateTime Timestamp { get; set; }
+    }
+
+    public class StringOrArrayConverter : JsonConverter<List<string>>
+    {
+        public override List<string> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            var result = new List<string>();
+
+            if (reader.TokenType == JsonTokenType.String)
+            {
+                result.Add(reader.GetString()!);
+            }
+            else if (reader.TokenType == JsonTokenType.StartArray)
+            {
+                while (reader.Read())
+                {
+                    if (reader.TokenType == JsonTokenType.EndArray)
+                        break;
+
+                    if (reader.TokenType == JsonTokenType.String)
+                    {
+                        result.Add(reader.GetString()!);
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        public override void Write(Utf8JsonWriter writer, List<string> value, JsonSerializerOptions options)
+        {
+            writer.WriteStartArray();
+            foreach (var item in value)
+            {
+                writer.WriteStringValue(item);
+            }
+            writer.WriteEndArray();
+        }
     }
 
     // Pagination response

@@ -1,4 +1,7 @@
 @inherits LayoutComponentBase
+@inject ApiClient Api
+@inject NavigationManager NavigationManager
+@implements IDisposable
 
 <div class="flex min-h-screen flex-col">
     <!-- Header -->
@@ -15,6 +18,7 @@
                 <a href="#services" class="text-sm font-medium hover:underline">Services</a>
                 <a href="#booking" class="text-sm font-medium hover:underline">Book Now</a>
                 <a href="#testimonials" class="text-sm font-medium hover:underline">Testimonials</a>
+                <a href="#contact"  class="text-sm font-medium hover:underline">Testimonials</a>
                 <a href="#contact" class="text-sm font-medium hover:underline">Contact</a>
             </nav>
             <div class="flex items-center gap-4">
@@ -23,10 +27,20 @@
                     <span class="text-sm font-medium">123-456-7890</span>
                 </a>
                 <div class="flex items-center gap-2">
-                    <a href="/login" class="text-sm font-medium hover:underline px-3 py-2">Login</a>
-                    <a href="/register" class="inline-flex items-center justify-center rounded-md bg-yellow-500 px-4 py-2 text-sm font-medium text-black hover:bg-yellow-600">
-                        Register
-                    </a>
+                    @if (isAuthenticated)
+                    {
+                        <div class="flex items-center gap-2">
+                            <span class="text-sm font-medium">Welcome, Minh</span>
+                            <button @onclick="HandleLogout" class="text-sm font-medium hover:underline px-3 py-2">Logout</button>
+                        </div>
+                    }
+                    else
+                    {
+                        <a href="/login" class="text-sm font-medium hover:underline px-3 py-2">Login</a>
+                        <a href="/register" class="inline-flex items-center justify-center rounded-md bg-yellow-500 px-4 py-2 text-sm font-medium text-black hover:bg-yellow-600">
+                            Register
+                        </a>
+                    }
                 </div>
                 <button class="md:hidden inline-flex items-center justify-center rounded-md border border-input p-2 text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground">
                     <i class="oi oi-menu" style="font-size: 1.25rem;"></i>
@@ -87,3 +101,36 @@
     </footer>
 </div>
 
+@code {
+    private bool isAuthenticated = false;
+    private System.Threading.Timer _timer;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CheckAuthenticationStatus();
+
+        // Set up a timer to periodically check authentication status
+        _timer = new System.Threading.Timer(async _ =>
+        {
+            await CheckAuthenticationStatus();
+            await InvokeAsync(StateHasChanged);
+        }, null, TimeSpan.Zero, TimeSpan.FromMinutes(5));
+    }
+
+    private async Task CheckAuthenticationStatus()
+    {
+        isAuthenticated = await Api.IsAuthenticated();
+    }
+
+    private async Task HandleLogout()
+    {
+        await Api.Auth.LogoutAsync();
+        isAuthenticated = false;
+        NavigationManager.NavigateTo("/", forceLoad: true);
+    }
+
+    public void Dispose()
+    {
+        _timer?.Dispose();
+    }
+}
