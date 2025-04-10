@@ -9,8 +9,10 @@ public class RideMappingProfile : Profile
 {
     public RideMappingProfile()
     {
-        CreateMap<CreateRideCommand, Ride>();
         CreateMap<MatchRideCommand, Ride>();
+        CreateMap<CreateRideCommand, Ride>()
+            .ForMember(dest => dest.VehicleTypeId, opt => opt.MapFrom(src => src.VehicleType))
+            .ForMember(dest => dest.VehicleType, opt => opt.Ignore());
 
         // Only map non-null properties and ensure strings are not whitespace
         CreateMap<UpdateRideCommand, Ride>()
@@ -27,8 +29,10 @@ public class RideMappingProfile : Profile
             .ForMember(dest => dest.RideId, opt => opt.MapFrom(src => src.Id));
 
         // Derived DTOs inherit the mapping from BaseRideResponseDTO
-        CreateMap<Ride, CreateRideResponseDTO>();
         CreateMap<Ride, UpdateRideResponseDTO>();
+        CreateMap<Ride, CreateRideResponseDTO>()
+            .ForMember(dest => dest.RideStatus, opt => opt.MapFrom(src => src.Status))
+            .ForMember(dest => dest.VehicleType, opt => opt.MapFrom(src => src.VehicleTypeId));
         CreateMap<Ride, MatchRideResponseDTO>()
             .ForMember(dest => dest.RideStatus, opt => opt.MapFrom(src => src.Status));
         CreateMap<Ride, GetRideResponseDTO>()

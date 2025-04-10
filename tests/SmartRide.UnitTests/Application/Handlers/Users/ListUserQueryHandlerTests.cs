@@ -88,7 +88,7 @@ public class ListUserQueryHandlerTests
             It.IsAny<bool>(),
             It.IsAny<int>(),
             It.IsAny<int>(),
-            It.IsAny<List<string>>(),
+            It.IsAny<List<Expression<Func<User, object>>>>(),
             It.IsAny<CancellationToken>()
         )).ReturnsAsync(users);
 

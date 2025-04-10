@@ -8,6 +8,7 @@ using SmartRide.Application.DTOs.Rides;
 using SmartRide.Application.Factories;
 using SmartRide.Application.Interfaces;
 using SmartRide.Application.Queries.Rides;
+using SmartRide.Common.Exceptions;
 using SmartRide.Common.Responses;
 using SmartRide.Domain.Interfaces;
 
@@ -30,6 +31,13 @@ public class RideService(IMediator mediator, IMapper mapper, IMapService mapServ
             {
                 Data = result,
                 Count = result.Count
+            };
+        }
+        catch (BaseException ex)
+        {
+            return new ListResponseDTO<ListRideResponseDTO>
+            {
+                Info = new ResponseInfo { Code = ex.Code, Message = ex.Message }
             };
         }
         catch (Exception ex)
@@ -81,6 +89,7 @@ public class RideService(IMediator mediator, IMapper mapper, IMapService mapServ
             {
                 PassengerId = request.PassengerId,
                 RideType = request.RideType,
+                VehicleType = request.VehicleType,
                 PickupLocationId = pickupLocation.LocationId,
                 DestinationId = destinationLocation.LocationId,
                 // PickupETA = pickupETA,

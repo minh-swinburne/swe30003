@@ -6,6 +6,7 @@ using SmartRide.Application.Queries.Locations;
 using SmartRide.Common.Exceptions;
 using SmartRide.Domain.Entities.Base;
 using SmartRide.Domain.Interfaces;
+using System.Linq.Expressions;
 
 namespace SmartRide.UnitTests.Application.Handlers.Locations;
 
@@ -42,7 +43,7 @@ public class GetLocationByIdQueryHandlerTests
       Longitude = location.Longitude
     };
 
-    _mockLocationRepository.Setup(r => r.GetByIdAsync(locationId, It.IsAny<List<string>>(), It.IsAny<CancellationToken>())).ReturnsAsync(location);
+    _mockLocationRepository.Setup(r => r.GetByIdAsync(locationId, It.IsAny<List<Expression<Func<Location, object>>>>(), It.IsAny<CancellationToken>())).ReturnsAsync(location);
     _mockMapper.Setup(m => m.Map<GetLocationResponseDTO>(location)).Returns(responseDto);
 
     var query = new GetLocationByIdQuery { LocationId = locationId };
@@ -54,7 +55,7 @@ public class GetLocationByIdQueryHandlerTests
     Assert.NotNull(result);
     Assert.Equal(responseDto.LocationId, result.LocationId);
     Assert.Equal(responseDto.Address, result.Address);
-    _mockLocationRepository.Verify(r => r.GetByIdAsync(locationId, It.IsAny<List<string>>(), It.IsAny<CancellationToken>()), Times.Once);
+    _mockLocationRepository.Verify(r => r.GetByIdAsync(locationId, It.IsAny<List<Expression<Func<Location, object>>>>(), It.IsAny<CancellationToken>()), Times.Once);
   }
 
   [Fact]
@@ -62,7 +63,7 @@ public class GetLocationByIdQueryHandlerTests
   {
     // Arrange
     var locationId = Guid.NewGuid();
-    _mockLocationRepository.Setup(r => r.GetByIdAsync(locationId, It.IsAny<List<string>>(), It.IsAny<CancellationToken>())).ReturnsAsync(null as Location);
+    _mockLocationRepository.Setup(r => r.GetByIdAsync(locationId, It.IsAny<List<Expression<Func<Location, object>>>>(), It.IsAny<CancellationToken>())).ReturnsAsync(null as Location);
 
     var query = new GetLocationByIdQuery { LocationId = locationId };
 

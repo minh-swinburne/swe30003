@@ -8,6 +8,7 @@ using SmartRide.Common.Exceptions;
 using SmartRide.Domain.Entities.Base;
 using SmartRide.Domain.Enums;
 using SmartRide.Domain.Interfaces;
+using System.Linq.Expressions;
 
 namespace SmartRide.UnitTests.Application.Handlers.Payments;
 
@@ -61,7 +62,7 @@ public class UpdatePaymentCommandHandlerTests
             }
         };
 
-        _mockPaymentRepository.Setup(r => r.GetByIdAsync(paymentId, It.IsAny<List<string>>(), It.IsAny<CancellationToken>())).ReturnsAsync(payment);
+        _mockPaymentRepository.Setup(r => r.GetByIdAsync(paymentId, It.IsAny<List<Expression<Func<Payment, object>>>>(), It.IsAny<CancellationToken>())).ReturnsAsync(payment);
         _mockPaymentRepository.Setup(r => r.UpdateAsync(It.IsAny<Payment>(), It.IsAny<CancellationToken>())).ReturnsAsync(updatedPayment);
         _mockMapper.Setup(m => m.Map<UpdatePaymentResponseDTO>(updatedPayment)).Returns(response);
 
@@ -80,7 +81,7 @@ public class UpdatePaymentCommandHandlerTests
     {
         // Arrange
         var command = new UpdatePaymentCommand { PaymentId = Guid.NewGuid() };
-        _mockPaymentRepository.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<List<string>>(), It.IsAny<CancellationToken>())).ReturnsAsync(null as Payment);
+        _mockPaymentRepository.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<List<Expression<Func<Payment, object>>>>(), It.IsAny<CancellationToken>())).ReturnsAsync(null as Payment);
 
         // Act & Assert
         await Assert.ThrowsAsync<BaseException>(() => _handler.Handle(command, CancellationToken.None));

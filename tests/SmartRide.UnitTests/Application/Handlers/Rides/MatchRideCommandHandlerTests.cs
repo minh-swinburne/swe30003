@@ -8,6 +8,7 @@ using SmartRide.Domain.Entities.Base;
 using SmartRide.Domain.Entities.Join;
 using SmartRide.Domain.Enums;
 using SmartRide.Domain.Interfaces;
+using System.Linq.Expressions;
 
 namespace SmartRide.UnitTests.Application.Handlers.Rides;
 
@@ -102,10 +103,33 @@ public class MatchRideCommandHandlerTests
             PickupETA = command.PickupETA,
         };
 
-        _mockRideRepository.Setup(r => r.GetByIdAsync(rideId, It.IsAny<List<string>>(), It.IsAny<CancellationToken>())).ReturnsAsync(ride);
-        _mockUserRepository.Setup(u => u.GetByIdAsync(driverId, It.IsAny<List<string>>(), It.IsAny<CancellationToken>())).ReturnsAsync(driver);
-        _mockVehicleRepository.Setup(v => v.GetByIdAsync(vehicleId, It.IsAny<List<string>>(), It.IsAny<CancellationToken>())).ReturnsAsync(vehicle);
-        _mockRideRepository.Setup(r => r.UpdateAsync(It.IsAny<Ride>(), It.IsAny<CancellationToken>())).ReturnsAsync(updatedRide);
+        _mockRideRepository
+            .Setup(r => r.GetByIdAsync(
+                rideId,
+                It.IsAny<List<Expression<Func<Ride, object>>>>(),
+                It.IsAny<CancellationToken>()
+                ))
+            .ReturnsAsync(ride);
+        _mockUserRepository
+            .Setup(u => u.GetByIdAsync(
+                driverId,
+                It.IsAny<List<Expression<Func<User, object>>>>(),
+                It.IsAny<CancellationToken>()
+                ))
+            .ReturnsAsync(driver);
+        _mockVehicleRepository
+            .Setup(v => v.GetByIdAsync(
+                vehicleId,
+                It.IsAny<List<Expression<Func<Vehicle, object>>>>(),
+                It.IsAny<CancellationToken>()
+                ))
+            .ReturnsAsync(vehicle);
+        _mockRideRepository
+            .Setup(r => r.UpdateAsync(
+                It.IsAny<Ride>(),
+                It.IsAny<CancellationToken>()
+                ))
+            .ReturnsAsync(updatedRide);
         _mockMapper.Setup(m => m.Map<MatchRideResponseDTO>(updatedRide)).Returns(response);
 
         // Act
@@ -125,7 +149,7 @@ public class MatchRideCommandHandlerTests
     {
         // Arrange
         var command = new MatchRideCommand { RideId = Guid.NewGuid() };
-        _mockRideRepository.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<List<string>>(), It.IsAny<CancellationToken>())).ReturnsAsync(null as Ride);
+        _mockRideRepository.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<List<Expression<Func<Ride, object>>>>(), It.IsAny<CancellationToken>())).ReturnsAsync(null as Ride);
 
         // Act & Assert
         await Assert.ThrowsAsync<BaseException>(() => _handler.Handle(command, CancellationToken.None));
@@ -148,8 +172,8 @@ public class MatchRideCommandHandlerTests
             DestinationId = Guid.NewGuid(),
         };
 
-        _mockRideRepository.Setup(r => r.GetByIdAsync(rideId, It.IsAny<List<string>>(), It.IsAny<CancellationToken>())).ReturnsAsync(ride);
-        _mockVehicleRepository.Setup(v => v.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<List<string>>(), It.IsAny<CancellationToken>())).ReturnsAsync(null as Vehicle);
+        _mockRideRepository.Setup(r => r.GetByIdAsync(rideId, It.IsAny<List<Expression<Func<Ride, object>>>>(), It.IsAny<CancellationToken>())).ReturnsAsync(ride);
+        _mockVehicleRepository.Setup(v => v.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<List<Expression<Func<Vehicle, object>>>>(), It.IsAny<CancellationToken>())).ReturnsAsync(null as Vehicle);
 
         // Act & Assert
         await Assert.ThrowsAsync<BaseException>(() => _handler.Handle(command, CancellationToken.None));

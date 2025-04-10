@@ -35,7 +35,7 @@ public class ListUserQueryHandler(IRepository<User> userRepository, IMapper mapp
             ascending: query.Ascending,
             skip: query.PageSize * (query.PageNo - 1),
             limit: query.PageSize,
-            includes: ["Roles"],
+            includes: [u => u.Roles],
             cancellationToken: cancellationToken
         );
 

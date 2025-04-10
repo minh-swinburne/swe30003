@@ -7,6 +7,7 @@ using SmartRide.Common.Exceptions;
 using SmartRide.Domain.Entities.Base;
 using SmartRide.Domain.Enums;
 using SmartRide.Domain.Interfaces;
+using System.Linq.Expressions;
 
 namespace SmartRide.UnitTests.Application.Handlers.Rides;
 
@@ -61,7 +62,7 @@ public class UpdateRideCommandHandlerTests
             Notes = command.Notes
         };
 
-        _mockRideRepository.Setup(r => r.GetByIdAsync(rideId, It.IsAny<List<string>>(), It.IsAny<CancellationToken>())).ReturnsAsync(ride);
+        _mockRideRepository.Setup(r => r.GetByIdAsync(rideId, It.IsAny<List<Expression<Func<Ride, object>>>>(), It.IsAny<CancellationToken>())).ReturnsAsync(ride);
         _mockRideRepository.Setup(r => r.UpdateAsync(It.IsAny<Ride>(), It.IsAny<CancellationToken>())).ReturnsAsync(updatedRide);
         _mockMapper.Setup(m => m.Map<UpdateRideResponseDTO>(updatedRide)).Returns(response);
 
@@ -79,7 +80,7 @@ public class UpdateRideCommandHandlerTests
     {
         // Arrange
         var command = new UpdateRideCommand { RideId = Guid.NewGuid() };
-        _mockRideRepository.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<List<string>>(), It.IsAny<CancellationToken>())).ReturnsAsync(null as Ride);
+        _mockRideRepository.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<List<Expression<Func<Ride, object>>>>(), It.IsAny<CancellationToken>())).ReturnsAsync(null as Ride);
 
         // Act & Assert
         await Assert.ThrowsAsync<BaseException>(() => _handler.Handle(command, CancellationToken.None));

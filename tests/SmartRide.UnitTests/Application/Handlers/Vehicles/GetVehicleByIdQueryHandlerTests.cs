@@ -8,6 +8,7 @@ using SmartRide.Application.Queries.Vehicles;
 using SmartRide.Domain.Entities.Base;
 using SmartRide.Domain.Enums;
 using SmartRide.Domain.Interfaces;
+using System.Linq.Expressions;
 
 namespace SmartRide.UnitTests.Application.Handlers.Vehicles;
 
@@ -71,7 +72,7 @@ public class GetVehicleByIdQueryHandlerTests
             },
         };
 
-        _mockVehicleRepository.Setup(r => r.GetByIdAsync(vehicleId, It.IsAny<List<string>>(), It.IsAny<CancellationToken>())).ReturnsAsync(vehicle);
+        _mockVehicleRepository.Setup(r => r.GetByIdAsync(vehicleId, It.IsAny<List<Expression<Func<Vehicle, object>>>>(), It.IsAny<CancellationToken>())).ReturnsAsync(vehicle);
         _mockMapper.Setup(m => m.Map<GetVehicleResponseDTO>(vehicle)).Returns(responseDto);
 
         var query = new GetVehicleByIdQuery { VehicleId = vehicleId };
@@ -83,7 +84,7 @@ public class GetVehicleByIdQueryHandlerTests
         Assert.NotNull(result);
         Assert.Equal(responseDto.VehicleId, result.VehicleId);
         Assert.Equal(responseDto.Make, result.Make);
-        _mockVehicleRepository.Verify(r => r.GetByIdAsync(vehicleId, It.IsAny<List<string>>(), It.IsAny<CancellationToken>()), Times.Once);
+        _mockVehicleRepository.Verify(r => r.GetByIdAsync(vehicleId, It.IsAny<List<Expression<Func<Vehicle, object>>>>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -91,7 +92,7 @@ public class GetVehicleByIdQueryHandlerTests
     {
         // Arrange
         var vehicleId = Guid.NewGuid();
-        _mockVehicleRepository.Setup(r => r.GetByIdAsync(vehicleId, It.IsAny<List<string>>(), It.IsAny<CancellationToken>())).ReturnsAsync(null as Vehicle);
+        _mockVehicleRepository.Setup(r => r.GetByIdAsync(vehicleId, It.IsAny<List<Expression<Func<Vehicle, object>>>>(), It.IsAny<CancellationToken>())).ReturnsAsync(null as Vehicle);
 
         var query = new GetVehicleByIdQuery { VehicleId = vehicleId };
 
@@ -100,6 +101,6 @@ public class GetVehicleByIdQueryHandlerTests
 
         // Assert
         Assert.Null(result);
-        _mockVehicleRepository.Verify(r => r.GetByIdAsync(vehicleId, It.IsAny<List<string>>(), It.IsAny<CancellationToken>()), Times.Once);
+        _mockVehicleRepository.Verify(r => r.GetByIdAsync(vehicleId, It.IsAny<List<Expression<Func<Vehicle, object>>>>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 }

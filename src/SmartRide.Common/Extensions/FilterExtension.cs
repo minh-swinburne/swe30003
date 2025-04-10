@@ -11,33 +11,46 @@ public static class FilterExtension
     /// <param name="left">The left predicate. If null, the right predicate is returned.</param>
     /// <param name="right">The right predicate.</param>
     /// <param name="useOr">Whether to use AND (default) or OR operation.</param>
-    /// <returns>A new predicament representing the logical AND or OR of the two input predicates.</returns>
+    /// <returns>A new predicate representing the logical AND or OR of the two input predicates.</returns>
     public static Expression<Func<T, bool>> AddFilter<T>(this Expression<Func<T, bool>>? left, Expression<Func<T, bool>> right, bool useOr = false)
     {
         if (left == null) return right;
 
         var parameter = Expression.Parameter(typeof(T));
 
-        var leftVisitor = new ReplaceExpressionVisitor(left.Parameters[0], parameter);
-        var leftBody = leftVisitor.Visit(left.Body);
+        var leftBody = ReplaceParameter(left.Body, left.Parameters[0], parameter);
+        var rightBody = ReplaceParameter(right.Body, right.Parameters[0], parameter);
 
-        var rightVisitor = new ReplaceExpressionVisitor(right.Parameters[0], parameter);
-        var rightBody = rightVisitor.Visit(right.Body);
-
-        Expression combinedBody;
-
-        if (useOr)
-            combinedBody = Expression.OrElse(leftBody, rightBody);
-        else
-            combinedBody = Expression.AndAlso(leftBody, rightBody);
+        Expression combinedBody = useOr
+            ? Expression.OrElse(leftBody, rightBody)
+            : Expression.AndAlso(leftBody, rightBody);
 
         return Expression.Lambda<Func<T, bool>>(combinedBody, parameter);
     }
 
-    // Helper class to replace expression parameters
-    private class ReplaceExpressionVisitor(Expression oldValue, Expression newValue) : ExpressionVisitor
+    /// <summary>
+    /// Replaces the parameter in an expression with a new parameter.
+    /// </summary>
+    private static Expression ReplaceParameter(Expression body, ParameterExpression oldParameter, ParameterExpression newParameter)
     {
-        private readonly Expression _newValue = newValue;
-        private readonly Expression _oldValue = oldValue;
+        return new ReplaceExpressionVisitor(oldParameter, newParameter).Visit(body)!;
+    }
+
+    // Helper class to replace expression parameters
+    private class ReplaceExpressionVisitor : ExpressionVisitor
+    {
+        private readonly ParameterExpression _oldParameter;
+        private readonly ParameterExpression _newParameter;
+
+        public ReplaceExpressionVisitor(ParameterExpression oldParameter, ParameterExpression newParameter)
+        {
+            _oldParameter = oldParameter;
+            _newParameter = newParameter;
+        }
+
+        protected override Expression VisitParameter(ParameterExpression node)
+        {
+            return node == _oldParameter ? _newParameter : base.VisitParameter(node);
+        }
     }
 }

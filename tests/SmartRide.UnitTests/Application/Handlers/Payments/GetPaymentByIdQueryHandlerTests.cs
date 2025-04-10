@@ -11,6 +11,7 @@ using SmartRide.Common.Exceptions;
 using SmartRide.Domain.Entities.Base;
 using SmartRide.Domain.Enums;
 using SmartRide.Domain.Interfaces;
+using System.Linq.Expressions;
 
 namespace SmartRide.UnitTests.Application.Handlers.Payments;
 
@@ -58,49 +59,51 @@ public class GetPaymentByIdQueryHandlerTests
             RoleId = RoleEnum.Driver,
             Name = "Driver"
         };
-        var responseDto = new GetPaymentResponseDTO
-        {
-            PaymentId = paymentId,
-            Amount = payment.Amount,
-            Status = payment.Status,
-            PaymentMethod = new PaymentMethodDTO
-            {
-                PaymentMethodId = PaymentMethodEnum.Cash,
-                Name = "Cash"
-            },
-            Ride = new GetRideResponseDTO
-            {
-                RideId = payment.RideId,
-                VehicleType = vehicleType,
-                RideType = RideTypeEnum.Private,
-                RideStatus = RideStatusEnum.Completed,
-                Fare = 100,
-                Passenger = new GetUserResponseDTO
-                {
-                    UserId = Guid.NewGuid(),
-                    FirstName = "John Doe",
-                    Email = "john.doe@example.com",
-                    Phone = "+12 345 678 910",
-                    Roles = [ passengerRole ]
-                },
-                PickupLocation = new GetLocationResponseDTO
-                {
-                    LocationId = Guid.NewGuid(),
-                    Address = "123 Main St",
-                    Latitude = 45.0,
-                    Longitude = -93.0
-                },
-                Destination = new GetLocationResponseDTO
-                {
-                    LocationId = Guid.NewGuid(),
-                    Address = "456 Elm St",
-                    Latitude = 45.5,
-                    Longitude = -93.5
-                },
-            }
-        };
+        GetPaymentResponseDTO responseDto = null!;
+        responseDto = new GetPaymentResponseDTO
+         {
+             PaymentId = paymentId,
+             Amount = payment.Amount,
+             Status = payment.Status,
+             PaymentMethod = new PaymentMethodDTO
+             {
+                 PaymentMethodId = PaymentMethodEnum.Cash,
+                 Name = "Cash"
+             },
+             Ride = new GetRideResponseDTO
+             {
+                 RideId = payment.RideId,
+                 Payment = responseDto,
+                 VehicleType = vehicleType,
+                 RideType = RideTypeEnum.Private,
+                 RideStatus = RideStatusEnum.Completed,
+                 Fare = 100,
+                 Passenger = new GetUserResponseDTO
+                 {
+                     UserId = Guid.NewGuid(),
+                     FirstName = "John Doe",
+                     Email = "john.doe@example.com",
+                     Phone = "+12 345 678 910",
+                     Roles = [passengerRole]
+                 },
+                 PickupLocation = new GetLocationResponseDTO
+                 {
+                     LocationId = Guid.NewGuid(),
+                     Address = "123 Main St",
+                     Latitude = 45.0,
+                     Longitude = -93.0
+                 },
+                 Destination = new GetLocationResponseDTO
+                 {
+                     LocationId = Guid.NewGuid(),
+                     Address = "456 Elm St",
+                     Latitude = 45.5,
+                     Longitude = -93.5
+                 },
+             }
+         };
 
-        _mockPaymentRepository.Setup(r => r.GetByIdAsync(paymentId, It.IsAny<List<string>>(), It.IsAny<CancellationToken>())).ReturnsAsync(payment);
+        _mockPaymentRepository.Setup(r => r.GetByIdAsync(paymentId, It.IsAny<List<Expression<Func<Payment, object>>>>(), It.IsAny<CancellationToken>())).ReturnsAsync(payment);
         _mockMapper.Setup(m => m.Map<GetPaymentResponseDTO>(payment)).Returns(responseDto);
 
         var query = new GetPaymentByIdQuery { PaymentId = paymentId };
@@ -112,7 +115,7 @@ public class GetPaymentByIdQueryHandlerTests
         Assert.NotNull(result);
         Assert.Equal(responseDto.PaymentId, result.PaymentId);
         Assert.Equal(responseDto.Amount, result.Amount);
-        _mockPaymentRepository.Verify(r => r.GetByIdAsync(paymentId, It.IsAny<List<string>>(), It.IsAny<CancellationToken>()), Times.Once);
+        _mockPaymentRepository.Verify(r => r.GetByIdAsync(paymentId, It.IsAny<List<Expression<Func<Payment, object>>>>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -120,7 +123,7 @@ public class GetPaymentByIdQueryHandlerTests
     {
         // Arrange
         var paymentId = Guid.NewGuid();
-        _mockPaymentRepository.Setup(r => r.GetByIdAsync(paymentId, It.IsAny<List<string>>(), It.IsAny<CancellationToken>())).ReturnsAsync(null as Payment);
+        _mockPaymentRepository.Setup(r => r.GetByIdAsync(paymentId, It.IsAny<List<Expression<Func<Payment, object>>>>(), It.IsAny<CancellationToken>())).ReturnsAsync(null as Payment);
 
         var query = new GetPaymentByIdQuery { PaymentId = paymentId };
 

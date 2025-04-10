@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using SmartRide.Common.Constants;
+using SmartRide.Common.Exceptions;
+using SmartRide.Common.Responses.Errors;
 using SmartRide.Domain.Entities.Lookup;
 using SmartRide.Domain.Enums;
 using SmartRide.Domain.Events;
@@ -72,6 +74,7 @@ public class Ride : BaseEntity
     public Vehicle? Vehicle { get; set; }
 
     [Required]
+    [ForeignKey(nameof(VehicleTypeId))]
     public VehicleType VehicleType { get; set; } = null!;
 
     [Required]
@@ -82,7 +85,7 @@ public class Ride : BaseEntity
     [ForeignKey(nameof(DestinationId))]
     public Location Destination { get; set; } = null!;
 
-    public Payment? Payment { get; set; }
+    public Payment Payment { get; set; } = null!;
 
     public Feedback? Feedback { get; set; }
 
@@ -90,7 +93,11 @@ public class Ride : BaseEntity
     {
         if (Driver != null && !Driver.IsDriver())
         {
-            throw new InvalidOperationException("The specified DriverId does not reference a User with the Driver role.");
+            throw new BaseException(
+                RideErrors.Module,
+                RideErrors.DRIVER_ROLE_INVALID.FormatMessage(("UserId", Driver.Id.ToString())),
+                new InvalidOperationException(RideErrors.DRIVER_ROLE_INVALID.Message.Replace("{UserId}", DriverId.ToString()))
+            );
         }
     }
 
@@ -98,7 +105,11 @@ public class Ride : BaseEntity
     {
         if (!Passenger.IsPassenger())
         {
-            throw new InvalidOperationException("The specified PassengerId does not reference a User with the Passenger role.");
+            throw new BaseException(
+                RideErrors.Module,
+                RideErrors.PASSENGER_ROLE_INVALID.FormatMessage(("UserId", Passenger.Id.ToString())),
+                new InvalidOperationException(RideErrors.PASSENGER_ROLE_INVALID.Message.Replace("{UserId}", PassengerId.ToString()))
+            );
         }
     }
 
@@ -106,7 +117,11 @@ public class Ride : BaseEntity
     {
         if (Vehicle != null && Vehicle.UserId != DriverId)
         {
-            throw new InvalidOperationException("The specified VehicleId does not reference a Vehicle owned by the specified DriverId.");
+            throw new BaseException(
+                RideErrors.Module,
+                RideErrors.VEHICLE_OWNERSHIP_INVALID,
+                new InvalidOperationException(RideErrors.VEHICLE_OWNERSHIP_INVALID.Message)
+            );
         }
     }
 

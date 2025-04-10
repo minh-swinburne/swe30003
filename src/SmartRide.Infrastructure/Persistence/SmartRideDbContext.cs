@@ -63,45 +63,44 @@ public class SmartRideDbContext : DbContext
         modelBuilder.Entity<Ride>()
             .HasOne(r => r.PickupLocation)
             .WithMany()
-            .HasForeignKey(r => r.PickupLocationId)
             .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<Ride>()
             .HasOne(r => r.Destination)
             .WithMany()
-            .HasForeignKey(r => r.DestinationId)
             .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<Ride>()
             .HasOne(r => r.Passenger)
             .WithMany()
-            .HasForeignKey(r => r.PassengerId);
+            .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<Ride>()
             .HasOne(r => r.Driver)
             .WithMany()
-            .HasForeignKey(r => r.DriverId)
             .OnDelete(DeleteBehavior.Restrict)
             .IsRequired(false); // Make the Driver relationship optional
 
         modelBuilder.Entity<Ride>()
             .HasOne(r => r.Vehicle)
             .WithMany()
-            .HasForeignKey(r => r.VehicleId)
             .OnDelete(DeleteBehavior.Restrict)
             .IsRequired(false); // Make the Vehicle relationship optional
 
         modelBuilder.Entity<Ride>()
+            .HasOne(r => r.VehicleType)
+            .WithMany()
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Ride>()
             .HasOne(r => r.Payment)
             .WithOne(p => p.Ride)
-            .HasForeignKey<Payment>(p => p.RideId)
             .OnDelete(DeleteBehavior.Restrict);
 
         // Payment entity
         modelBuilder.Entity<Payment>()
             .HasOne(p => p.PaymentMethod)
             .WithMany()
-            .HasForeignKey(p => p.PaymentMethodId)
             .OnDelete(DeleteBehavior.Restrict);
 
         // Feedback entity

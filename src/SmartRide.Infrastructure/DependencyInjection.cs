@@ -16,11 +16,10 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        // Register DbSettings from configuration
+        // Register settings from configuration
         services.Configure<DbSettings>(configuration.GetSection(nameof(DbSettings)));
-
-        // Register JwtSettings from configuration
         services.Configure<JwtSettings>(configuration.GetSection(nameof(JwtSettings)));
+        services.Configure<MapSettings>(configuration.GetSection(nameof(MapSettings)));
 
         // Register DbContext
         services.AddDbContext<SmartRideDbContext>((provider, options) =>

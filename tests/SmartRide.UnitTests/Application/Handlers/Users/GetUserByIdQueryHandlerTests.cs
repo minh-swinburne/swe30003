@@ -5,6 +5,7 @@ using SmartRide.Application.Handlers.Users;
 using SmartRide.Application.Queries.Users;
 using SmartRide.Domain.Entities.Base;
 using SmartRide.Domain.Interfaces;
+using System.Linq.Expressions;
 
 namespace SmartRide.UnitTests.Application.Handlers.Users;
 
@@ -44,7 +45,7 @@ public class GetUserByIdQueryHandlerTests
             Roles = []
         };
 
-        _mockUserRepository.Setup(r => r.GetByIdAsync(userId, It.IsAny<List<string>>(), It.IsAny<CancellationToken>())).ReturnsAsync(user);
+        _mockUserRepository.Setup(r => r.GetByIdAsync(userId, It.IsAny<List<Expression<Func<User, object>>>>(), It.IsAny<CancellationToken>())).ReturnsAsync(user);
         _mockMapper.Setup(m => m.Map<GetUserResponseDTO>(user)).Returns(responseDto);
 
         var query = new GetUserByIdQuery { UserId = userId };
@@ -57,7 +58,7 @@ public class GetUserByIdQueryHandlerTests
         Assert.Equal(responseDto.UserId, result.UserId);
         Assert.Equal(responseDto.FirstName, result.FirstName);
         Assert.Equal(responseDto.Email, result.Email);
-        _mockUserRepository.Verify(r => r.GetByIdAsync(userId, It.IsAny<List<string>>(), It.IsAny<CancellationToken>()), Times.Once);
+        _mockUserRepository.Verify(r => r.GetByIdAsync(userId, It.IsAny<List<Expression<Func<User, object>>>>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -65,7 +66,7 @@ public class GetUserByIdQueryHandlerTests
     {
         // Arrange
         var userId = Guid.NewGuid();
-        _mockUserRepository.Setup(r => r.GetByIdAsync(userId, It.IsAny<List<string>>(), It.IsAny<CancellationToken>())).ReturnsAsync(null as User);
+        _mockUserRepository.Setup(r => r.GetByIdAsync(userId, It.IsAny<List<Expression<Func<User, object>>>>(), It.IsAny<CancellationToken>())).ReturnsAsync(null as User);
 
         var query = new GetUserByIdQuery { UserId = userId };
 
@@ -74,6 +75,6 @@ public class GetUserByIdQueryHandlerTests
 
         // Assert
         Assert.Null(result);
-        _mockUserRepository.Verify(r => r.GetByIdAsync(userId, It.IsAny<List<string>>(), It.IsAny<CancellationToken>()), Times.Once);
+        _mockUserRepository.Verify(r => r.GetByIdAsync(userId, It.IsAny<List<Expression<Func<User, object>>>>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 }

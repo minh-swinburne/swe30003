@@ -37,6 +37,5 @@
     <Folder Include="Persistence\" />
     <Folder Include="Seed\" />
     <Folder Include="Services\" />
-    <Folder Include="Settings\" />
   </ItemGroup>
 </Project>

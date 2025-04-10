@@ -53,7 +53,7 @@ public class ListPaymentQueryHandlerTests
             It.IsAny<bool>(),
             It.IsAny<int>(),
             It.IsAny<int>(),
-            It.IsAny<List<string>>(),
+            It.IsAny<List<Expression<Func<Payment, object>>>>(),
             It.IsAny<CancellationToken>()
         )).ReturnsAsync(payments);
 
@@ -81,7 +81,7 @@ public class ListPaymentQueryHandlerTests
             It.IsAny<bool>(),
             It.IsAny<int>(),
             It.IsAny<int>(),
-            It.IsAny<List<string>>(),
+            It.IsAny<List<Expression<Func<Payment, object>>>>(),
             It.IsAny<CancellationToken>()
         )).ReturnsAsync([]);
 

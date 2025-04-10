@@ -16,8 +16,11 @@ public class GetLocationByIdQueryHandler(IRepository<Location> locationRepositor
 
     public override async Task<GetLocationResponseDTO> Handle(GetLocationByIdQuery query, CancellationToken cancellationToken)
     {
-        var location = await _locationRepository.GetByIdAsync(query.LocationId, ["User"], cancellationToken)
-            ?? throw new BaseException(LocationErrors.Module, LocationErrors.ID_NOT_FOUND.FormatMessage(("LocationId", query.LocationId)));
+        var location = await _locationRepository.GetByIdAsync(
+            query.LocationId,
+            [l => l.User!],
+            cancellationToken
+            ) ?? throw new BaseException(LocationErrors.Module, LocationErrors.ID_NOT_FOUND.FormatMessage(("LocationId", query.LocationId)));
 
         return _mapper.Map<GetLocationResponseDTO>(location);
     }

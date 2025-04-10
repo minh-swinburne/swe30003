@@ -93,7 +93,7 @@ public class ListRideQueryHandlerTests
             It.IsAny<bool>(),
             It.IsAny<int>(),
             It.IsAny<int>(),
-            It.IsAny<List<string>>(),
+            It.IsAny<List<Expression<Func<Ride, object>>>>(),
             It.IsAny<CancellationToken>()
         )).ReturnsAsync(rides);
 

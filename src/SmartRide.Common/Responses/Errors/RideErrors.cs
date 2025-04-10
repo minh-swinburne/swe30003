@@ -43,6 +43,18 @@ public class RideErrors
         Message = "Passenger with ID {UserId} not found."
     };
 
+    public static readonly ResponseInfo PASSENGER_ROLE_INVALID = new()
+    {
+        Code = $"{Module}.PASSENGER_ROLE_INVALID",
+        Message = "The specified PassengerId does not reference a User with the Passenger role."
+    };
+
+    public static readonly ResponseInfo PASSENGER_ALREADY_IN_RIDE = new()
+    {
+        Code = $"{Module}.PASSENGER_ALREADY_IN_RIDE",
+        Message = "Passenger cannot be in multiple rides."
+    };
+
     public static readonly ResponseInfo DRIVER_ID_EMPTY = new()
     {
         Code = $"{Module}.DRIVER_ID_EMPTY",
@@ -61,6 +73,18 @@ public class RideErrors
         Message = "Driver with ID {UserId} not found."
     };
 
+    public static readonly ResponseInfo DRIVER_ROLE_INVALID = new()
+    {
+        Code = $"{Module}.DRIVER_ROLE_INVALID",
+        Message = "The specified DriverId does not reference a User with the Driver role."
+    };
+
+    public static readonly ResponseInfo DRIVER_ALREADY_IN_RIDES = new()
+    {
+        Code = $"{Module}.DRIVER_ALREADY_IN_RIDES",
+        Message = "Driver cannot be in multiple private rides or more than 3 shared rides."
+    };
+
     public static readonly ResponseInfo VEHICLE_ID_EMPTY = new()
     {
         Code = $"{Module}.VEHICLE_ID_EMPTY",
@@ -77,6 +101,12 @@ public class RideErrors
     {
         Code = $"{Module}.VEHICLE_ID_NOT_FOUND",
         Message = "Vehicle with ID {VehicleId} not found."
+    };
+
+    public static readonly ResponseInfo VEHICLE_OWNERSHIP_INVALID = new()
+    {
+        Code = $"{Module}.VEHICLE_OWNERSHIP_INVALID",
+        Message = "The specified VehicleId does not reference a Vehicle owned by the specified DriverId."
     };
 
     public static readonly ResponseInfo FARE_INVALID = new()
@@ -101,24 +131,6 @@ public class RideErrors
     {
         Code = $"{Module}.DESTINATION_ID_EMPTY",
         Message = "Destination ID cannot be empty."
-    };
-
-    public static readonly ResponseInfo DRIVER_ROLE_INVALID = new()
-    {
-        Code = $"{Module}.DRIVER_ROLE_INVALID",
-        Message = "The specified DriverId does not reference a User with the Driver role."
-    };
-
-    public static readonly ResponseInfo PASSENGER_ROLE_INVALID = new()
-    {
-        Code = $"{Module}.PASSENGER_ROLE_INVALID",
-        Message = "The specified PassengerId does not reference a User with the Passenger role."
-    };
-
-    public static readonly ResponseInfo VEHICLE_OWNERSHIP_INVALID = new()
-    {
-        Code = $"{Module}.VEHICLE_OWNERSHIP_INVALID",
-        Message = "The specified VehicleId does not reference a Vehicle owned by the specified DriverId."
     };
 
     public static readonly ResponseInfo PICKUP_ETA_IN_PAST = new()

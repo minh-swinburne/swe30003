@@ -46,7 +46,11 @@ public class BaseRepository<T>(SmartRideDbContext dbContext) : IRepository<T> wh
         return result.Entity;
     }
 
-    public async Task<T?> GetByIdAsync(Guid id, List<string>? includes = null, CancellationToken cancellationToken = default)
+    public async Task<T?> GetByIdAsync(
+        Guid id,
+        List<Expression<Func<T, object>>>? includes = null,
+        CancellationToken cancellationToken = default
+    )
     {
         var query = _dbSet.AsQueryable();
 
@@ -61,7 +65,10 @@ public class BaseRepository<T>(SmartRideDbContext dbContext) : IRepository<T> wh
         return await query.FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
     }
 
-    public async Task<List<T>> GetAllAsync(List<string>? includes = null, CancellationToken cancellationToken = default)
+    public async Task<List<T>> GetAllAsync(
+        List<Expression<Func<T, object>>>? includes = null,
+        CancellationToken cancellationToken = default
+    )
     {
         var query = _dbSet.AsQueryable();
 
@@ -83,7 +90,7 @@ public class BaseRepository<T>(SmartRideDbContext dbContext) : IRepository<T> wh
         bool ascending = true,
         int skip = 0,
         int limit = 0,
-        List<string>? includes = null,
+        List<Expression<Func<T, object>>>? includes = null,
         CancellationToken cancellationToken = default
     )
     {

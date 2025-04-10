@@ -127,7 +127,7 @@ public class LocationService(IMediator mediator, IMapper mapper, IMapService map
                     LongitudeTo = longitude
                 });
 
-                if (existingLocation.Count != 0)
+                if (existingLocation != null && existingLocation.Count != 0)
                 {
                     return _mapper.Map<GetLocationResponseDTO>(existingLocation.First());
                 }

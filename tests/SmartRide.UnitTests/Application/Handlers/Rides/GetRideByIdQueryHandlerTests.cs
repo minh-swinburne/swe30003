@@ -2,6 +2,7 @@ using AutoMapper;
 using Moq;
 using SmartRide.Application.DTOs.Locations;
 using SmartRide.Application.DTOs.Lookup;
+using SmartRide.Application.DTOs.Payments;
 using SmartRide.Application.DTOs.Rides;
 using SmartRide.Application.DTOs.Users;
 using SmartRide.Application.DTOs.Vehicles;
@@ -10,6 +11,7 @@ using SmartRide.Application.Queries.Rides;
 using SmartRide.Domain.Entities.Base;
 using SmartRide.Domain.Enums;
 using SmartRide.Domain.Interfaces;
+using System.Linq.Expressions;
 
 namespace SmartRide.UnitTests.Application.Handlers.Rides;
 
@@ -67,7 +69,8 @@ public class GetRideByIdQueryHandlerTests
             Phone = "+98 765 432 109",
             Roles = [driverRole]
         };
-        var responseDto = new GetRideResponseDTO
+        GetRideResponseDTO responseDto = null!;
+        responseDto = new GetRideResponseDTO
         {
             RideId = rideId,
             Passenger = new GetUserResponseDTO
@@ -79,6 +82,18 @@ public class GetRideByIdQueryHandlerTests
                 Roles = [passengerRole]
             },
             Driver = driver,
+            Payment = new GetPaymentResponseDTO
+            {
+                PaymentId = Guid.NewGuid(),
+                Ride = responseDto,
+                Amount = ride.Fare,
+                Status = PaymentStatusEnum.Completed,
+                PaymentMethod = new PaymentMethodDTO
+                {
+                    PaymentMethodId = PaymentMethodEnum.Cash,
+                    Name = "Cash"
+                }
+            },
             Vehicle = new GetVehicleResponseDTO
             {
                 VehicleId = (Guid)ride.VehicleId,
@@ -112,7 +127,7 @@ public class GetRideByIdQueryHandlerTests
             Notes = ride.Notes
         };
 
-        _mockRideRepository.Setup(r => r.GetByIdAsync(rideId, It.IsAny<List<string>>(), It.IsAny<CancellationToken>())).ReturnsAsync(ride);
+        _mockRideRepository.Setup(r => r.GetByIdAsync(rideId, It.IsAny<List<Expression<Func<Ride, object>>>>(), It.IsAny<CancellationToken>())).ReturnsAsync(ride);
         _mockMapper.Setup(m => m.Map<GetRideResponseDTO>(ride)).Returns(responseDto);
 
         var query = new GetRideByIdQuery { RideId = rideId };
@@ -124,7 +139,7 @@ public class GetRideByIdQueryHandlerTests
         Assert.NotNull(result);
         Assert.Equal(responseDto.RideId, result.RideId);
         Assert.Equal(responseDto.Fare, result.Fare);
-        _mockRideRepository.Verify(r => r.GetByIdAsync(rideId, It.IsAny<List<string>>(), It.IsAny<CancellationToken>()), Times.Once);
+        _mockRideRepository.Verify(r => r.GetByIdAsync(rideId, It.IsAny<List<Expression<Func<Ride, object>>>>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -132,7 +147,7 @@ public class GetRideByIdQueryHandlerTests
     {
         // Arrange
         var rideId = Guid.NewGuid();
-        _mockRideRepository.Setup(r => r.GetByIdAsync(rideId, It.IsAny<List<string>>(), It.IsAny<CancellationToken>())).ReturnsAsync(null as Ride);
+        _mockRideRepository.Setup(r => r.GetByIdAsync(rideId, It.IsAny<List<Expression<Func<Ride, object>>>>(), It.IsAny<CancellationToken>())).ReturnsAsync(null as Ride);
 
         var query = new GetRideByIdQuery { RideId = rideId };
 

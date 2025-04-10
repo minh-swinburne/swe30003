@@ -14,4 +14,5 @@ public class CreateRideResponseDTO : BaseRideResponseDTO
     public DateTime? ArrivalETA { get; set; }
     public required decimal Fare { get; set; }
     public string? Notes { get; set; }
+    public Guid? PaymentId { get; set; }
 }

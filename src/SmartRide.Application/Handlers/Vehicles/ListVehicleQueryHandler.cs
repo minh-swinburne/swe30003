@@ -35,7 +35,7 @@ public class ListVehicleQueryHandler(IRepository<Vehicle> vehicleRepository, IMa
             ascending: query.Ascending,
             skip: query.PageSize * (query.PageNo - 1),
             limit: query.PageSize,
-            includes: ["VehicleType"],
+            includes: [v => v.VehicleType],
             cancellationToken: cancellationToken
         );
 

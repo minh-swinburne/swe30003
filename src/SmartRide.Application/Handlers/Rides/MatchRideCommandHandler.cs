@@ -22,11 +22,19 @@ public class MatchRideCommandHandler(IRepository<Ride> rideRepository, IReposito
         var ride = await _rideRepository.GetByIdAsync(command.RideId, cancellationToken: cancellationToken)
             ?? throw new BaseException(RideErrors.Module, RideErrors.ID_NOT_FOUND.FormatMessage(("RideId", command.RideId)));
 
-        var driver = await _userRepository.GetByIdAsync(command.DriverId, cancellationToken: cancellationToken)
-            ?? throw new BaseException(RideErrors.Module, RideErrors.DRIVER_ID_NOT_FOUND.FormatMessage(("UserId", command.DriverId)));
+        var driver = await _userRepository.GetByIdAsync(
+            command.DriverId,
+            [ d => d.Rides ],
+            cancellationToken: cancellationToken
+            ) ?? throw new BaseException(RideErrors.Module, RideErrors.DRIVER_ID_NOT_FOUND.FormatMessage(("UserId", command.DriverId)));
 
         var vehicle = await _vehicleRepository.GetByIdAsync(command.VehicleId, cancellationToken: cancellationToken)
             ?? throw new BaseException(RideErrors.Module, RideErrors.VEHICLE_ID_NOT_FOUND.FormatMessage(("VehicleId", command.VehicleId)));
+
+        if (ride.RideType == RideTypeEnum.Shared && driver.ActiveRides().Count() > 3)
+            throw new BaseException(RideErrors.Module, RideErrors.DRIVER_ALREADY_IN_RIDES.FormatMessage(("DriverId", command.DriverId)));
+        else if (ride.RideType == RideTypeEnum.Private && driver.ActiveRides().Any())
+            throw new BaseException(RideErrors.Module, RideErrors.DRIVER_ALREADY_IN_RIDES.FormatMessage(("DriverId", command.VehicleId)));
 
         _mapper.Map(command, ride);
         ride.Status = RideStatusEnum.Picking;

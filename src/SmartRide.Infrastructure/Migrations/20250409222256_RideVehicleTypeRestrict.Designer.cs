@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartRide.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using SmartRide.Infrastructure.Persistence;
 namespace SmartRide.Infrastructure.Migrations
 {
     [DbContext(typeof(SmartRideDbContext))]
-    partial class SmartRideDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250409222256_RideVehicleTypeRestrict")]
+    partial class RideVehicleTypeRestrict
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

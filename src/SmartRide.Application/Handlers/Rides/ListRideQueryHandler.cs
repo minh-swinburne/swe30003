@@ -33,7 +33,7 @@ public class ListRideQueryHandler(IRepository<Ride> rideRepository, IMapper mapp
             ascending: query.Ascending,
             skip: query.PageSize * (query.PageNo - 1),
             limit: query.PageSize,
-            includes: ["VehicleType"],
+            includes: [r => r.VehicleType],
             cancellationToken: cancellationToken
         );
 

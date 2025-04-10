@@ -1,17 +1,15 @@
 using System.Net.Http;
 using System.Text.Json;
+using Microsoft.Extensions.Options;
 using SmartRide.Domain.Interfaces;
+using SmartRide.Infrastructure.Settings;
 
 namespace SmartRide.Infrastructure.Services;
 
-public class GoogleMapsService : IMapService
+public class GoogleMapsService(HttpClient httpClient, IOptions<MapSettings> mapSettings) : IMapService
 {
-    private readonly HttpClient _httpClient;
-
-    public GoogleMapsService(HttpClient httpClient)
-    {
-        _httpClient = httpClient;
-    }
+    private readonly HttpClient _httpClient = httpClient;
+    private readonly string _apiKey = mapSettings.Value.GoogleApiKey;
 
     public async Task<(double DistanceInKm, int EstimatedTimeInMinutes)> CalculateDistanceAndTimeAsync(
         double originLatitude,
@@ -20,7 +18,8 @@ public class GoogleMapsService : IMapService
         double destinationLongitude
     )
     {
-        var url = $"https://maps.googleapis.com/maps/api/distancematrix/json?origins={originLatitude},{originLongitude}&destinations={destinationLatitude},{destinationLongitude}&mode=driving&key=YOUR_API_KEY";
+        return (1.5, 10); // Placeholder for actual implementation
+        var url = $"https://maps.googleapis.com/maps/api/distancematrix/json?origins={originLatitude},{originLongitude}&destinations={destinationLatitude},{destinationLongitude}&mode=driving&key={_apiKey}";
 
         var response = await _httpClient.GetAsync(url);
         response.EnsureSuccessStatusCode();

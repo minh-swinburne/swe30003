@@ -67,20 +67,13 @@ public class User : BaseEntity
         private set => _licenses = value;
     }
 
-    public bool IsDriver()
-    {
-        return UserRoles.Any(ur => ur.RoleId == RoleEnum.Driver);
-    }
+    public bool IsDriver() => UserRoles.Any(ur => ur.RoleId == RoleEnum.Driver);
 
-    public bool IsPassenger()
-    {
-        return UserRoles.Any(ur => ur.RoleId == RoleEnum.Passenger);
-    }
+    public bool IsPassenger() => UserRoles.Any(ur => ur.RoleId == RoleEnum.Passenger);
 
-    public bool IsManager()
-    {
-        return UserRoles.Any(ur => ur.RoleId == RoleEnum.Manager);
-    }
+    public bool IsManager() => UserRoles.Any(ur => ur.RoleId == RoleEnum.Manager);
+
+    public IEnumerable<Ride> ActiveRides() => Rides.Where(r => r.Status == RideStatusEnum.Picking || r.Status == RideStatusEnum.Travelling);
 
     public override void OnSave(EntityState state)
     {
