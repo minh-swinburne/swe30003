@@ -50,12 +50,6 @@ public class GoogleMapsService(HttpClient httpClient, IOptions<MapSettings> mapS
         // Implementation for getting address from Google Maps API
         throw new NotImplementedException();
     }
-
-    public async Task<double> CalculateDistance(double latitude1, double longitude1, double latitude2, double longitude2)
-    {
-        // Implementation for calculating distance using Google Maps API
-        throw new NotImplementedException();
-    }
 }
 
 // Helper classes for deserializing Google Maps API response
