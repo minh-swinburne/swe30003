@@ -21,12 +21,21 @@ public class Payment : BaseEntity
     public decimal Amount { get; set; }
 
     [Required]
+    [Column(TypeName = "VARCHAR")]
+    [StringLength(3)]
+    public string Currency { get; set; } = PaymentCurrencyEnum.USD.ToString();
+
+    [Required]
     [Column(TypeName = "TINYINT")]
     public PaymentMethodEnum PaymentMethodId { get; set; }
 
     [Required]
     [Column(TypeName = "TINYINT")]
     public PaymentStatusEnum Status { get; set; } = PaymentStatusEnum.Pending;
+
+    [Column(TypeName = "VARCHAR")]
+    [StringLength(PaymentConstants.TransactionIdMaxLength)]
+    public string? TransactionId { get; set; }
 
     [Column(TypeName = "DATETIME")]
     public DateTime? TransactionTime { get; set; }

@@ -102,9 +102,15 @@ public static class RideGenerator
                 Id = Guid.NewGuid(),
                 RideId = ride.Id,
                 Amount = ride.Fare,
+                Currency = faker.Finance.Currency().Code,
                 PaymentMethodId = paymentMethod,
                 Status = paymentStatus,
-                TransactionTime = faker.Date.Recent(),
+                TransactionId = paymentStatus != PaymentStatusEnum.Pending
+                    ? faker.Random.AlphaNumeric(10)
+                    : null,
+                TransactionTime = paymentStatus != PaymentStatusEnum.Pending
+                    ? faker.Date.Recent()
+                    : null,
                 Ride = ride
             };
 
