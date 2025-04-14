@@ -25,7 +25,7 @@ public class SmartRideDbContext : DbContext
         _dbSettings = dbSettings.Value;
         _mediator = mediator;
         // Ensure lookup values exist
-        // EnsureLookupValuesExist();
+        EnsureLookupValuesExist();
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

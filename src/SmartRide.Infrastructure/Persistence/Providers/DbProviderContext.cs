@@ -1,18 +1,19 @@
 using Microsoft.EntityFrameworkCore;
+using SmartRide.Domain.Interfaces;
 using SmartRide.Infrastructure.Settings;
 
-namespace SmartRide.Infrastructure.Persistence.Strategies;
+namespace SmartRide.Infrastructure.Persistence.Providers;
 
-public class DbStrategyContext<T> where T : DbContext
+public class DbProviderContext<T> where T : DbContext
 {
-    private IDbStrategy<T>? _dbStrategy;
+    private IDbProvider<T>? _dbStrategy;
 
-    public void SetStrategy(DbProvider dbProvider)
+    public void SetStrategy(DbProviderEnum dbProvider)
     {
         _dbStrategy = dbProvider switch
         {
-            DbProvider.SqlServer => new SqlServerDbStrategy<T>(),
-            DbProvider.MySql => new MySqlDbStrategy<T>(),
+            DbProviderEnum.SqlServer => new SqlServerDbProvider<T>(),
+            DbProviderEnum.MySql => new MySqlDbProvider<T>(),
             _ => throw new ArgumentOutOfRangeException(nameof(dbProvider), dbProvider, "Database provider is not supported.")
         };
     }

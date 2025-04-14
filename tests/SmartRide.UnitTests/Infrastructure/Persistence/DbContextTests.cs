@@ -18,7 +18,7 @@ public class DbContextTests
     {
         return new DbSettings
         {
-            Provider = DbProvider.InMemory,
+            Provider = DbProviderEnum.InMemory,
             ConnectionString = "DataSource=:memory:",
             UseSnakeCaseNaming = true
         };

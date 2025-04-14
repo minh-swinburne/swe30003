@@ -1,12 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SmartRide.Domain.Interfaces;
 
-namespace SmartRide.Infrastructure.Persistence.Strategies;
+namespace SmartRide.Infrastructure.Persistence.Providers;
 
-public class SqlServerDbStrategy<T> : IDbStrategy<T> where T : DbContext
+public class MySqlDbProvider<T> : IDbProvider<T> where T : DbContext
 {
     public void Apply(DbContextOptionsBuilder optionsBuilder, string connectionString)
     {
-        optionsBuilder.UseSqlServer(connectionString, sqlOptions =>
+        optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString), sqlOptions =>
         {
             // Migrations assembly is required for EF Core 5
             sqlOptions.MigrationsAssembly(typeof(T).Assembly.FullName);

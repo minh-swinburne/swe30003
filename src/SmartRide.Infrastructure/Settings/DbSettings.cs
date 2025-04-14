@@ -1,6 +1,6 @@
 ﻿namespace SmartRide.Infrastructure.Settings;
 
-public enum DbProvider
+public enum DbProviderEnum
 {
     InMemory,
     //Sqlite,
@@ -12,7 +12,7 @@ public enum DbProvider
 
 public class DbSettings
 {
-    public required DbProvider Provider { get; set; }
+    public required DbProviderEnum Provider { get; set; }
     public required string ConnectionString { get; set; }
     public bool UseSnakeCaseNaming { get; set; } = true;
 }
