@@ -33,7 +33,10 @@ public class ListPaymentQueryHandler(IRepository<Payment> paymentRepository, IMa
             ascending: query.Ascending,
             skip: query.PageSize * (query.PageNo - 1),
             limit: query.PageSize,
-            includes: [p => p.PaymentMethod],
+            includes: [
+                p => p.PaymentMethod,
+                p => p.Ride,
+            ],
             cancellationToken: cancellationToken
         );
 
@@ -44,8 +47,14 @@ public class ListPaymentQueryHandler(IRepository<Payment> paymentRepository, IMa
     {
         Expression<Func<Payment, bool>>? filter = null;
 
+        if (query.PassengerId.HasValue)
+            filter = filter.AddFilter(payment => payment.Ride.PassengerId == query.PassengerId.Value);
+
+        if (query.DriverId.HasValue)
+            filter = filter.AddFilter(payment => payment.Ride.DriverId == query.DriverId.Value);
+
         if (query.Status.HasValue)
-            filter = filter.AddFilter(payment => payment.Status == query.Status.Value);
+                filter = filter.AddFilter(payment => payment.Status == query.Status.Value);
 
         if (query.PaymentMethodId.HasValue)
             filter = filter.AddFilter(payment => payment.PaymentMethodId == query.PaymentMethodId.Value);

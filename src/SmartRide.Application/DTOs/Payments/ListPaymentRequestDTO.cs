@@ -5,6 +5,8 @@ namespace SmartRide.Application.DTOs.Payments;
 
 public class ListPaymentRequestDTO : BaseRequestDTO, ISortable, IPageable
 {
+    public Guid? PassengerId { get; init; }
+    public Guid? DriverId { get; init; }
     public PaymentStatusEnum? Status { get; init; }
     public PaymentMethodEnum? PaymentMethodId { get; init; }
     public DateTime? TransactionTimeFrom { get; init; }

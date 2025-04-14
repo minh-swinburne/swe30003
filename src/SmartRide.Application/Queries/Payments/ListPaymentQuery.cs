@@ -6,6 +6,8 @@ namespace SmartRide.Application.Queries.Payments;
 
 public class ListPaymentQuery : BaseQuery<List<ListPaymentResponseDTO>>, ISortable, IPageable
 {
+    public Guid? PassengerId { get; init; }
+    public Guid? DriverId { get; init; }
     public PaymentStatusEnum? Status { get; set; }
     public PaymentMethodEnum? PaymentMethodId { get; set; }
     public DateTime? TransactionTimeFrom { get; set; }
