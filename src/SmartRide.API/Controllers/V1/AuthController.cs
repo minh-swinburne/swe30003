@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SmartRide.Application.DTOs;
 using SmartRide.Application.DTOs.Auth;
 using SmartRide.Application.DTOs.Users;
 using SmartRide.Application.Interfaces;
@@ -30,8 +31,12 @@ public class AuthController(IAuthService authService) : BaseController
 
     // POST: api/v1/auth/validate
     [HttpPost("validate")]
-    public IActionResult ValidateToken([FromBody] ValidateTokenRequestDTO request)
+    public IActionResult ValidateToken([FromHeader(Name="Authorization")] string token)
     {
+        if (!token.StartsWith("Bearer "))
+            throw new ArgumentException("Invalid token.");
+
+        var request = new ValidateTokenRequestDTO { Token = token.Split(" ")[1] };
         var result = _authService.ValidateToken(request);
         return Respond(result);
     }

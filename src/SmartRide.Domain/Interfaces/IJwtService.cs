@@ -4,6 +4,6 @@ namespace SmartRide.Domain.Interfaces;
 
 public interface IJwtService
 {
-    string GenerateToken(IEnumerable<Claim> claims, TimeSpan expiration);
+    string GenerateToken(IEnumerable<Claim> claims);
     ClaimsPrincipal? ValidateToken(string token);
 }

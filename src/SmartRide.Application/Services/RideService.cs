@@ -10,6 +10,7 @@ using SmartRide.Application.Interfaces;
 using SmartRide.Application.Queries.Rides;
 using SmartRide.Common.Exceptions;
 using SmartRide.Common.Responses;
+using SmartRide.Domain.Enums;
 using SmartRide.Domain.Interfaces;
 
 namespace SmartRide.Application.Services;
@@ -82,7 +83,7 @@ public class RideService(IMediator mediator, IMapper mapper, IMapService mapServ
                 destinationLocation.Longitude!.Value
             );
 
-            var fare = CalculateFare(distance);
+            var fare = CalculateFare(request.VehicleType, distance);
 
             // Step 3: Create the ride
             var rideCommand = new CreateRideCommand
@@ -106,7 +107,8 @@ public class RideService(IMediator mediator, IMapper mapper, IMapService mapServ
                 Amount = fare,
                 PaymentMethodId = request.PaymentMethod
             };
-            await _mediator.Send(paymentCommand);
+            var paymentResult = await _mediator.Send(paymentCommand);
+            rideResult.PaymentId = paymentResult.PaymentId;
 
             // Step 5: Save changes
             await _mediator.Send(new SaveChangesCommand());
@@ -120,13 +122,6 @@ public class RideService(IMediator mediator, IMapper mapper, IMapService mapServ
                 Info = new ResponseInfo { Code = "CREATE_RIDE_ERROR", Message = ex.Message }
             };
         }
-    }
-
-    private static decimal CalculateFare(double distanceInKm)
-    {
-        const decimal baseFare = 2.50m;
-        const decimal perKmRate = 0.50m;
-        return baseFare + (decimal)distanceInKm * perKmRate;
     }
 
     public async Task<ResponseDTO<UpdateRideResponseDTO>> UpdateRideAsync(UpdateRideRequestDTO request)
@@ -181,5 +176,17 @@ public class RideService(IMediator mediator, IMapper mapper, IMapService mapServ
                 Info = new ResponseInfo { Code = "DELETE_RIDE_ERROR", Message = ex.Message }
             };
         }
+    }
+
+    private static decimal CalculateFare(VehicleTypeEnum vehicleType, double distanceInKm)
+    {
+        var (baseFare, perKmRate) = vehicleType switch
+        {
+            VehicleTypeEnum.Motorbike => (1.00m, 0.25m),
+            VehicleTypeEnum.SmallCar => (1.50m, 0.35m),
+            VehicleTypeEnum.LargeCar => (2.00m, 0.50m),
+            _ => throw new ArgumentOutOfRangeException(nameof(vehicleType), vehicleType, "Invalid vehicle type.")
+        };
+        return baseFare + (decimal)distanceInKm * perKmRate;
     }
 }

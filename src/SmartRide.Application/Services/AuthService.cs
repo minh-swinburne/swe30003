@@ -46,15 +46,15 @@ public class AuthService(IUserService userService, IJwtService jwtService, IPass
 
             var roles = user.Roles.Select(r => r.Name).ToList();
 
-            var token = _jwtService.GenerateToken(
-                [
-                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                    new Claim(ClaimTypes.Email, user.Email),
-                    new Claim(ClaimTypes.Name, user.FirstName),
-                    new Claim(ClaimTypes.Role, string.Join(",", roles))
-                ],
-                expiration: TimeSpan.FromMinutes(60)
-            );
+            var token = _jwtService.GenerateToken([
+                new Claim("sub", user.Id.ToString()),
+                new Claim("email", user.Email),
+                new Claim("phone", user.Phone),
+                new Claim("firstName", user.FirstName),
+                new Claim("lastName", user.LastName ?? ""),
+                new Claim("roles", string.Join(",", roles)),
+                // new Claim("iat", DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString())
+            ]);
 
             return new ResponseDTO<string> { Data = token };
         }

@@ -17,7 +17,7 @@ public class Payment : BaseEntity
 
     [Required]
     [Range((double)PaymentConstants.MinAmount, (double)PaymentConstants.MaxAmount)]
-    [Column(TypeName = "DECIMAL(18,2)")]
+    [Column(TypeName = "DECIMAL(20,4)")]
     public decimal Amount { get; set; }
 
     [Required]
@@ -33,12 +33,12 @@ public class Payment : BaseEntity
     [Column(TypeName = "TINYINT")]
     public PaymentStatusEnum Status { get; set; } = PaymentStatusEnum.Pending;
 
+    [Column(TypeName = "DATETIME")]
+    public DateTime? TransactionTime { get; set; }
+
     [Column(TypeName = "VARCHAR")]
     [StringLength(PaymentConstants.TransactionIdMaxLength)]
     public string? TransactionId { get; set; }
-
-    [Column(TypeName = "DATETIME")]
-    public DateTime? TransactionTime { get; set; }
 
     [Required]
     [ForeignKey(nameof(RideId))]

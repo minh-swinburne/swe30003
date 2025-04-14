@@ -5,8 +5,9 @@ using Microsoft.Extensions.Options;
 using SmartRide.Application.Commands;
 using SmartRide.Domain.Interfaces;
 using SmartRide.Infrastructure.Persistence;
-using SmartRide.Infrastructure.Persistence.Strategies;
+using SmartRide.Infrastructure.Persistence.Providers;
 using SmartRide.Infrastructure.Services;
+using SmartRide.Infrastructure.Services.Transaction;
 using SmartRide.Infrastructure.Settings;
 using System.Reflection;
 
@@ -20,6 +21,7 @@ public static class DependencyInjection
         services.Configure<DbSettings>(configuration.GetSection(nameof(DbSettings)));
         services.Configure<JwtSettings>(configuration.GetSection(nameof(JwtSettings)));
         services.Configure<MapSettings>(configuration.GetSection(nameof(MapSettings)));
+        services.Configure<TransactionSettings>(configuration.GetSection(nameof(TransactionSettings)));
 
         // Register DbContext
         services.AddDbContext<SmartRideDbContext>((provider, options) =>
@@ -28,7 +30,7 @@ public static class DependencyInjection
             var dbSettings = provider.GetRequiredService<IOptions<DbSettings>>().Value;
 
             // Use the appropriate strategy based on database provider
-            DbStrategyContext<SmartRideDbContext> dbStrategyContext = new();
+            DbProviderContext<SmartRideDbContext> dbStrategyContext = new();
             dbStrategyContext.SetStrategy(dbSettings.Provider);
             dbStrategyContext.Configure(options, dbSettings.ConnectionString);
         });
@@ -52,6 +54,16 @@ public static class DependencyInjection
 
         // Register HttpClient for GoogleMapsService
         services.AddHttpClient<IMapService, GoogleMapsService>();
+
+        // Register all ITransactionProcessor implementations as singletons
+        services.Scan(scan => scan
+            .FromAssemblies(Assembly.GetExecutingAssembly())
+            .AddClasses(classes => classes.AssignableTo<ITransactionProcessor>())
+            .AsImplementedInterfaces()
+            .WithSingletonLifetime());
+
+        // Register TransactionService as a singleton
+        services.AddSingleton<ITransactionService, TransactionService>();
 
         return services;
     }

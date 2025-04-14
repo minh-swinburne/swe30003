@@ -56,7 +56,7 @@ public class Ride : BaseEntity
 
     [Required]
     [Range((double)RideConstants.MinFare, (double)RideConstants.MaxFare)]
-    [Column(TypeName = "DECIMAL(18,2)")]
+    [Column(TypeName = "DECIMAL(20,4)")]
     public decimal Fare { get; set; }
 
     [Column(TypeName = "TEXT")]
