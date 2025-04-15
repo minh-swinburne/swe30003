@@ -61,47 +61,48 @@ public class GetPaymentByIdQueryHandlerTests
         };
         GetPaymentResponseDTO responseDto = null!;
         responseDto = new GetPaymentResponseDTO
-         {
-             PaymentId = paymentId,
-             Amount = payment.Amount,
-             Status = payment.Status,
-             PaymentMethod = new PaymentMethodDTO
-             {
-                 PaymentMethodId = PaymentMethodEnum.Cash,
-                 Name = "Cash"
-             },
-             Ride = new GetRideResponseDTO
-             {
-                 RideId = payment.RideId,
-                 Payment = responseDto,
-                 VehicleType = vehicleType,
-                 RideType = RideTypeEnum.Private,
-                 RideStatus = RideStatusEnum.Completed,
-                 Fare = 100,
-                 Passenger = new GetUserResponseDTO
-                 {
-                     UserId = Guid.NewGuid(),
-                     FirstName = "John Doe",
-                     Email = "john.doe@example.com",
-                     Phone = "+12 345 678 910",
-                     Roles = [passengerRole]
-                 },
-                 PickupLocation = new GetLocationResponseDTO
-                 {
-                     LocationId = Guid.NewGuid(),
-                     Address = "123 Main St",
-                     Latitude = 45.0,
-                     Longitude = -93.0
-                 },
-                 Destination = new GetLocationResponseDTO
-                 {
-                     LocationId = Guid.NewGuid(),
-                     Address = "456 Elm St",
-                     Latitude = 45.5,
-                     Longitude = -93.5
-                 },
-             }
-         };
+        {
+            PaymentId = paymentId,
+            Amount = payment.Amount,
+            Currency = PaymentCurrencyEnum.USD.ToString(),
+            Status = payment.Status,
+            PaymentMethod = new PaymentMethodDTO
+            {
+                PaymentMethodId = PaymentMethodEnum.Cash,
+                Name = "Cash"
+            },
+            Ride = new GetRideResponseDTO
+            {
+                RideId = payment.RideId,
+                Payment = responseDto,
+                VehicleType = vehicleType,
+                RideType = RideTypeEnum.Standard,
+                RideStatus = RideStatusEnum.Completed,
+                Fare = 100,
+                Passenger = new GetUserResponseDTO
+                {
+                    UserId = Guid.NewGuid(),
+                    FirstName = "John Doe",
+                    Email = "john.doe@example.com",
+                    Phone = "+12 345 678 910",
+                    Roles = [passengerRole]
+                },
+                PickupLocation = new GetLocationResponseDTO
+                {
+                    LocationId = Guid.NewGuid(),
+                    Address = "123 Main St",
+                    Latitude = 45.0,
+                    Longitude = -93.0
+                },
+                Destination = new GetLocationResponseDTO
+                {
+                    LocationId = Guid.NewGuid(),
+                    Address = "456 Elm St",
+                    Latitude = 45.5,
+                    Longitude = -93.5
+                },
+            }
+        };
 
         _mockPaymentRepository.Setup(r => r.GetByIdAsync(paymentId, It.IsAny<List<Expression<Func<Payment, object>>>>(), It.IsAny<CancellationToken>())).ReturnsAsync(payment);
         _mockMapper.Setup(m => m.Map<GetPaymentResponseDTO>(payment)).Returns(responseDto);

@@ -70,7 +70,7 @@ public static class RideGenerator
                 VehicleId = vehicle?.Id,
                 Status = status,
                 RideType = vehicle?.VehicleTypeId != VehicleTypeEnum.LargeCar
-                    ? RideTypeEnum.Private
+                    ? RideTypeEnum.Standard
                     : faker.PickRandom<RideTypeEnum>(),
                 VehicleTypeId = vehicle?.VehicleTypeId ?? faker.PickRandom<VehicleTypeEnum>(),
                 PickupLocationId = pickupLocation.Id,

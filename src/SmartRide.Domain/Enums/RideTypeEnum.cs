@@ -2,6 +2,6 @@
 
 public enum RideTypeEnum
 {
-    Private = 1,
+    Standard = 1,
     Shared = 2,
 }

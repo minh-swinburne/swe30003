@@ -34,7 +34,7 @@ public class ListRideQueryHandlerTests
                 DriverId = Guid.NewGuid(),
                 VehicleId = Guid.NewGuid(),
                 VehicleTypeId = VehicleTypeEnum.SmallCar,
-                RideType = RideTypeEnum.Private,
+                RideType = RideTypeEnum.Standard,
                 Status = RideStatusEnum.Completed,
                 PickupLocationId = Guid.NewGuid(),
                 DestinationId = Guid.NewGuid(),

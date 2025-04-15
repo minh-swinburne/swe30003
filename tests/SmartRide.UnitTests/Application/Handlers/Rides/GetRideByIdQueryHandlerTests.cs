@@ -87,6 +87,7 @@ public class GetRideByIdQueryHandlerTests
                 PaymentId = Guid.NewGuid(),
                 Ride = responseDto,
                 Amount = ride.Fare,
+                Currency = PaymentCurrencyEnum.USD.ToString(),
                 Status = PaymentStatusEnum.Completed,
                 PaymentMethod = new PaymentMethodDTO
                 {
@@ -107,7 +108,7 @@ public class GetRideByIdQueryHandlerTests
                 RegisteredDate = DateTime.UtcNow.AddYears(-1),
             },
             VehicleType = vehicleType,
-            RideType = RideTypeEnum.Private,
+            RideType = RideTypeEnum.Standard,
             RideStatus = RideStatusEnum.Travelling,
             PickupLocation = new GetLocationResponseDTO
             {

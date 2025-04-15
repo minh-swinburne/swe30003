@@ -24,7 +24,7 @@ public class MatchRideCommandHandler(IRepository<Ride> rideRepository, IReposito
 
         var driver = await _userRepository.GetByIdAsync(
             command.DriverId,
-            [ d => d.Rides ],
+            [d => d.Rides],
             cancellationToken: cancellationToken
             ) ?? throw new BaseException(RideErrors.Module, RideErrors.DRIVER_ID_NOT_FOUND.FormatMessage(("UserId", command.DriverId)));
 
@@ -33,7 +33,7 @@ public class MatchRideCommandHandler(IRepository<Ride> rideRepository, IReposito
 
         if (ride.RideType == RideTypeEnum.Shared && driver.ActiveRides().Count() > 3)
             throw new BaseException(RideErrors.Module, RideErrors.DRIVER_ALREADY_IN_RIDES.FormatMessage(("DriverId", command.DriverId)));
-        else if (ride.RideType == RideTypeEnum.Private && driver.ActiveRides().Any())
+        else if (ride.RideType == RideTypeEnum.Standard && driver.ActiveRides().Any())
             throw new BaseException(RideErrors.Module, RideErrors.DRIVER_ALREADY_IN_RIDES.FormatMessage(("DriverId", command.VehicleId)));
 
         _mapper.Map(command, ride);

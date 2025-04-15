@@ -28,7 +28,7 @@ public class Ride : BaseEntity
 
     [Required]
     [Column(TypeName = "TINYINT")]
-    public RideTypeEnum RideType { get; init; } = RideTypeEnum.Private;
+    public RideTypeEnum RideType { get; init; } = RideTypeEnum.Standard;
 
     [Required]
     [Column(TypeName = "TINYINT")]
