@@ -23,7 +23,7 @@ Login Request Body:
 Create Ride Request:
 ```json
 {
-  "passengerId": "95c66cf1-8d51-4e21-bab1-1aa24b9cfbf0",
+  "passengerId": "<USER_ID>",
   "pickupAddress": "Empire State Building, 20 W 34th St., New York, NY 10001, United States",
   "pickupLatitude": 40.7487166425943,
   "pickupLongitude": -73.9858545105651,

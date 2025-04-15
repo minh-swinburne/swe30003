@@ -78,7 +78,7 @@ public class Program
                 BearerFormat = "JWT",
                 In = ParameterLocation.Header,
                 Type = SecuritySchemeType.Http,
-                Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\""
+                Description = "JWT Authorization header using the Bearer scheme."
             });
 
             options.AddSecurityRequirement(new OpenApiSecurityRequirement

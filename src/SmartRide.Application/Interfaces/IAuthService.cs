@@ -7,7 +7,7 @@ namespace SmartRide.Application.Interfaces;
 
 public interface IAuthService
 {
-    Task<ResponseDTO<string>> LoginAsync(LoginRequestDTO request);
-    Task<ResponseDTO<CreateUserResponseDTO>> RegisterAsync(CreateUserRequestDTO request);
+    Task<ResponseDTO<AuthResponseDTO>> LoginAsync(LoginRequestDTO request);
+    Task<ResponseDTO<AuthResponseDTO>> RegisterAsync(CreateUserRequestDTO request);
     ResponseDTO<List<Claim>> ValidateToken(ValidateTokenRequestDTO request);
 }

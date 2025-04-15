@@ -37,4 +37,20 @@ public class PaymentController(IPaymentService paymentService) : BaseController
         var result = await _paymentService.UpdatePaymentAsync(request);
         return Respond(result);
     }
+
+    // POST api/v1/payment/request
+    [HttpPost("request")]
+    public async Task<IActionResult> RequestPayment([FromBody] GetPaymentByRideIdRequestDTO request)
+    {
+        var result = await _paymentService.RequestPaymentAsync(request);
+        return Respond(result);
+    }
+
+    // POST api/v1/payment/capture
+    [HttpPost("capture")]
+    public async Task<IActionResult> CapturePayment([FromBody] GetPaymentByIdRequestDTO request)
+    {
+        var result = await _paymentService.CapturePaymentAsync(request);
+        return Respond(result);
+    }
 }

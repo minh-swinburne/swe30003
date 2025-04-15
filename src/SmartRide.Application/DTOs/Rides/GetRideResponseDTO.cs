@@ -10,7 +10,7 @@ namespace SmartRide.Application.DTOs.Rides;
 public class GetRideResponseDTO : BaseRideResponseDTO
 {
     public required GetUserResponseDTO Passenger { get; set; }
-    public required GetPaymentResponseDTO? Payment { get; set; }
+    public required GetPaymentResponseDTO Payment { get; set; }
     public GetUserResponseDTO? Driver { get; set; }
     public GetVehicleResponseDTO? Vehicle { get; set; }
     public required VehicleTypeDTO VehicleType { get; set; }

@@ -18,65 +18,82 @@ public class AuthService(IUserService userService, IJwtService jwtService, IPass
     private readonly IPasswordHasher<User> _passwordHasher = passwordHasher;
     private readonly IMapper _mapper = mapper;
 
-    public async Task<ResponseDTO<string>> LoginAsync(LoginRequestDTO request)
+    private string GenerateAccessToken(GetUserResponseDTO user)
+    {
+        var roles = user.Roles.Select(r => r.Name).ToList();
+        return _jwtService.GenerateToken([
+            new Claim("sub", user.UserId.ToString()),
+            new Claim("email", user.Email),
+            new Claim("phone", user.Phone),
+            new Claim("firstName", user.FirstName),
+            new Claim("lastName", user.LastName ?? ""),
+            new Claim("roles", string.Join(",", roles)),
+            // new Claim("iat", DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString())
+        ]);
+    }
+
+    public async Task<ResponseDTO<AuthResponseDTO>> LoginAsync(LoginRequestDTO request)
     {
         try
         {
             var userResponse = await _userService.GetUserByEmailAsync(new GetUserByEmailRequestDTO { Email = request.Email });
+            var user = userResponse.Data;
 
-            if (userResponse.Data == null)
+            if (user == null)
             {
-                return new ResponseDTO<string>
+                return new ResponseDTO<AuthResponseDTO>
                 {
                     Info = new ResponseInfo { Code = "USER_NOT_FOUND", Message = "User not found." }
                 };
             }
 
-            var user = _mapper.Map<User>(userResponse.Data);
-            var passwordVerificationResult = _passwordHasher.VerifyHashedPassword(user, user.Password!, request.Password);
+            var passwordVerificationResult = _passwordHasher.VerifyHashedPassword(null!, user.Password!, request.Password);
 
             if (passwordVerificationResult != PasswordVerificationResult.Success)
             {
-                return new ResponseDTO<string>
+                return new ResponseDTO<AuthResponseDTO>
                 {
                     Data = null,
                     Info = new ResponseInfo { Code = "INVALID_PASSWORD", Message = "Invalid password." }
                 };
             }
 
-            var roles = user.Roles.Select(r => r.Name).ToList();
+            var token = GenerateAccessToken(user);
 
-            var token = _jwtService.GenerateToken([
-                new Claim("sub", user.Id.ToString()),
-                new Claim("email", user.Email),
-                new Claim("phone", user.Phone),
-                new Claim("firstName", user.FirstName),
-                new Claim("lastName", user.LastName ?? ""),
-                new Claim("roles", string.Join(",", roles)),
-                // new Claim("iat", DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString())
-            ]);
-
-            return new ResponseDTO<string> { Data = token };
+            return new ResponseDTO<AuthResponseDTO>
+            {
+                Data = new AuthResponseDTO
+                {
+                    AccessToken = token,
+                    // RefreshToken = null, // TODO: Implement refresh token logic
+                }
+            };
         }
         catch (Exception ex)
         {
-            return new ResponseDTO<string>
+            return new ResponseDTO<AuthResponseDTO>
             {
                 Info = new ResponseInfo { Code = "LOGIN_ERROR", Message = ex.Message }
             };
         }
     }
 
-    public async Task<ResponseDTO<CreateUserResponseDTO>> RegisterAsync(CreateUserRequestDTO request)
+    public async Task<ResponseDTO<AuthResponseDTO>> RegisterAsync(CreateUserRequestDTO request)
     {
         try
         {
             var userResponse = await _userService.CreateUserAsync(request);
-            return new ResponseDTO<CreateUserResponseDTO> { Data = userResponse.Data };
+            var user = await _userService.GetUserByIdAsync(new GetUserByIdRequestDTO { UserId = userResponse.Data!.UserId });
+
+            return await LoginAsync(new LoginRequestDTO
+            {
+                Email = user.Data!.Email,
+                Password = user.Data!.Password!
+            });
         }
         catch (Exception ex)
         {
-            return new ResponseDTO<CreateUserResponseDTO>
+            return new ResponseDTO<AuthResponseDTO>
             {
                 Info = new ResponseInfo { Code = "REGISTER_ERROR", Message = ex.Message }
             };
