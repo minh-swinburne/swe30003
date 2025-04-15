@@ -19,6 +19,14 @@ public static class RideGenerator
         var drivers = users.Where(u => u.IsDriver()).ToList();
         var passengers = users.ToList();
 
+        var exchangeRate = new Dictionary<PaymentCurrencyEnum, decimal>
+        {
+            { PaymentCurrencyEnum.USD, 1.0m },
+            { PaymentCurrencyEnum.EUR, 0.88m },
+            { PaymentCurrencyEnum.AUD, 1.58m },
+            { PaymentCurrencyEnum.VND, 25888m }
+        };
+
         for (int i = 0; i < rideCount; i++)
         {
             var status = faker.Random.WeightedRandom(
@@ -79,7 +87,7 @@ public static class RideGenerator
                 PickupATA = faker.Random.Bool() ? faker.Date.Future() : null,
                 ArrivalETA = faker.Date.Future(),
                 ArrivalATA = faker.Random.Bool() ? faker.Date.Future() : null,
-                Fare = faker.Random.Decimal(10, 100),
+                Fare = faker.Random.Decimal(1, 50),
                 Notes = faker.Lorem.Sentence(),
                 Passenger = passenger,
                 Driver = driver,
@@ -97,12 +105,14 @@ public static class RideGenerator
                         ? faker.PickRandom(PaymentStatusEnum.Pending, PaymentStatusEnum.Completed)
                         : PaymentStatusEnum.Pending;
 
+            var currency = faker.PickRandom<PaymentCurrencyEnum>();
+
             ride.Payment = new Payment
             {
                 Id = Guid.NewGuid(),
                 RideId = ride.Id,
-                Amount = ride.Fare,
-                Currency = faker.Finance.Currency().Code,
+                Amount = ride.Fare * exchangeRate[currency],
+                Currency = currency.ToString(),
                 PaymentMethodId = paymentMethod,
                 Status = paymentStatus,
                 TransactionId = paymentStatus != PaymentStatusEnum.Pending

@@ -19,11 +19,20 @@ public class TransactionService(IOptions<TransactionSettings> settings, IEnumera
             ?? throw new NotImplementedException($"Payment method {paymentMethod} is not implemented.");
     }
 
-    public async Task<bool> CreateTransactionAsync(PaymentMethodEnum paymentMethod, decimal amount, string currency)
+    public async Task<(string, string)> CreateTransactionAsync(
+        PaymentMethodEnum paymentMethod,
+        decimal amount,
+        string currency,
+        RideTypeEnum rideType,
+        VehicleTypeEnum vehicleType,
+        string pickupAddress,
+        string destinationAddress
+        )
     {
         var processor = GetProcessor(paymentMethod);
-        var transactionId = await processor.CreateTransactionAsync(amount, currency);
-        return !string.IsNullOrEmpty(transactionId);
+        var (transactionId, approvalUrl) = await processor.CreateTransactionAsync(amount, currency, rideType, vehicleType, pickupAddress, destinationAddress);
+
+        return (transactionId, approvalUrl);
     }
 
     public async Task<bool> CaptureTransactionAsync(PaymentMethodEnum paymentMethod, string transactionId)

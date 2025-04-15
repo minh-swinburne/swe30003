@@ -57,12 +57,18 @@ public class PaymentErrors
     public static readonly ResponseInfo STATUS_INVALID = new()
     {
         Code = $"{Module}.STATUS_INVALID",
-        Message = "Payment status is invalid."
+        Message = "Payment status must be {Status} for this action."
     };
 
     public static readonly ResponseInfo TRANSACTION_TIME_IN_FUTURE = new()
     {
         Code = $"{Module}.TRANSACTION_TIME_IN_FUTURE",
         Message = "Payment transaction time must not be in the future."
+    };
+
+    public static readonly ResponseInfo TRANSACTION_ID_EMPTY = new()
+    {
+        Code = $"{Module}.TRANSACTION_ID_EMPTY",
+        Message = "Transaction ID cannot be empty."
     };
 }

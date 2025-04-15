@@ -10,7 +10,14 @@ public class CreditCardProcessor(IOptions<TransactionSettings> settings) : ITran
     private readonly CreditCardSettings _settings = settings.Value.CreditCard;
     public PaymentMethodEnum PaymentMethod => PaymentMethodEnum.CreditCard;
 
-    public Task<string> CreateTransactionAsync(decimal amount, string currency)
+    public Task<(string, string)> CreateTransactionAsync(
+        decimal amount,
+        string currency,
+        RideTypeEnum rideType,
+        VehicleTypeEnum vehicleType,
+        string pickupAddress,
+        string destinationAddress
+        )
     {
         // Implement credit card transaction creation logic here
         throw new NotImplementedException();
