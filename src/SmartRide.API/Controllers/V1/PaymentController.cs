@@ -40,7 +40,7 @@ public class PaymentController(IPaymentService paymentService) : BaseController
 
     // POST api/v1/payment/request
     [HttpPost("request")]
-    public async Task<IActionResult> RequestPayment([FromBody] GetPaymentByRideIdRequestDTO request)
+    public async Task<IActionResult> RequestPayment([FromBody] GetPaymentByIdRequestDTO request)
     {
         var result = await _paymentService.RequestPaymentAsync(request);
         return Respond(result);

@@ -8,6 +8,6 @@ public interface IPaymentService
     Task<ListResponseDTO<ListPaymentResponseDTO>> ListPaymentsAsync(ListPaymentRequestDTO request);
     Task<ResponseDTO<GetPaymentResponseDTO>> GetPaymentByIdAsync(GetPaymentByIdRequestDTO request);
     Task<ResponseDTO<UpdatePaymentResponseDTO>> UpdatePaymentAsync(UpdatePaymentRequestDTO request);
-    Task<ResponseDTO<RequestPaymentResponseDTO>> RequestPaymentAsync(GetPaymentByRideIdRequestDTO request);
+    Task<ResponseDTO<RequestPaymentResponseDTO>> RequestPaymentAsync(GetPaymentByIdRequestDTO request);
     Task<ResponseDTO<UpdatePaymentResponseDTO>> CapturePaymentAsync(GetPaymentByIdRequestDTO request);
 }

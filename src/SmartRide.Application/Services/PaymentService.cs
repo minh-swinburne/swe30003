@@ -75,16 +75,19 @@ public class PaymentService(IMediator mediator, ITransactionService transactionS
         }
     }
 
-    public async Task<ResponseDTO<RequestPaymentResponseDTO>> RequestPaymentAsync(GetPaymentByRideIdRequestDTO request)
+    public async Task<ResponseDTO<RequestPaymentResponseDTO>> RequestPaymentAsync(GetPaymentByIdRequestDTO request)
     {
         GetPaymentResponseDTO payment = null!;
 
         try
         {
-            var paymentQuery = MediatRFactory.CreateQuery<GetPaymentByRideIdQuery>(request);
+            var paymentQuery = MediatRFactory.CreateQuery<GetPaymentByIdQuery>(request);
             payment = await _mediator.Send(paymentQuery);
 
-            var rideQuery = MediatRFactory.CreateQuery<GetRideByIdQuery>(request);
+            var rideQuery = new GetRideByIdQuery
+            {
+                RideId = payment.Ride.RideId
+            };
             var ride = await _mediator.Send(rideQuery);
 
             var (transactionId, approvalUrl) = await _transactionService.CreateTransactionAsync(
@@ -103,6 +106,7 @@ public class PaymentService(IMediator mediator, ITransactionService transactionS
                 TransactionId = transactionId,
                 Status = PaymentStatusEnum.Processing
             };
+
             var result = await _mediator.Send(command);
             await _mediator.Send(new SaveChangesCommand());
 

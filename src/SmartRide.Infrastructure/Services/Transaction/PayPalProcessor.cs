@@ -6,6 +6,7 @@ using PaypalServerSdk.Standard.Models;
 using SmartRide.Domain.Enums;
 using SmartRide.Domain.Interfaces;
 using SmartRide.Infrastructure.Settings;
+using System.Globalization;
 
 namespace SmartRide.Infrastructure.Services.Transaction;
 
@@ -59,7 +60,15 @@ public class PayPalProcessor : ITransactionProcessor
                     Amount = new AmountWithBreakdown
                     {
                         CurrencyCode = currency,
-                        MValue = amount.ToString("D4")
+                        MValue = amount.ToString("F2", CultureInfo.InvariantCulture),
+                        Breakdown = new AmountBreakdown
+                        {
+                            ItemTotal = new Money
+                            {
+                                CurrencyCode = currency,
+                                MValue = amount.ToString("F2", CultureInfo.InvariantCulture)
+                            }
+                        }
                     },
                     Items =
                     [
@@ -70,7 +79,7 @@ public class PayPalProcessor : ITransactionProcessor
                             UnitAmount = new Money
                             {
                                 CurrencyCode = currency,
-                                MValue = amount.ToString("D4")
+                                MValue = amount.ToString("F2", CultureInfo.InvariantCulture)
                             },
                             Quantity = "1",
                             Category = ItemCategory.DigitalGoods
@@ -81,7 +90,7 @@ public class PayPalProcessor : ITransactionProcessor
         };
 
         var response = await _client.OrdersController.CreateOrderAsync(new CreateOrderInput { Body = orderRequest });
-        if (response.StatusCode == 200)
+        if (response.StatusCode == 200 || response.StatusCode == 201)
         {
             return (
                 response.Data.Id,
@@ -98,8 +107,8 @@ public class PayPalProcessor : ITransactionProcessor
     public async Task<bool> CaptureTransactionAsync(string transactionId)
     {
         var response = await _client.OrdersController.CaptureOrderAsync(new CaptureOrderInput { Id = transactionId });
-        
-        if (response.StatusCode == 200)
+
+        if (response.StatusCode == 200 || response.StatusCode == 201)
         {
             return true;
         }
