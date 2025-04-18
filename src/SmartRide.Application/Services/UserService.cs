@@ -1,7 +1,9 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using SmartRide.Application.Commands;
 using SmartRide.Application.Commands.Users;
 using SmartRide.Application.DTOs;
+using SmartRide.Application.DTOs.Auth;
 using SmartRide.Application.DTOs.Users;
 using SmartRide.Application.Factories;
 using SmartRide.Application.Interfaces;
@@ -10,9 +12,11 @@ using SmartRide.Common.Responses;
 
 namespace SmartRide.Application.Services;
 
-public class UserService(IMediator mediator) : IUserService
+public class UserService(IMediator mediator, IMapper mapper, IAuthService authService) : IUserService
 {
     private readonly IMediator _mediator = mediator;
+    private readonly IMapper _mapper = mapper;
+    private readonly IAuthService _authService = authService;
 
     public async Task<ListResponseDTO<ListUserResponseDTO>> ListUsersAsync(ListUserRequestDTO request)
     {
@@ -31,6 +35,30 @@ public class UserService(IMediator mediator) : IUserService
             return new ListResponseDTO<ListUserResponseDTO>
             {
                 Info = new ResponseInfo { Code = "LIST_USERS_ERROR", Message = ex.Message }
+            };
+        }
+    }
+
+    public async Task<ResponseDTO<GetUserResponseDTO>> GetCurrentUserAsync(GetCurrentUserRequestDTO request)
+    {
+        try
+        {
+            var validateTokenRequest = _mapper.Map<GetCurrentUserRequestDTO, ValidateTokenRequestDTO>(request);
+            var claims = _authService.ValidateToken(validateTokenRequest);
+            var userId = claims.Data!
+                .Where(c => c.Properties.Any(prop => prop.Value == "sub"))
+                .Select(c => c.Value)
+                .FirstOrDefault();
+
+            var query = new GetUserByIdQuery { UserId = Guid.Parse(userId!) };
+            var result = await _mediator.Send(query);
+            return new ResponseDTO<GetUserResponseDTO> { Data = result };
+        }
+        catch (Exception ex)
+        {
+            return new ResponseDTO<GetUserResponseDTO>
+            {
+                Info = new ResponseInfo { Code = "GET_CURRENT_USER_ERROR", Message = ex.Message }
             };
         }
     }

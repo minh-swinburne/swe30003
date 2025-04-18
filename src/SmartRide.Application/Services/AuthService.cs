@@ -11,12 +11,11 @@ using SmartRide.Domain.Interfaces;
 
 namespace SmartRide.Application.Services;
 
-public class AuthService(IUserService userService, IJwtService jwtService, IPasswordHasher<User> passwordHasher, IMapper mapper) : IAuthService
+public class AuthService(IPasswordHasher<User> passwordHasher, IUserService userService, IJwtService jwtService) : IAuthService
 {
+    private readonly IPasswordHasher<User> _passwordHasher = passwordHasher;
     private readonly IUserService _userService = userService;
     private readonly IJwtService _jwtService = jwtService;
-    private readonly IPasswordHasher<User> _passwordHasher = passwordHasher;
-    private readonly IMapper _mapper = mapper;
 
     private string GenerateAccessToken(GetUserResponseDTO user)
     {
@@ -104,7 +103,7 @@ public class AuthService(IUserService userService, IJwtService jwtService, IPass
     {
         try
         {
-            var principal = _jwtService.ValidateToken(request.Token);
+            var principal = _jwtService.ValidateToken(request.AccessToken);
 
             if (principal == null)
             {

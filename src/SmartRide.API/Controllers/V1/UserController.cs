@@ -21,6 +21,17 @@ public class UserController(IUserService userService) : BaseController
         return Respond(result);
     }
 
+    // GET api/v1/user/me
+    [HttpGet("me")]
+    public async Task<IActionResult> GetCurrentUser([FromHeader(Name = "Authorization")] string token)
+    {
+        if (!token.StartsWith("Bearer "))
+            throw new ArgumentException("Invalid token.");
+
+        var result = await _userService.GetCurrentUserAsync(new GetCurrentUserRequestDTO { AccessToken = token.Split(" ")[1] });
+        return Respond(result);
+    }
+
     // GET api/v1/user/<userId>
     [HttpGet("{userId}")]
     public async Task<IActionResult> GetUserById([FromRoute] Guid userId)

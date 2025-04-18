@@ -31,12 +31,12 @@ public class AuthController(IAuthService authService) : BaseController
 
     // POST: api/v1/auth/validate
     [HttpPost("validate")]
-    public IActionResult ValidateToken([FromHeader(Name="Authorization")] string token)
+    public IActionResult ValidateToken([FromHeader(Name = "Authorization")] string token)
     {
         if (!token.StartsWith("Bearer "))
             throw new ArgumentException("Invalid token.");
 
-        var request = new ValidateTokenRequestDTO { Token = token.Split(" ")[1] };
+        var request = new ValidateTokenRequestDTO { AccessToken = token.Split(" ")[1] };
         var result = _authService.ValidateToken(request);
         return Respond(result);
     }

@@ -15,12 +15,11 @@ using SmartRide.Domain.Interfaces;
 
 namespace SmartRide.Application.Services;
 
-public class RideService(IMediator mediator, IMapper mapper, IMapService mapService, ILocationService locationService) : IRideService
+public class RideService(IMediator mediator, ILocationService locationService, IMapService mapService) : IRideService
 {
     private readonly IMediator _mediator = mediator;
-    private readonly IMapper _mapper = mapper;
-    private readonly IMapService _mapService = mapService;
     private readonly ILocationService _locationService = locationService;
+    private readonly IMapService _mapService = mapService;
 
     public async Task<ListResponseDTO<ListRideResponseDTO>> ListRidesAsync(ListRideRequestDTO request)
     {
