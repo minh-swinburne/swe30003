@@ -19,14 +19,13 @@ public class AuthService(IPasswordHasher<User> passwordHasher, IUserService user
 
     private string GenerateAccessToken(GetUserResponseDTO user)
     {
-        var roles = user.Roles.Select(r => r.Name).ToList();
         return _jwtService.GenerateToken([
             new Claim("sub", user.UserId.ToString()),
             new Claim("email", user.Email),
             new Claim("phone", user.Phone),
             new Claim("firstName", user.FirstName),
             new Claim("lastName", user.LastName ?? ""),
-            new Claim("roles", string.Join(",", roles)),
+            new Claim("roles", string.Join(",", user.Roles.Select(r => r.Name))),
             // new Claim("iat", DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString())
         ]);
     }

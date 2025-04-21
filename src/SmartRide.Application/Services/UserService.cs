@@ -9,6 +9,7 @@ using SmartRide.Application.Factories;
 using SmartRide.Application.Interfaces;
 using SmartRide.Application.Queries.Users;
 using SmartRide.Common.Responses;
+using SmartRide.Common.Responses.Errors;
 
 namespace SmartRide.Application.Services;
 
@@ -45,12 +46,26 @@ public class UserService(IMediator mediator, IMapper mapper, IAuthService authSe
         {
             var validateTokenRequest = _mapper.Map<GetCurrentUserRequestDTO, ValidateTokenRequestDTO>(request);
             var claims = _authService.ValidateToken(validateTokenRequest);
-            var userId = claims.Data!
-                .Where(c => c.Properties.Any(prop => prop.Value == "sub"))
+
+            if (claims.Data == null)
+                return new ResponseDTO<GetUserResponseDTO>
+                {
+                    Info = claims.Info
+                };
+
+            var userId = claims.Data
+                .Where(c => c.Properties.Any(prop => prop.Value == "sub")
+                    || c.Type == "sub")
                 .Select(c => c.Value)
                 .FirstOrDefault();
 
-            var query = new GetUserByIdQuery { UserId = Guid.Parse(userId!) };
+            if (string.IsNullOrEmpty(userId))
+                return new ResponseDTO<GetUserResponseDTO>
+                {
+                    Info = UserErrors.ID_EMPTY
+                };
+
+            var query = new GetUserByIdQuery { UserId = Guid.Parse(userId) };
             var result = await _mediator.Send(query);
             return new ResponseDTO<GetUserResponseDTO> { Data = result };
         }
