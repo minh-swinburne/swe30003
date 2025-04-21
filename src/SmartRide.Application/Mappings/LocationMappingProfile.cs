@@ -14,7 +14,10 @@ public class LocationMappingProfile : Profile
         // Only map non-null properties and ensure strings are not whitespace
         CreateMap<UpdateLocationCommand, Location>()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
-                srcMember != null && (srcMember is not string str || !string.IsNullOrWhiteSpace(str))));
+                srcMember != null &&
+                (srcMember is not string str || !string.IsNullOrWhiteSpace(str)) &&
+                (!srcMember.GetType().IsValueType || Nullable.GetUnderlyingType(srcMember.GetType()) != null)
+            ));
 
         // Common mapping for BaseLocationResponseDTO
         CreateMap<Location, BaseLocationResponseDTO>()
