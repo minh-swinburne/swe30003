@@ -3,21 +3,21 @@ using MediatR;
 using SmartRide.Application.Commands;
 using SmartRide.Application.Commands.Users;
 using SmartRide.Application.DTOs;
-using SmartRide.Application.DTOs.Auth;
 using SmartRide.Application.DTOs.Users;
 using SmartRide.Application.Factories;
 using SmartRide.Application.Interfaces;
 using SmartRide.Application.Queries.Users;
 using SmartRide.Common.Responses;
 using SmartRide.Common.Responses.Errors;
+using SmartRide.Domain.Interfaces;
 
 namespace SmartRide.Application.Services;
 
-public class UserService(IMediator mediator, IMapper mapper, IAuthService authService) : IUserService
+public class UserService(IMediator mediator, IMapper mapper, IJwtService jwtService) : IUserService
 {
     private readonly IMediator _mediator = mediator;
     private readonly IMapper _mapper = mapper;
-    private readonly IAuthService _authService = authService;
+    private readonly IJwtService _jwtService = jwtService;
 
     public async Task<ListResponseDTO<ListUserResponseDTO>> ListUsersAsync(ListUserRequestDTO request)
     {
@@ -44,20 +44,19 @@ public class UserService(IMediator mediator, IMapper mapper, IAuthService authSe
     {
         try
         {
-            var validateTokenRequest = _mapper.Map<GetCurrentUserRequestDTO, ValidateTokenRequestDTO>(request);
-            var claims = _authService.ValidateToken(validateTokenRequest);
+            var payload = _jwtService.DecodeToken(request.AccessToken);
 
-            if (claims.Data == null)
+            if (payload == null || payload.Count == 0)
                 return new ResponseDTO<GetUserResponseDTO>
                 {
-                    Info = claims.Info
+                    Info = AuthErrors.TOKEN_EMPTY
                 };
 
-            var userId = claims.Data
-                .Where(c => c.Properties.Any(prop => prop.Value == "sub")
-                    || c.Type == "sub")
+            var userId = payload
+                .Where(c => c.Key == "sub")
                 .Select(c => c.Value)
-                .FirstOrDefault();
+                .FirstOrDefault()?
+                .ToString();
 
             if (string.IsNullOrEmpty(userId))
                 return new ResponseDTO<GetUserResponseDTO>

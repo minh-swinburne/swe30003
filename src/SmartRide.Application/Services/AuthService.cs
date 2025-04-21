@@ -1,5 +1,4 @@
 using System.Security.Claims;
-using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using SmartRide.Application.Commands;
@@ -10,7 +9,10 @@ using SmartRide.Application.DTOs.Users;
 using SmartRide.Application.Factories;
 using SmartRide.Application.Interfaces;
 using SmartRide.Application.Queries.Users;
+using SmartRide.Common.Exceptions;
+using SmartRide.Common.Extensions;
 using SmartRide.Common.Responses;
+using SmartRide.Common.Responses.Errors;
 using SmartRide.Domain.Entities.Base;
 using SmartRide.Domain.Interfaces;
 
@@ -54,13 +56,10 @@ public class AuthService(IMediator mediator, IPasswordHasher<User> passwordHashe
             var result = _passwordHasher.VerifyHashedPassword(null!, user.Password!, request.Password);
 
             if (result != PasswordVerificationResult.Success)
-            {
                 return new ResponseDTO<AuthResponseDTO>
                 {
-                    Data = null,
                     Info = new ResponseInfo { Code = "INVALID_PASSWORD", Message = "Invalid password." }
                 };
-            }
 
             var token = GenerateAccessToken(user);
 
@@ -105,28 +104,27 @@ public class AuthService(IMediator mediator, IPasswordHasher<User> passwordHashe
         }
     }
 
-    public ResponseDTO<List<Claim>> ValidateToken(ValidateTokenRequestDTO request)
+    public ResponseDTO<ValidateTokenResponseDTO> ValidateToken(ValidateTokenRequestDTO request)
     {
         try
         {
-            var principal = _jwtService.ValidateToken(request.AccessToken);
+            var payload = _jwtService.DecodeToken(request.AccessToken);
+            var result = payload.ToObject<ValidateTokenResponseDTO>();
 
-            if (principal == null)
+            return new ResponseDTO<ValidateTokenResponseDTO> { Data = result };
+        }
+        catch (BaseException ex)
+        {
+            return new ResponseDTO<ValidateTokenResponseDTO>
             {
-                return new ResponseDTO<List<Claim>>
-                {
-                    Info = new ResponseInfo { Code = "INVALID_TOKEN", Message = "Token validation failed." }
-                };
-            }
-
-            var claims = principal.Claims.ToList();
-            return new ResponseDTO<List<Claim>> { Data = claims };
+                Info = ex.Info
+            };
         }
         catch (Exception ex)
         {
-            return new ResponseDTO<List<Claim>>
+            return new ResponseDTO<ValidateTokenResponseDTO>
             {
-                Info = new ResponseInfo { Code = "TOKEN_VALIDATION_ERROR", Message = ex.Message }
+                Info = AuthErrors.VALIDATION_FAILED.FormatMessage(("Details", ex.Message))
             };
         }
     }

@@ -3,13 +3,14 @@ using AutoMapper;
 using MediatR;
 using SmartRide.Application.DTOs.Auth;
 using SmartRide.Application.DTOs.Users;
-using SmartRide.Application.Interfaces;
 using SmartRide.Application.Services;
 using SmartRide.Common.Responses;
 using System.Security.Claims;
 using SmartRide.Application.DTOs.Lookup;
 using SmartRide.Application.DTOs;
 using SmartRide.Application.Queries.Users;
+using SmartRide.Domain.Interfaces;
+using SmartRide.Common.Responses.Errors;
 
 namespace SmartRide.UnitTests.Application.Services;
 
@@ -17,15 +18,15 @@ public class UserServiceTests
 {
     private readonly Mock<IMediator> _mockMediator;
     private readonly Mock<IMapper> _mockMapper;
-    private readonly Mock<IAuthService> _mockAuthService;
+    private readonly Mock<IJwtService> _mockJwtService;
     private readonly UserService _userService;
 
     public UserServiceTests()
     {
         _mockMediator = new Mock<IMediator>();
         _mockMapper = new Mock<IMapper>();
-        _mockAuthService = new Mock<IAuthService>();
-        _userService = new UserService(_mockMediator.Object, _mockMapper.Object, _mockAuthService.Object);
+        _mockJwtService = new Mock<IJwtService>();
+        _userService = new UserService(_mockMediator.Object, _mockMapper.Object, _mockJwtService.Object);
     }
 
     [Fact]
@@ -42,24 +43,19 @@ public class UserServiceTests
             Roles = [new RoleDTO { Name = "Passenger" }]
         };
         var token = "valid-token";
-        var claims = new List<Claim>
+        var payload = new Dictionary<string, object>
         {
-            new("sub", user.UserId.ToString()),
-            new("email", user.Email),
-            new("phone", user.Phone),
-            new("firstName", user.FirstName),
-            new("lastName", user.LastName),
-            new("roles", string.Join(",", user.Roles.Select(r => r.Name))),
-            // new Claim("iat", DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString())
+            { "sub", user.UserId.ToString() },
+            { "email", user.Email },
+            { "phone", user.Phone },
+            { "firstName", user.FirstName },
+            { "lastName", user.LastName },
+            { "roles", string.Join(",", user.Roles.Select(r => r.Name)) }
         };
 
-        _mockAuthService
-            .Setup(a => a.ValidateToken(It.IsAny<ValidateTokenRequestDTO>()))
-            .Returns(new ResponseDTO<List<Claim>> { Data = claims });
-
-        _mockMapper
-            .Setup(m => m.Map<GetCurrentUserRequestDTO, ValidateTokenRequestDTO>(It.IsAny<GetCurrentUserRequestDTO>()))
-            .Returns(new ValidateTokenRequestDTO { AccessToken = token });
+        _mockJwtService
+            .Setup(a => a.DecodeToken(It.IsAny<string>()))
+            .Returns(payload);
 
         _mockMediator
             .Setup(m => m.Send(It.IsAny<GetUserByIdQuery>(), It.IsAny<CancellationToken>()))
@@ -72,7 +68,7 @@ public class UserServiceTests
         Assert.NotNull(result.Data);
         Assert.Equal(user.UserId, result.Data.UserId);
 
-        _mockAuthService.Verify(a => a.ValidateToken(It.IsAny<ValidateTokenRequestDTO>()), Times.Once);
+        _mockJwtService.Verify(a => a.DecodeToken(It.IsAny<string>()), Times.Once);
         _mockMediator.Verify(m => m.Send(It.IsAny<GetUserByIdQuery>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 
@@ -82,16 +78,9 @@ public class UserServiceTests
         // Arrange
         var token = "invalid-token";
 
-        _mockAuthService
-            .Setup(a => a.ValidateToken(It.IsAny<ValidateTokenRequestDTO>()))
-            .Returns(new ResponseDTO<List<Claim>>
-            {
-                Info = new ResponseInfo { Code = "INVALID_TOKEN", Message = "Token validation failed." }
-            });
-
-        _mockMapper
-            .Setup(m => m.Map<GetCurrentUserRequestDTO, ValidateTokenRequestDTO>(It.IsAny<GetCurrentUserRequestDTO>()))
-            .Returns(new ValidateTokenRequestDTO { AccessToken = token });
+        _mockJwtService
+            .Setup(a => a.DecodeToken(It.IsAny<string>()))
+            .Returns([]);
 
         // Act
         var result = await _userService.GetCurrentUserAsync(new GetCurrentUserRequestDTO { AccessToken = token });
@@ -99,10 +88,9 @@ public class UserServiceTests
         // Assert
         Assert.Null(result.Data);
         Assert.NotNull(result.Info);
-        Assert.Equal("INVALID_TOKEN", result.Info?.Code);
-        Assert.Equal("Token validation failed.", result.Info?.Message);
+        Assert.Equal(AuthErrors.TOKEN_EMPTY, result.Info);
 
-        _mockAuthService.Verify(a => a.ValidateToken(It.IsAny<ValidateTokenRequestDTO>()), Times.Once);
+        _mockJwtService.Verify(a => a.DecodeToken(It.IsAny<string>()), Times.Once);
         _mockMediator.Verify(m => m.Send(It.IsAny<GetUserByIdQuery>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 

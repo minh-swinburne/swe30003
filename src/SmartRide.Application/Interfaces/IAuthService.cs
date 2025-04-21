@@ -9,5 +9,5 @@ public interface IAuthService
 {
     Task<ResponseDTO<AuthResponseDTO>> LoginAsync(LoginRequestDTO request);
     Task<ResponseDTO<AuthResponseDTO>> RegisterAsync(CreateUserRequestDTO request);
-    ResponseDTO<List<Claim>> ValidateToken(ValidateTokenRequestDTO request);
+    ResponseDTO<ValidateTokenResponseDTO> ValidateToken(ValidateTokenRequestDTO request);
 }

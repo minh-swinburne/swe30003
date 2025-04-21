@@ -3,6 +3,8 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using SmartRide.Common.Exceptions;
+using SmartRide.Common.Responses.Errors;
 using SmartRide.Domain.Interfaces;
 using SmartRide.Infrastructure.Settings;
 
@@ -30,10 +32,13 @@ public class JwtService(IOptions<JwtSettings> jwtSettings) : IJwtService
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
-    public ClaimsPrincipal? ValidateToken(string token)
+    public ClaimsPrincipal ValidateToken(string token)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.UTF8.GetBytes(_settings.SecretKey);
+
+        if (string.IsNullOrEmpty(token))
+            throw new BaseException("Authentication", AuthErrors.TOKEN_EMPTY);
 
         try
         {
@@ -50,9 +55,33 @@ public class JwtService(IOptions<JwtSettings> jwtSettings) : IJwtService
 
             return principal;
         }
-        catch
+        catch (SecurityTokenExpiredException ex)
         {
-            return null; // Token is invalid
+            throw new BaseException("Authentication", AuthErrors.TOKEN_EXPIRED, ex);
         }
+        // catch (SecurityTokenInvalidSignatureException ex)
+        // {
+        //     throw new BaseException("Authentication", AuthErrors.TOKEN_INVALID, ex);
+        // }
+        catch (Exception ex)
+        {
+            throw new BaseException("Authentication", AuthErrors.TOKEN_INVALID, ex);
+        }
+    }
+
+    public Dictionary<string, object> DecodeToken(string token)
+    {
+        var handler = new JwtSecurityTokenHandler();
+        var jwtToken = handler.ReadJwtToken(token);
+
+        // Extract payload as a dictionary
+        var header = jwtToken.Header.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+        var payload = jwtToken.Payload.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+        return new Dictionary<string, object>
+        {
+            { "Header", header },
+            { "Payload", payload }
+        };
     }
 }

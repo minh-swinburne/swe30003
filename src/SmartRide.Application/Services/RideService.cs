@@ -37,7 +37,7 @@ public class RideService(IMediator mediator, ILocationService locationService, I
         {
             return new ListResponseDTO<ListRideResponseDTO>
             {
-                Info = new ResponseInfo { Code = ex.Code, Message = ex.Message }
+                Info = ex.Info
             };
         }
         catch (Exception ex)
