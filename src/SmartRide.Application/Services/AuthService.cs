@@ -1,20 +1,25 @@
 using System.Security.Claims;
 using AutoMapper;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
+using SmartRide.Application.Commands;
+using SmartRide.Application.Commands.Users;
 using SmartRide.Application.DTOs;
 using SmartRide.Application.DTOs.Auth;
 using SmartRide.Application.DTOs.Users;
+using SmartRide.Application.Factories;
 using SmartRide.Application.Interfaces;
+using SmartRide.Application.Queries.Users;
 using SmartRide.Common.Responses;
 using SmartRide.Domain.Entities.Base;
 using SmartRide.Domain.Interfaces;
 
 namespace SmartRide.Application.Services;
 
-public class AuthService(IPasswordHasher<User> passwordHasher, IUserService userService, IJwtService jwtService) : IAuthService
+public class AuthService(IMediator mediator, IPasswordHasher<User> passwordHasher, IJwtService jwtService) : IAuthService
 {
+    private readonly IMediator _mediator = mediator;
     private readonly IPasswordHasher<User> _passwordHasher = passwordHasher;
-    private readonly IUserService _userService = userService;
     private readonly IJwtService _jwtService = jwtService;
 
     private string GenerateAccessToken(GetUserResponseDTO user)
@@ -34,20 +39,21 @@ public class AuthService(IPasswordHasher<User> passwordHasher, IUserService user
     {
         try
         {
-            var userResponse = await _userService.GetUserByEmailAsync(new GetUserByEmailRequestDTO { Email = request.Email });
-            var user = userResponse.Data;
+            var query = new GetUserByEmailQuery
+            {
+                Email = request.Email
+            };
+            var user = await _mediator.Send(query);
 
             if (user == null)
-            {
                 return new ResponseDTO<AuthResponseDTO>
                 {
                     Info = new ResponseInfo { Code = "USER_NOT_FOUND", Message = "User not found." }
                 };
-            }
 
-            var passwordVerificationResult = _passwordHasher.VerifyHashedPassword(null!, user.Password!, request.Password);
+            var result = _passwordHasher.VerifyHashedPassword(null!, user.Password!, request.Password);
 
-            if (passwordVerificationResult != PasswordVerificationResult.Success)
+            if (result != PasswordVerificationResult.Success)
             {
                 return new ResponseDTO<AuthResponseDTO>
                 {
@@ -80,13 +86,14 @@ public class AuthService(IPasswordHasher<User> passwordHasher, IUserService user
     {
         try
         {
-            var userResponse = await _userService.CreateUserAsync(request);
-            var user = await _userService.GetUserByIdAsync(new GetUserByIdRequestDTO { UserId = userResponse.Data!.UserId });
+            var command = MediatRFactory.CreateCommand<CreateUserCommand>(request);
+            await _mediator.Send(command);
+            await _mediator.Send(new SaveChangesCommand());
 
             return await LoginAsync(new LoginRequestDTO
             {
-                Email = user.Data!.Email,
-                Password = user.Data!.Password!
+                Email = command.Email,
+                Password = command.Password!
             });
         }
         catch (Exception ex)
