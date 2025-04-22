@@ -1,6 +1,6 @@
 namespace SmartRide.Common.Responses.Errors;
 
-public class QueryErrors
+public static class QueryErrors
 {
     public static readonly string Module = "Query";
 

@@ -2,7 +2,7 @@ using SmartRide.Common.Constants;
 
 namespace SmartRide.Common.Responses.Errors;
 
-public class PaymentErrors
+public static class PaymentErrors
 {
     public static readonly string Module = "Payment";
 
@@ -70,5 +70,47 @@ public class PaymentErrors
     {
         Code = $"{Module}.TRANSACTION_ID_EMPTY",
         Message = "Transaction ID cannot be empty."
+    };
+
+    public static readonly ResponseInfo REQUEST_FAILED = new()
+    {
+        Code = $"{Module}.REQUEST_FAILED",
+        Message = "Payment request failed. Details: {Details}."
+    };
+
+    public static readonly ResponseInfo REQUEST_TIMEOUT = new()
+    {
+        Code = $"{Module}.REQUEST_TIMEOUT",
+        Message = "Payment request timed out. Please try again."
+    };
+
+    public static readonly ResponseInfo REQUEST_CANCELED = new()
+    {
+        Code = $"{Module}.REQUEST_CANCELED",
+        Message = "Payment request was canceled."
+    };
+
+    public static readonly ResponseInfo CAPTURE_FAILED = new()
+    {
+        Code = $"{Module}.CAPTURE_FAILED",
+        Message = "Payment capture failed. Details: {Details}."
+    };
+
+    public static readonly ResponseInfo CREATE_TRANSACTION_FAILED = new()
+    {
+        Code = $"{Module}.CREATE_TRANSACTION_FAILED",
+        Message = "Failed to create transaction. Details: {Details}."
+    };
+
+    public static readonly ResponseInfo CAPTURE_TRANSACTION_FAILED = new()
+    {
+        Code = $"{Module}.CAPTURE_TRANSACTION_FAILED",
+        Message = "Failed to capture transaction. Details: {Details}."
+    };
+
+    public static readonly ResponseInfo REFUND_TRANSACTION_FAILED = new()
+    {
+        Code = $"{Module}.REFUND_TRANSACTION_FAILED",
+        Message = "Failed to refund transaction. Details: {Details}."
     };
 }

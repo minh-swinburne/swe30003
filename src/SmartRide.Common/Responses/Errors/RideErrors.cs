@@ -2,7 +2,7 @@ using SmartRide.Common.Constants;
 
 namespace SmartRide.Common.Responses.Errors;
 
-public class RideErrors
+public static class RideErrors
 {
     public static readonly string Module = "Ride";
 

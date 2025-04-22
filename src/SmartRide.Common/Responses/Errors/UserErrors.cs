@@ -1,6 +1,6 @@
 ﻿namespace SmartRide.Common.Responses.Errors;
 
-public class UserErrors
+public static class UserErrors
 {
     public static readonly string Module = "User";
 

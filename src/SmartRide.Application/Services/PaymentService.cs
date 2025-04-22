@@ -166,6 +166,15 @@ public class PaymentService(IMediator mediator, ITransactionService transactionS
             }
 
             var result = await _transactionService.CaptureTransactionAsync(payment.PaymentMethod.PaymentMethodId, payment.TransactionId);
+
+            if (!result)
+            {
+                return new ResponseDTO<UpdatePaymentResponseDTO>
+                {
+                    Info = PaymentErrors.CAPTURE_FAILED.FormatMessage(("Details", payment.TransactionId))
+                };
+            }
+
             var command = new UpdatePaymentCommand
             {
                 PaymentId = payment.PaymentId,

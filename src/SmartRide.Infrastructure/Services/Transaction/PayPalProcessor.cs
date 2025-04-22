@@ -3,6 +3,8 @@ using Microsoft.Extensions.Options;
 using PaypalServerSdk.Standard;
 using PaypalServerSdk.Standard.Authentication;
 using PaypalServerSdk.Standard.Models;
+using SmartRide.Common.Exceptions;
+using SmartRide.Common.Responses.Errors;
 using SmartRide.Domain.Enums;
 using SmartRide.Domain.Interfaces;
 using SmartRide.Infrastructure.Settings;
@@ -101,7 +103,7 @@ public class PayPalProcessor : ITransactionProcessor
                 ); // Return the order ID and approval URL
         }
 
-        throw new Exception($"Failed to create order: {response}");
+        throw new BaseException("Payment", PaymentErrors.CREATE_TRANSACTION_FAILED.FormatMessage(("Details", response.ToString()!)));
     }
 
     public async Task<bool> CaptureTransactionAsync(string transactionId)
@@ -113,7 +115,7 @@ public class PayPalProcessor : ITransactionProcessor
             return true;
         }
 
-        throw new Exception($"Failed to capture order: {response}");
+        throw new BaseException("Payment", PaymentErrors.CAPTURE_TRANSACTION_FAILED.FormatMessage(("Details", response.ToString()!)));
     }
 
     public async Task<bool> RefundTransactionAsync(string transactionId)
@@ -124,6 +126,6 @@ public class PayPalProcessor : ITransactionProcessor
             return true;
         }
 
-        throw new Exception($"Failed to refund order: {response}");
+        throw new BaseException("Payment", PaymentErrors.REFUND_TRANSACTION_FAILED.FormatMessage(("Details", response.ToString()!)));
     }
 }

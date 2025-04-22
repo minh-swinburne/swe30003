@@ -2,7 +2,7 @@ using SmartRide.Common.Constants;
 
 namespace SmartRide.Common.Responses.Errors;
 
-public class LocationErrors
+public static class LocationErrors
 {
     public static readonly string Module = "Location";
 

@@ -1,6 +1,6 @@
 namespace SmartRide.Common.Responses.Errors;
 
-public class VehicleErrors
+public static class VehicleErrors
 {
     public static readonly string Module = "Vehicle";
 

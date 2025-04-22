@@ -1,6 +1,6 @@
 namespace SmartRide.Common.Responses.Errors;
 
-public class AuthErrors
+public static class AuthErrors
 {
     public static readonly string Module = "Authentication";
 
@@ -37,12 +37,12 @@ public class AuthErrors
     public static readonly ResponseInfo REGISTRATION_FAILED = new()
     {
         Code = $"{Module}.REGISTRATION_FAILED",
-        Message = "Registeration failed. Please check your information and try again."
+        Message = "Failed to register new user. Please check your information and try again."
     };
 
     public static readonly ResponseInfo VALIDATION_FAILED = new()
     {
         Code = $"{Module}.VALIDATION_FAILED",
-        Message = "Validation failed. Details: {Details}."
+        Message = "Failed to validate token. Details: {Details}."
     };
 }
