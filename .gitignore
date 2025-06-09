@@ -7,6 +7,10 @@
 appsettings.Development.json
 appsettings.Production.json
 
+# Build files
+*.min.css
+
+# Development files
 .cursor
 .github
 
