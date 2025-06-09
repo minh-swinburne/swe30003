@@ -7,6 +7,9 @@
 appsettings.Development.json
 appsettings.Production.json
 
+.cursor
+.github
+
 # User-specific files
 *.rsuser
 *.suo
