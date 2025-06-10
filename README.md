@@ -1,5 +1,11 @@
 # SWE30003 - Software Architectures and Design
 
+Start TailwindCSS CLI building for Blazor Web (FE):
+```bash
+cd src/SmartRide.Web
+tailwindcss -i ./wwwroot/css/app.css -o ./wwwroot/css/app.min.css -w
+```
+
 New User Registration Request Body:
 ```json
 {
