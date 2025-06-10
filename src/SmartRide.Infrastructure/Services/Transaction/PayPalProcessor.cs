@@ -15,12 +15,12 @@ namespace SmartRide.Infrastructure.Services.Transaction;
 public class PayPalProcessor : ITransactionProcessor
 {
     private readonly PaypalServerSdkClient _client;
-    private readonly PayPalSettings _settings; // Access nested settings
+    private readonly PayPalSettings _paypalSettings; // Access nested settings
     public PaymentMethodEnum PaymentMethod => PaymentMethodEnum.PayPal;
 
-    public PayPalProcessor(IOptions<TransactionSettings> settings)
+    public PayPalProcessor(IOptions<TransactionSettings> txSettings)
     {
-        _settings = settings.Value.PayPal;
+        _paypalSettings = txSettings.Value.PayPal;
         _client = GenerateClient();
     }
 
@@ -29,12 +29,12 @@ public class PayPalProcessor : ITransactionProcessor
         return new PaypalServerSdkClient.Builder()
             .ClientCredentialsAuth(
                 new ClientCredentialsAuthModel.Builder(
-                    _settings.ClientId,
-                    _settings.ClientSecret
+                    _paypalSettings.ClientId,
+                    _paypalSettings.ClientSecret
                 )
                 .Build()
             )
-            .Environment(_settings.SandboxMode ? PaypalServerSdk.Standard.Environment.Sandbox : PaypalServerSdk.Standard.Environment.Production)
+            .Environment(_paypalSettings.SandboxMode ? PaypalServerSdk.Standard.Environment.Sandbox : PaypalServerSdk.Standard.Environment.Production)
             .LoggingConfig(config => config
                 .LogLevel(LogLevel.Information)
                 .RequestConfig(reqConfig => reqConfig.Body(true))

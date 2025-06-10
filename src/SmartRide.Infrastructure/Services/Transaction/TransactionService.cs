@@ -5,10 +5,10 @@ using SmartRide.Infrastructure.Settings;
 
 namespace SmartRide.Infrastructure.Services.Transaction;
 
-public class TransactionService(IOptions<TransactionSettings> settings, IEnumerable<ITransactionProcessor> processors)
+public class TransactionService(IOptions<TransactionSettings> txSettings, IEnumerable<ITransactionProcessor> processors)
     : ITransactionService
 {
-    private readonly TransactionSettings _settings = settings.Value;
+    private readonly TransactionSettings _txSettings = txSettings.Value;
     private readonly IEnumerable<ITransactionProcessor> _processors = processors;
 
     // Constructor injection for ITransactionProcessor implementations

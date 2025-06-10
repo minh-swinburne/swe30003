@@ -1,32 +1,17 @@
-﻿using System;
-using System.Net.Http;
+﻿using SmartRide.Web.Models;
+using SmartRide.Web.Services.Interfaces;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
-using SmartRide.Web.Models;
-using SmartRide.Web.Services.Interfaces;
 
 namespace SmartRide.Web.Services
 {
-    public class TokenService : ITokenService
+    public class TokenService(ILocalStorageService localStorage, HttpClient httpClient) : ITokenService
     {
-        private readonly ILocalStorageService _localStorage;
-        private readonly HttpClient _httpClient;
+        private readonly ILocalStorageService _localStorage = localStorage;
+        private readonly HttpClient _httpClient = httpClient;
         private const string TokenKey = "access_token";
-
-        public TokenService(ILocalStorageService localStorage, HttpClient httpClient)
-        {
-            _localStorage = localStorage;
-            _httpClient = httpClient;
-
-            // Ensure the base address is set
-            if (_httpClient.BaseAddress == null)
-            {
-                _httpClient.BaseAddress = new Uri("http://localhost:5275/api/v1/");
-            }
-        }
 
         public async Task<string> GetTokenAsync()
         {

@@ -1,30 +1,15 @@
-﻿using System;
-using System.Net.Http;
+﻿using SmartRide.Web.Models;
+using SmartRide.Web.Services.Interfaces;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
-using SmartRide.Web.Models;
-using SmartRide.Web.Services.Interfaces;
 
 namespace SmartRide.Web.Services
 {
-    public class AuthService : IAuthService
+    public class AuthService(HttpClient httpClient, ITokenService tokenService) : IAuthService
     {
-        private readonly HttpClient _httpClient;
-        private readonly ITokenService _tokenService;
-
-        public AuthService(HttpClient httpClient, ITokenService tokenService)
-        {
-            _httpClient = httpClient;
-            _tokenService = tokenService;
-
-            // Ensure the base address is set
-            if (_httpClient.BaseAddress == null)
-            {
-                _httpClient.BaseAddress = new Uri("http://localhost:5275/api/v1/");
-            }
-        }
+        private readonly HttpClient _httpClient = httpClient;
+        private readonly ITokenService _tokenService = tokenService;
 
         public async Task<string> LoginAsync(string email, string password)
         {
@@ -44,7 +29,7 @@ namespace SmartRide.Web.Services
                     $"Login failed. Status code: {(int)response.StatusCode}",
                     (int)response.StatusCode,
                     errorContent,
-                    null
+                    null!
                 );
             }
 
@@ -57,7 +42,7 @@ namespace SmartRide.Web.Services
                     "Login failed. Invalid response from server.",
                     (int)response.StatusCode,
                     apiResponse?.Info ?? "Unknown error",
-                    null
+                    null!
                 );
             }
 
@@ -115,7 +100,7 @@ namespace SmartRide.Web.Services
                     $"Change password failed. Status code: {(int)response.StatusCode}",
                     (int)response.StatusCode,
                     errorContent,
-                    null
+                    null!
                 );
             }
 
@@ -135,7 +120,7 @@ namespace SmartRide.Web.Services
                     $"Failed to register user. Status code: {(int)response.StatusCode}",
                     (int)response.StatusCode,
                     errorContent,
-                    null
+                    null!
                 );
             }
 
@@ -147,7 +132,7 @@ namespace SmartRide.Web.Services
                     "Failed to register user. Invalid response from server.",
                     (int)response.StatusCode,
                     apiResponse?.Info ?? "Unknown error",
-                    null
+                    null!
                 );
             }
 

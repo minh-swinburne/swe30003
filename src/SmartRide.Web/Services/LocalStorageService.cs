@@ -1,20 +1,14 @@
-﻿using System.Text.Json;
-using System.Threading.Tasks;
-using Microsoft.JSInterop;
+﻿using Microsoft.JSInterop;
 using SmartRide.Web.Services.Interfaces;
+using System.Text.Json;
 
 namespace SmartRide.Web.Services
 {
-    public class LocalStorageService : ILocalStorageService
+    public class LocalStorageService(IJSRuntime jsRuntime) : ILocalStorageService
     {
-        private readonly IJSRuntime _jsRuntime;
+        private readonly IJSRuntime _jsRuntime = jsRuntime;
 
-        public LocalStorageService(IJSRuntime jsRuntime)
-        {
-            _jsRuntime = jsRuntime;
-        }
-
-        public async Task<T> GetItemAsync<T>(string key)
+        public async Task<T?> GetItemAsync<T>(string key)
         {
             var json = await _jsRuntime.InvokeAsync<string>("localStorageInterop.getItem", key);
 

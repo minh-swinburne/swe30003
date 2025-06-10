@@ -1,13 +1,13 @@
-using System;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 using SmartRide.Web.Services.Interfaces;
+using SmartRide.Web.Settings;
+using System.Net.Http.Headers;
 
 namespace SmartRide.Web.Services
 {
     public class ApiClient
     {
+        private readonly ApiSettings _apiSettings;
         private readonly HttpClient _httpClient;
         private readonly ITokenService _tokenService;
 
@@ -17,15 +17,14 @@ namespace SmartRide.Web.Services
 
         public ApiClient(
             HttpClient httpClient,
+            IOptions<ApiSettings> apiSettings,
             IUserService userService,
             ITokenService tokenService,
             IAuthService authService)
         {
+            _apiSettings = apiSettings.Value;
             _httpClient = httpClient;
             _tokenService = tokenService;
-
-            // Set base address
-            _httpClient.BaseAddress = new Uri("http://localhost:5275/api/v1/");
 
             // Assign services
             User = userService;
@@ -63,16 +62,9 @@ namespace SmartRide.Web.Services
         }
     }
 
-    public class ApiException : Exception
+    public class ApiException(string message, int statusCode, string response, Exception innerException) : Exception(message, innerException)
     {
-        public int StatusCode { get; }
-        public string Response { get; }
-
-        public ApiException(string message, int statusCode, string response, Exception innerException)
-            : base(message, innerException)
-        {
-            StatusCode = statusCode;
-            Response = response;
-        }
+        public int StatusCode { get; } = statusCode;
+        public string Response { get; } = response;
     }
 }

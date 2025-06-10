@@ -5,9 +5,9 @@ using SmartRide.Infrastructure.Settings;
 
 namespace SmartRide.Infrastructure.Services.Transaction;
 
-public class CreditCardProcessor(IOptions<TransactionSettings> settings) : ITransactionProcessor
+public class CreditCardProcessor(IOptions<TransactionSettings> txSettings) : ITransactionProcessor
 {
-    private readonly CreditCardSettings _settings = settings.Value.CreditCard;
+    private readonly CreditCardSettings _ccSettings = txSettings.Value.CreditCard;
     public PaymentMethodEnum PaymentMethod => PaymentMethodEnum.CreditCard;
 
     public Task<(string, string)> CreateTransactionAsync(

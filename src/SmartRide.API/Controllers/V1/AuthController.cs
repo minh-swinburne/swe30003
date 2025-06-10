@@ -18,6 +18,19 @@ public class AuthController(IAuthService authService) : BaseController
     public async Task<IActionResult> Login([FromBody] LoginRequestDTO request)
     {
         var result = await _authService.LoginAsync(request);
+
+        if (result.Data?.AccessToken != null)
+        {
+            // Set JWT as HttpOnly, Secure cookie
+            Response.Cookies.Append("access_token", result.Data.AccessToken, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true, // Only over HTTPS in production!
+                SameSite = SameSiteMode.Lax, // Or Lax, depending on your needs
+                Expires = DateTimeOffset.UtcNow.AddHours(1)
+            });
+        }
+
         return Respond(result);
     }
 
@@ -38,6 +51,15 @@ public class AuthController(IAuthService authService) : BaseController
 
         var request = new ValidateTokenRequestDTO { AccessToken = token.Split(" ")[1] };
         var result = _authService.ValidateToken(request);
+        return Respond(result);
+    }
+
+    // POST: api/v1/auth/logout
+    [HttpPost("logout")]
+    public IActionResult Logout()
+    {
+        Response.Cookies.Delete("access_token");
+        var result = new ResponseDTO<bool> { Data = true };
         return Respond(result);
     }
 }

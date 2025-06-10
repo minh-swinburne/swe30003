@@ -1,7 +1,35 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #615fff;
+  --color-primary: light-dark(var(--color-indigo-700), var(--color-indigo-400));
+  --color-primary-50: var(--color-indigo-50);
+  --color-primary-100: var(--color-indigo-100);
+  --color-primary-200: var(--color-indigo-200);
+  --color-primary-300: var(--color-indigo-300);
+  --color-primary-400: var(--color-indigo-400);
+  --color-primary-500: var(--color-indigo-500);
+  --color-primary-600: var(--color-indigo-600);
+  --color-primary-700: var(--color-indigo-700);
+  --color-primary-800: var(--color-indigo-800);
+  --color-primary-900: var(--color-indigo-900);
+  --color-primary-950: var(--color-indigo-950);
+
+  --color-secondary: light-dark(var(--color-blue-600), var(--color-blue-400));
+  --color-info: light-dark(var(--color-sky-600), var(--color-sky-400));
+  --color-success: light-dark(var(--color-emerald-600), var(--color-emerald-400));
+  --color-warning: light-dark(var(--color-amber-600), var(--color-amber-400));
+  --color-danger: light-dark(var(--color-red-600), var(--color-red-400));
+  --color-light: light-dark(var(--color-gray-100), var(--color-gray-800));
+  --color-dark: light-dark(var(--color-gray-800), var(--color-gray-100));
+  --color-body: light-dark(var(--color-gray-900), var(--color-gray-50));
+  --color-body-secondary: light-dark(var(--color-gray-800), var(--color-gray-200));
+  --color-border: light-dark(var(--color-gray-200), var(--color-gray-700));
+  --color-border-secondary: light-dark(var(--color-gray-300), var(--color-gray-600));
+  --color-border-muted: light-dark(var(--color-gray-200), var(--color-gray-700));
+  --color-border-subtle: light-dark(var(--color-gray-200), var(--color-gray-700));
+  --color-border-subtle-secondary: light-dark(var(--color-gray-300), var(--color-gray-600));
+  --color-border-subtle-muted: light-dark(var(--color-gray-200), var(--color-gray-700));
+  --color-border-subtle-subtle: light-dark(var(--color-gray-200), var(--color-gray-700));
 }
 
 html,

@@ -1,30 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
+using SmartRide.Web.Models;
+using SmartRide.Web.Services.Interfaces;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
-using SmartRide.Web.Models;
-using SmartRide.Web.Services.Interfaces;
 
 namespace SmartRide.Web.Services
 {
-    public class UserService : IUserService
+    public class UserService(HttpClient httpClient) : IUserService
     {
-        private readonly HttpClient _httpClient;
+        private readonly HttpClient _httpClient = httpClient;
         private const string BaseUrl = "users";
-
-        public UserService(HttpClient httpClient)
-        {
-            _httpClient = httpClient;
-
-            // Ensure the base address is set
-            if (_httpClient.BaseAddress == null)
-            {
-                _httpClient.BaseAddress = new Uri("http://localhost:5275/api/v1/");
-            }
-        }
 
         public async Task<GetUserResponseDTO> GetUserByIdAsync(Guid userId)
         {
@@ -37,7 +22,7 @@ namespace SmartRide.Web.Services
                     $"Failed to get user. Status code: {(int)response.StatusCode}",
                     (int)response.StatusCode,
                     errorContent,
-                    null
+                    null!
                 );
             }
 
@@ -49,7 +34,7 @@ namespace SmartRide.Web.Services
                     "Failed to get user. Invalid response from server.",
                     (int)response.StatusCode,
                     apiResponse?.Info ?? "Unknown error",
-                    null
+                    null!
                 );
             }
 
@@ -69,7 +54,7 @@ namespace SmartRide.Web.Services
                     $"Failed to get user by email. Status code: {(int)response.StatusCode}",
                     (int)response.StatusCode,
                     errorContent,
-                    null
+                    null!
                 );
             }
 
@@ -81,7 +66,7 @@ namespace SmartRide.Web.Services
                     "Failed to get user by email. Invalid response from server.",
                     (int)response.StatusCode,
                     apiResponse?.Info ?? "Unknown error",
-                    null
+                    null!
                 );
             }
 
@@ -101,7 +86,7 @@ namespace SmartRide.Web.Services
                     $"Failed to get user by phone. Status code: {(int)response.StatusCode}",
                     (int)response.StatusCode,
                     errorContent,
-                    null
+                    null!
                 );
             }
 
@@ -113,7 +98,7 @@ namespace SmartRide.Web.Services
                     "Failed to get user by phone. Invalid response from server.",
                     (int)response.StatusCode,
                     apiResponse?.Info ?? "Unknown error",
-                    null
+                    null!
                 );
             }
 
@@ -132,7 +117,7 @@ namespace SmartRide.Web.Services
                     $"Failed to update user. Status code: {(int)response.StatusCode}",
                     (int)response.StatusCode,
                     errorContent,
-                    null
+                    null!
                 );
             }
 
@@ -144,7 +129,7 @@ namespace SmartRide.Web.Services
                     "Failed to update user. Invalid response from server.",
                     (int)response.StatusCode,
                     apiResponse?.Info ?? "Unknown error",
-                    null
+                    null!
                 );
             }
 
@@ -172,7 +157,7 @@ namespace SmartRide.Web.Services
                     $"Failed to delete user. Status code: {(int)response.StatusCode}",
                     (int)response.StatusCode,
                     errorContent,
-                    null
+                    null!
                 );
             }
 
@@ -184,7 +169,7 @@ namespace SmartRide.Web.Services
                     "Failed to delete user. Invalid response from server.",
                     (int)response.StatusCode,
                     apiResponse?.Info ?? "Unknown error",
-                    null
+                    null!
                 );
             }
 
@@ -203,7 +188,7 @@ namespace SmartRide.Web.Services
                     $"Failed to list users. Status code: {(int)response.StatusCode}",
                     (int)response.StatusCode,
                     errorContent,
-                    null
+                    null!
                 );
             }
 
@@ -215,7 +200,7 @@ namespace SmartRide.Web.Services
                     "Failed to list users. Invalid response from server.",
                     (int)response.StatusCode,
                     apiResponse?.Info ?? "Unknown error",
-                    null
+                    null!
                 );
             }
 
