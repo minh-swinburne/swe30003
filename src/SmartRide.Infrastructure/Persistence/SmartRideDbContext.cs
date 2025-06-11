@@ -32,70 +32,107 @@ public class SmartRideDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        // User entity and related configurations
-        modelBuilder.Entity<User>()
-            .HasMany(u => u.Roles)
-            .WithMany(r => r.Users)
-            .UsingEntity<UserRole>();
+        // Base entities
+        // User entity
+        modelBuilder.Entity<User>(entity =>
+        {
+            // Indexes
+            entity.HasIndex(u => u.Email)
+                .IsUnique();
+            entity.HasIndex(u => u.Phone)
+                .IsUnique();
 
-        modelBuilder.Entity<User>()
-            .HasMany(u => u.Vehicles)
-            .WithOne(v => v.User)
-            .HasForeignKey(v => v.UserId);
+            // Backing fields
+            entity.Property(u => u.Vehicles)
+                .HasField("_vehicles")
+                .UsePropertyAccessMode(PropertyAccessMode.Field);
+            entity.Property(u => u.Licenses)
+                .HasField("_licenses")
+                .UsePropertyAccessMode(PropertyAccessMode.Field);
 
-        modelBuilder.Entity<User>()
-            .HasMany(u => u.Locations)
-            .WithOne(l => l.User)
-            .HasForeignKey(l => l.UserId);
+            // Many-to-many relationships
+            entity.HasMany(u => u.Roles)
+                .WithMany(r => r.Users)
+                .UsingEntity<UserRole>();
 
-        modelBuilder.Entity<User>()
-            .HasMany(u => u.Licenses)
-            .WithOne(l => l.User)
-            .HasForeignKey(l => l.UserId);
+            // One-to-many relationships
+            entity.HasMany(u => u.Vehicles)
+                .WithOne(v => v.User)
+                .HasForeignKey(v => v.UserId);
+            entity.HasMany(u => u.Locations)
+                .WithOne(l => l.User)
+                .HasForeignKey(l => l.UserId);
+            entity.HasMany(u => u.Licenses)
+                .WithOne(l => l.User)
+                .HasForeignKey(l => l.UserId);
+        });
 
         // Identity entity
-        modelBuilder.Entity<Identity>()
-            .HasOne(i => i.User)
-            .WithOne(u => u.Identity)
-            .HasForeignKey<Identity>(i => i.UserId);
+        modelBuilder.Entity<Identity>(entity =>
+        {
+            // Indexes
+            entity.HasIndex(i => i.NationalId)
+                .IsUnique();
 
-        // Ride entity and related configurations
-        modelBuilder.Entity<Ride>()
-            .HasOne(r => r.PickupLocation)
-            .WithMany()
-            .OnDelete(DeleteBehavior.Restrict);
+            // One-to-one relationships
+            entity.HasOne(i => i.User)
+                .WithOne(u => u.Identity)
+                .HasForeignKey<Identity>(i => i.UserId);
+        });
 
-        modelBuilder.Entity<Ride>()
-            .HasOne(r => r.Destination)
-            .WithMany()
-            .OnDelete(DeleteBehavior.Restrict);
+        // License entity
+        modelBuilder.Entity<License>(entity =>
+        {
+            // Indexes
+            entity.HasIndex(l => l.Number)
+                .IsUnique();
+        });
 
-        modelBuilder.Entity<Ride>()
-            .HasOne(r => r.Passenger)
-            .WithMany()
-            .OnDelete(DeleteBehavior.Restrict);
+        // Vehicle entity
+        modelBuilder.Entity<Vehicle>(entity =>
+        {
+            // Indexes
+            entity.HasIndex(v => v.Vin)
+                .IsUnique();
+            entity.HasIndex(v => v.Plate)
+                .IsUnique();
+        });
 
-        modelBuilder.Entity<Ride>()
-            .HasOne(r => r.Driver)
-            .WithMany()
-            .OnDelete(DeleteBehavior.Restrict)
-            .IsRequired(false); // Make the Driver relationship optional
+        // Ride entity
+        modelBuilder.Entity<Ride>(entity =>
+        {
+            // Many-to-one relationships
+            entity.HasOne(r => r.PickupLocation)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
+            entity.HasOne(r => r.Destination)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
+            entity.HasOne(r => r.Passenger)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
+            entity.HasOne(r => r.Driver)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired(false);
+            entity.HasOne(r => r.Vehicle)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired(false);
+            entity.HasOne(r => r.VehicleType)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
 
-        modelBuilder.Entity<Ride>()
-            .HasOne(r => r.Vehicle)
-            .WithMany()
-            .OnDelete(DeleteBehavior.Restrict)
-            .IsRequired(false); // Make the Vehicle relationship optional
-
-        modelBuilder.Entity<Ride>()
-            .HasOne(r => r.VehicleType)
-            .WithMany()
-            .OnDelete(DeleteBehavior.Restrict);
-
-        modelBuilder.Entity<Ride>()
-            .HasOne(r => r.Payment)
-            .WithOne(p => p.Ride)
-            .OnDelete(DeleteBehavior.Restrict);
+            // One-to-one relationships
+            entity.HasOne(r => r.Payment)
+                .WithOne(p => p.Ride)
+                .HasForeignKey<Payment>(p => p.RideId)
+                .OnDelete(DeleteBehavior.Restrict);
+            entity.HasOne(r => r.Feedback)
+                .WithOne(f => f.Ride)
+                .HasForeignKey<Feedback>(f => f.RideId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
 
         // Payment entity
         modelBuilder.Entity<Payment>()
@@ -103,12 +140,11 @@ public class SmartRideDbContext : DbContext
             .WithMany()
             .OnDelete(DeleteBehavior.Restrict);
 
-        // Feedback entity
-        modelBuilder.Entity<Feedback>()
-            .HasOne(f => f.Ride)
-            .WithOne(r => r.Feedback)
-            .HasForeignKey<Feedback>(f => f.RideId)
-            .OnDelete(DeleteBehavior.Cascade); // Ensure proper delete behavior
+        // Join entities
+        modelBuilder.Entity<UserRole>(entity =>
+        {
+            entity.HasKey(ur => new { ur.UserId, ur.RoleId });
+        });
 
         // Seed data for Role
         modelBuilder.Entity<Role>().HasData(
@@ -201,7 +237,7 @@ public class SmartRideDbContext : DbContext
     {
         foreach (var entry in ChangeTracker.Entries<BaseEntity>())
         {
-            entry.Entity.OnSave(entry.State);
+            entry.Entity.OnSave(entry.State.ToString());
 
             foreach (var domainEvent in entry.Entity.DomainEvents)
             {

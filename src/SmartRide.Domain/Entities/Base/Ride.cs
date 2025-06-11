@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using SmartRide.Common.Constants;
 using SmartRide.Common.Exceptions;
 using SmartRide.Common.Responses.Errors;
@@ -125,21 +124,21 @@ public class Ride : BaseEntity
         }
     }
 
-    public override void OnSave(EntityState state)
+    public override void OnSave(string state)
     {
         base.OnSave(state);
 
         // Add domain events based on the entity state
-        if (state == EntityState.Added)
+        if (state == "Added")
         {
             ValidateDriverRole();
             ValidatePassengerRole();
             ValidateVehicleOwnership();
             AddDomainEvent(new RideCreatedEvent(this));
         }
-        else if (state == EntityState.Modified)
+        else if (state == "Modified")
             AddDomainEvent(new RideUpdatedEvent(this));
-        else if (state == EntityState.Deleted)
+        else if (state == "Deleted")
             AddDomainEvent(new RideDeletedEvent(this));
     }
 }

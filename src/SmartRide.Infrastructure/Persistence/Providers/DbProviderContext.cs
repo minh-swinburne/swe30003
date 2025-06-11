@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using SmartRide.Domain.Interfaces;
 using SmartRide.Infrastructure.Settings;
 
 namespace SmartRide.Infrastructure.Persistence.Providers;

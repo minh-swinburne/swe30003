@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SmartRide.Common.Constants;
+﻿using SmartRide.Common.Constants;
 using SmartRide.Domain.Entities.Lookup;
 using SmartRide.Domain.Enums;
 using SmartRide.Domain.Events;
@@ -8,8 +7,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SmartRide.Domain.Entities.Base;
 
-[Index(nameof(Vin), IsUnique = true)]
-[Index(nameof(Plate), IsUnique = true)]
 public class Vehicle : BaseEntity
 {
     [Required]
@@ -64,19 +61,19 @@ public class Vehicle : BaseEntity
             throw new InvalidOperationException("Vehicle can only be assigned to a driver.");
     }
 
-    public override void OnSave(EntityState state)
+    public override void OnSave(string state)
     {
         base.OnSave(state);
 
         // Add domain events based on the entity state
-        if (state == EntityState.Added)
+        if (state == "Added")
         {
             ValidateDriverRole();
             AddDomainEvent(new VehicleCreatedEvent(this));
         }
-        else if (state == EntityState.Modified)
+        else if (state == "Modified")
             AddDomainEvent(new VehicleUpdatedEvent(this));
-        else if (state == EntityState.Deleted)
+        else if (state == "Deleted")
             AddDomainEvent(new VehicleDeletedEvent(this));
     }
 }

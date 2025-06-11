@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SmartRide.Common.Constants;
+﻿using SmartRide.Common.Constants;
 using SmartRide.Domain.Entities.Join;
 using SmartRide.Domain.Entities.Lookup;
 using SmartRide.Domain.Enums;
@@ -9,8 +8,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SmartRide.Domain.Entities.Base;
 
-[Index(nameof(Email), IsUnique = true)]
-[Index(nameof(Phone), IsUnique = true)]
 public class User : BaseEntity
 {
     [Required]
@@ -53,14 +50,12 @@ public class User : BaseEntity
 
     private ICollection<License>? _licenses { get; set; } = [];
 
-    [BackingField(nameof(_vehicles))]
     public ICollection<Vehicle>? Vehicles
     {
         get => IsDriver() ? _vehicles : null;
         private set => _vehicles = value;
     }
 
-    [BackingField(nameof(_licenses))]
     public ICollection<License>? Licenses
     {
         get => IsDriver() ? _licenses : null;
@@ -75,11 +70,11 @@ public class User : BaseEntity
 
     public IEnumerable<Ride> ActiveRides() => Rides.Where(r => r.Status == RideStatusEnum.Picking || r.Status == RideStatusEnum.Travelling);
 
-    public override void OnSave(EntityState state)
+    public override void OnSave(string state)
     {
         base.OnSave(state);
 
-        if (state == EntityState.Added)
+        if (state == "Added")
         {
             // Assign Passenger role if no roles are assigned
             if (UserRoles.Count == 0)
@@ -93,9 +88,9 @@ public class User : BaseEntity
 
             AddDomainEvent(new UserCreatedEvent(this));
         }
-        else if (state == EntityState.Modified)
+        else if (state == "Modified")
             AddDomainEvent(new UserUpdatedEvent(this));
-        else if (state == EntityState.Deleted)
+        else if (state == "Deleted")
             AddDomainEvent(new UserDeletedEvent(this));
     }
 }

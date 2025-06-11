@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 using SmartRide.Domain.Interfaces;
 
 namespace SmartRide.Domain.Entities.Base;
@@ -9,7 +8,7 @@ public abstract class BaseEntity
 {
     [Key]
     [Column(TypeName = "BINARY(16)")]
-    public required Guid Id { get; set; }
+    public required Guid Id { get; init; }
 
     [Column(TypeName = "TIMESTAMP")]
     [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
@@ -27,37 +26,17 @@ public abstract class BaseEntity
         Id = Guid.NewGuid();
     }
 
-    public virtual Guid GetId()
-    {
-        return Id;
-    }
+    public void UpdateTimestamp() => UpdatedTime = DateTime.UtcNow;
+    public void AddDomainEvent(IDomainEvent domainEvent) => _domainEvents.Add(domainEvent);
+    public void RemoveDomainEvent(IDomainEvent domainEvent) => _domainEvents.Remove(domainEvent);
+    public void ClearDomainEvents() => _domainEvents.Clear();
 
-    public void UpdateTimestamp()
+    public virtual void OnSave(string state)
     {
-        UpdatedTime = DateTime.UtcNow;
-    }
-
-    public void AddDomainEvent(IDomainEvent domainEvent)
-    {
-        _domainEvents.Add(domainEvent);
-    }
-
-    public void RemoveDomainEvent(IDomainEvent domainEvent)
-    {
-        _domainEvents.Remove(domainEvent);
-    }
-
-    public void ClearDomainEvents()
-    {
-        _domainEvents.Clear();
-    }
-
-    public virtual void OnSave(EntityState state)
-    {
-        if (state == EntityState.Modified || state == EntityState.Added)
+        if (state == "Modified" || state == "Added")
         {
             UpdateTimestamp();
-            if (state == EntityState.Added)
+            if (state == "Added")
                 CreatedTime = DateTime.UtcNow;
         }
     }

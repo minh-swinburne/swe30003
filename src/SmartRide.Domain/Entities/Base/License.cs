@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using SmartRide.Domain.Enums;
 using SmartRide.Domain.Events;
 using System.ComponentModel.DataAnnotations;
@@ -6,7 +5,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SmartRide.Domain.Entities.Base;
 
-[Index(nameof(Number), IsUnique = true)]
 public class License : BaseEntity
 {
     [Required]
@@ -39,15 +37,15 @@ public class License : BaseEntity
     [ForeignKey(nameof(UserId))]
     public User User { get; set; } = null!;
 
-    public override void OnSave(EntityState state)
+    public override void OnSave(string state)
     {
         base.OnSave(state);
 
-        if (state == EntityState.Added)
+        if (state == "Added")
             AddDomainEvent(new LicenseCreatedEvent(this));
-        else if (state == EntityState.Modified)
+        else if (state == "Modified")
             AddDomainEvent(new LicenseUpdatedEvent(this));
-        else if (state == EntityState.Deleted)
+        else if (state == "Deleted")
             AddDomainEvent(new LicenseDeletedEvent(this));
     }
 }

@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SmartRide.Common.Constants;
+﻿using SmartRide.Common.Constants;
 using SmartRide.Domain.Entities.Lookup;
 using SmartRide.Domain.Enums;
 using SmartRide.Domain.Events;
@@ -8,7 +7,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SmartRide.Domain.Entities.Base;
 
-[Index(nameof(RideId), IsUnique = true)]
 public class Payment : BaseEntity
 {
     [Required]
@@ -48,15 +46,15 @@ public class Payment : BaseEntity
     [ForeignKey(nameof(PaymentMethodId))]
     public PaymentMethod PaymentMethod { get; set; } = null!;
 
-    public override void OnSave(EntityState state)
+    public override void OnSave(string state)
     {
         base.OnSave(state);
 
-        if (state == EntityState.Added)
+        if (state == "Added")
             AddDomainEvent(new PaymentCreatedEvent(this));
-        else if (state == EntityState.Modified)
+        else if (state == "Modified")
             AddDomainEvent(new PaymentUpdatedEvent(this));
-        else if (state == EntityState.Deleted)
+        else if (state == "Deleted")
             AddDomainEvent(new PaymentDeletedEvent(this));
     }
 }

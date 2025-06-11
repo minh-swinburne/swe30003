@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace SmartRide.Domain.Interfaces;
+namespace SmartRide.Infrastructure.Persistence.Providers;
 
 public interface IDbProvider<T> where T : DbContext
 {

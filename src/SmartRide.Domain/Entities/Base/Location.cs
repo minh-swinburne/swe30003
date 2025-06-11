@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using SmartRide.Common.Constants;
 using SmartRide.Domain.Events;
 using System.ComponentModel.DataAnnotations;
@@ -25,15 +24,15 @@ public class Location : BaseEntity
     [ForeignKey(nameof(UserId))]
     public User? User { get; set; }
 
-    public override void OnSave(EntityState state)
+    public override void OnSave(string state)
     {
         base.OnSave(state);
 
-        if (state == EntityState.Added)
+        if (state == "Added")
             AddDomainEvent(new LocationCreatedEvent(this));
-        else if (state == EntityState.Modified)
+        else if (state == "Modified")
             AddDomainEvent(new LocationUpdatedEvent(this));
-        else if (state == EntityState.Deleted)
+        else if (state == "Deleted")
             AddDomainEvent(new LocationDeletedEvent(this));
     }
 }

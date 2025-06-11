@@ -1,13 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SmartRide.Domain.Enums;
+﻿using SmartRide.Domain.Enums;
 using SmartRide.Domain.Events;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SmartRide.Domain.Entities.Base;
 
-[Index(nameof(UserId), IsUnique = true)]
-[Index(nameof(NationalId), IsUnique = true)]
 public class Identity : BaseEntity
 {
     [Required]
@@ -55,15 +52,15 @@ public class Identity : BaseEntity
     [ForeignKey(nameof(UserId))]
     public User User { get; set; } = null!;
 
-    public override void OnSave(EntityState state)
+    public override void OnSave(string state)
     {
         base.OnSave(state);
 
-        if (state == EntityState.Added)
+        if (state == "Added")
             AddDomainEvent(new IdentityCreatedEvent(this));
-        else if (state == EntityState.Modified)
+        else if (state == "Modified")
             AddDomainEvent(new IdentityUpdatedEvent(this));
-        else if (state == EntityState.Deleted)
+        else if (state == "Deleted")
             AddDomainEvent(new IdentityDeletedEvent(this));
     }
 }
