@@ -58,9 +58,7 @@ public abstract class BaseEntity
         {
             UpdateTimestamp();
             if (state == EntityState.Added)
-            {
                 CreatedTime = DateTime.UtcNow;
-            }
         }
     }
 }

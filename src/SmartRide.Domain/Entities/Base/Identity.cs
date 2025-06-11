@@ -60,16 +60,10 @@ public class Identity : BaseEntity
         base.OnSave(state);
 
         if (state == EntityState.Added)
-        {
             AddDomainEvent(new IdentityCreatedEvent(this));
-        }
         else if (state == EntityState.Modified)
-        {
             AddDomainEvent(new IdentityUpdatedEvent(this));
-        }
         else if (state == EntityState.Deleted)
-        {
             AddDomainEvent(new IdentityDeletedEvent(this));
-        }
     }
 }

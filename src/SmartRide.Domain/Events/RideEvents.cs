@@ -3,20 +3,20 @@ using SmartRide.Domain.Interfaces;
 
 namespace SmartRide.Domain.Events;
 
-public record RideCreatedEvent(Ride ride) : IDomainEvent
+public record RideCreatedEvent(Ride Ride) : IDomainEvent
 {
     public DateTime OccurredOn { get; } = DateTime.UtcNow;
-    public readonly Ride Ride = ride;
+    public readonly Ride Ride = Ride;
 }
 
-public record RideUpdatedEvent(Ride ride) : IDomainEvent
+public record RideUpdatedEvent(Ride Ride) : IDomainEvent
 {
     public DateTime OccurredOn { get; } = DateTime.UtcNow;
-    public readonly Ride Ride = ride;
+    public readonly Ride Ride = Ride;
 }
 
-public record RideDeletedEvent(Ride ride) : IDomainEvent
+public record RideDeletedEvent(Ride Ride) : IDomainEvent
 {
     public DateTime OccurredOn { get; } = DateTime.UtcNow;
-    public readonly Ride Ride = ride;
+    public readonly Ride Ride = Ride;
 }

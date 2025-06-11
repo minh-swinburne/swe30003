@@ -44,16 +44,10 @@ public class License : BaseEntity
         base.OnSave(state);
 
         if (state == EntityState.Added)
-        {
             AddDomainEvent(new LicenseCreatedEvent(this));
-        }
         else if (state == EntityState.Modified)
-        {
             AddDomainEvent(new LicenseUpdatedEvent(this));
-        }
         else if (state == EntityState.Deleted)
-        {
             AddDomainEvent(new LicenseDeletedEvent(this));
-        }
     }
 }

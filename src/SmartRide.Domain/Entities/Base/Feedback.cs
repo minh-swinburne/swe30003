@@ -29,16 +29,10 @@ public class Feedback : BaseEntity
         base.OnSave(state);
 
         if (state == EntityState.Added)
-        {
             AddDomainEvent(new FeedbackCreatedEvent(this));
-        }
         else if (state == EntityState.Modified)
-        {
             AddDomainEvent(new FeedbackUpdatedEvent(this));
-        }
         else if (state == EntityState.Deleted)
-        {
             AddDomainEvent(new FeedbackDeletedEvent(this));
-        }
     }
 }

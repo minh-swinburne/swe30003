@@ -53,16 +53,10 @@ public class Payment : BaseEntity
         base.OnSave(state);
 
         if (state == EntityState.Added)
-        {
             AddDomainEvent(new PaymentCreatedEvent(this));
-        }
         else if (state == EntityState.Modified)
-        {
             AddDomainEvent(new PaymentUpdatedEvent(this));
-        }
         else if (state == EntityState.Deleted)
-        {
             AddDomainEvent(new PaymentDeletedEvent(this));
-        }
     }
 }

@@ -3,20 +3,20 @@ using SmartRide.Domain.Interfaces;
 
 namespace SmartRide.Domain.Events;
 
-public record LicenseCreatedEvent(License license) : IDomainEvent
+public record LicenseCreatedEvent(License License) : IDomainEvent
 {
     public DateTime OccurredOn { get; } = DateTime.UtcNow;
-    public readonly License License = license;
+    public readonly License License = License;
 }
 
-public record LicenseUpdatedEvent(License license) : IDomainEvent
+public record LicenseUpdatedEvent(License License) : IDomainEvent
 {
     public DateTime OccurredOn { get; } = DateTime.UtcNow;
-    public readonly License License = license;
+    public readonly License License = License;
 }
 
-public record LicenseDeletedEvent(License license) : IDomainEvent
+public record LicenseDeletedEvent(License License) : IDomainEvent
 {
     public DateTime OccurredOn { get; } = DateTime.UtcNow;
-    public readonly License License = license;
+    public readonly License License = License;
 }

@@ -3,20 +3,20 @@ using SmartRide.Domain.Interfaces;
 
 namespace SmartRide.Domain.Events;
 
-public record PaymentCreatedEvent(Payment payment) : IDomainEvent
+public record PaymentCreatedEvent(Payment Payment) : IDomainEvent
 {
     public DateTime OccurredOn { get; } = DateTime.UtcNow;
-    public readonly Payment Payment = payment;
+    public readonly Payment Payment = Payment;
 }
 
-public record PaymentUpdatedEvent(Payment payment) : IDomainEvent
+public record PaymentUpdatedEvent(Payment Payment) : IDomainEvent
 {
     public DateTime OccurredOn { get; } = DateTime.UtcNow;
-    public readonly Payment Payment = payment;
+    public readonly Payment Payment = Payment;
 }
 
-public record PaymentDeletedEvent(Payment payment) : IDomainEvent
+public record PaymentDeletedEvent(Payment Payment) : IDomainEvent
 {
     public DateTime OccurredOn { get; } = DateTime.UtcNow;
-    public readonly Payment Payment = payment;
+    public readonly Payment Payment = Payment;
 }

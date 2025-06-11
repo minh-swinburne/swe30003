@@ -61,9 +61,7 @@ public class Vehicle : BaseEntity
     public void ValidateDriverRole()
     {
         if (User == null || !User.IsDriver())
-        {
             throw new InvalidOperationException("Vehicle can only be assigned to a driver.");
-        }
     }
 
     public override void OnSave(EntityState state)
@@ -77,12 +75,8 @@ public class Vehicle : BaseEntity
             AddDomainEvent(new VehicleCreatedEvent(this));
         }
         else if (state == EntityState.Modified)
-        {
             AddDomainEvent(new VehicleUpdatedEvent(this));
-        }
         else if (state == EntityState.Deleted)
-        {
             AddDomainEvent(new VehicleDeletedEvent(this));
-        }
     }
 }

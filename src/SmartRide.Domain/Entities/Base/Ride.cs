@@ -138,12 +138,8 @@ public class Ride : BaseEntity
             AddDomainEvent(new RideCreatedEvent(this));
         }
         else if (state == EntityState.Modified)
-        {
             AddDomainEvent(new RideUpdatedEvent(this));
-        }
         else if (state == EntityState.Deleted)
-        {
             AddDomainEvent(new RideDeletedEvent(this));
-        }
     }
 }
