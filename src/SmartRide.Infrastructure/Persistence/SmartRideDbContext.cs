@@ -42,14 +42,6 @@ public class SmartRideDbContext : DbContext
             entity.HasIndex(u => u.Phone)
                 .IsUnique();
 
-            // Backing fields
-            entity.Property(u => u.Vehicles)
-                .HasField("_vehicles")
-                .UsePropertyAccessMode(PropertyAccessMode.Field);
-            entity.Property(u => u.Licenses)
-                .HasField("_licenses")
-                .UsePropertyAccessMode(PropertyAccessMode.Field);
-
             // Many-to-many relationships
             entity.HasMany(u => u.Roles)
                 .WithMany(r => r.Users)

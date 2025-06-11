@@ -6,6 +6,7 @@ using SmartRide.Application.Handlers.Users;
 using SmartRide.Application.Queries.Users;
 using SmartRide.Domain.Entities.Base;
 using SmartRide.Domain.Interfaces;
+using System.Linq.Expressions;
 
 namespace SmartRide.UnitTests.Application.Handlers.Users;
 
@@ -45,8 +46,8 @@ public class GetUserByEmailQueryHandlerTests
             Roles = []
         };
 
-        _mockUserRepository.Setup(r => r.Query(It.IsAny<CancellationToken>()))
-            .Returns(new List<User> { user }.BuildMock());
+        _mockUserRepository.Setup(r => r.Query(It.IsAny<Expression<Func<User, bool>>>(), It.IsAny<IEnumerable<Expression<Func<User, object>>>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(user);
         _mockMapper.Setup(m => m.Map<GetUserResponseDTO>(user)).Returns(responseDto);
 
         var query = new GetUserByEmailQuery { Email = email };
@@ -57,7 +58,7 @@ public class GetUserByEmailQueryHandlerTests
         // Assert
         Assert.NotNull(result);
         Assert.Equal(responseDto.Email, result.Email);
-        _mockUserRepository.Verify(r => r.Query(It.IsAny<CancellationToken>()), Times.Once);
+        _mockUserRepository.Verify(r => r.Query(It.IsAny<Expression<Func<User, bool>>>(), It.IsAny<IEnumerable<Expression<Func<User, object>>>>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -65,8 +66,8 @@ public class GetUserByEmailQueryHandlerTests
     {
         // Arrange
         var email = "notfound@example.com";
-        _mockUserRepository.Setup(r => r.Query(It.IsAny<CancellationToken>()))
-            .Returns(new List<User>().BuildMock());
+        _mockUserRepository.Setup(r => r.Query(It.IsAny<Expression<Func<User, bool>>>(), It.IsAny<IEnumerable<Expression<Func<User, object>>>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync((User)null!);
 
         var query = new GetUserByEmailQuery { Email = email };
 
@@ -75,6 +76,6 @@ public class GetUserByEmailQueryHandlerTests
 
         // Assert
         Assert.Null(result);
-        _mockUserRepository.Verify(r => r.Query(It.IsAny<CancellationToken>()), Times.Once);
+        _mockUserRepository.Verify(r => r.Query(It.IsAny<Expression<Func<User, bool>>>(), It.IsAny<IEnumerable<Expression<Func<User, object>>>>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 }

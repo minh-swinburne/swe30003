@@ -1,5 +1,4 @@
 using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using SmartRide.Application.DTOs.Payments;
 using SmartRide.Application.Queries.Payments;
 using SmartRide.Common.Exceptions;
@@ -18,10 +17,10 @@ public class GetPaymentByRideIdQueryHandler(IRepository<Payment> paymentReposito
     public override async Task<GetPaymentResponseDTO> Handle(GetPaymentByRideIdQuery query, CancellationToken cancellationToken)
     {
         var payment = await _paymentRepository
-            .Query(cancellationToken)
-            .Include(p => p.Ride)
-            .Include(p => p.PaymentMethod)
-            .FirstOrDefaultAsync(p => p.RideId == query.RideId, cancellationToken)
+            .Query(filter: p => p.RideId == query.RideId, includes: [
+                p => p.Ride,
+                p => p.PaymentMethod
+            ], cancellationToken)
             ?? throw new BaseException(PaymentErrors.Module, PaymentErrors.RIDE_ID_NOT_FOUND.FormatMessage(("RideId", query.RideId)));
 
         return _mapper.Map<GetPaymentResponseDTO>(payment);

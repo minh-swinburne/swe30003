@@ -9,6 +9,7 @@ using SmartRide.Application.Queries.Vehicles;
 using SmartRide.Domain.Entities.Base;
 using SmartRide.Domain.Enums;
 using SmartRide.Domain.Interfaces;
+using System.Linq.Expressions;
 
 namespace SmartRide.UnitTests.Application.Handlers.Vehicles;
 
@@ -73,8 +74,8 @@ public class GetVehicleByVinQueryHandlerTests
             },
         };
 
-        _mockVehicleRepository.Setup(r => r.Query(It.IsAny<CancellationToken>()))
-            .Returns(new List<Vehicle> { vehicle }.BuildMock());
+        _mockVehicleRepository.Setup(r => r.Query(It.IsAny<Expression<Func<Vehicle, bool>>>(), It.IsAny<IEnumerable<Expression<Func<Vehicle, object>>>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(vehicle);
         _mockMapper.Setup(m => m.Map<GetVehicleResponseDTO>(vehicle)).Returns(responseDto);
 
         var query = new GetVehicleByVinQuery { Vin = vin };
@@ -85,7 +86,7 @@ public class GetVehicleByVinQueryHandlerTests
         // Assert
         Assert.NotNull(result);
         Assert.Equal(responseDto.Vin, result.Vin);
-        _mockVehicleRepository.Verify(r => r.Query(It.IsAny<CancellationToken>()), Times.Once);
+        _mockVehicleRepository.Verify(r => r.Query(It.IsAny<Expression<Func<Vehicle, bool>>>(), It.IsAny<IEnumerable<Expression<Func<Vehicle, object>>>>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -93,8 +94,8 @@ public class GetVehicleByVinQueryHandlerTests
     {
         // Arrange
         var vin = "INVALIDVIN@1234567";
-        _mockVehicleRepository.Setup(r => r.Query(It.IsAny<CancellationToken>()))
-            .Returns(new List<Vehicle>().BuildMock());
+        _mockVehicleRepository.Setup(r => r.Query(It.IsAny<Expression<Func<Vehicle, bool>>>(), It.IsAny<IEnumerable<Expression<Func<Vehicle, object>>>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync((Vehicle)null!);
 
         var query = new GetVehicleByVinQuery { Vin = vin };
 
@@ -103,6 +104,6 @@ public class GetVehicleByVinQueryHandlerTests
 
         // Assert
         Assert.Null(result);
-        _mockVehicleRepository.Verify(r => r.Query(It.IsAny<CancellationToken>()), Times.Once);
+        _mockVehicleRepository.Verify(r => r.Query(It.IsAny<Expression<Func<Vehicle, bool>>>(), It.IsAny<IEnumerable<Expression<Func<Vehicle, object>>>>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 }

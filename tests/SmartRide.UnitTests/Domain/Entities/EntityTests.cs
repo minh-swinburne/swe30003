@@ -58,7 +58,7 @@ public class EntityTests
         };
 
         // Act
-        vehicle.OnSave(EntityState.Added);
+        vehicle.OnSave(EntityState.Added.ToString());
 
         // Assert
         Assert.Single(vehicle.DomainEvents);

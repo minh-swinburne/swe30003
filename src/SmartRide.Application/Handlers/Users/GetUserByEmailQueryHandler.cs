@@ -1,5 +1,4 @@
 using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using SmartRide.Application.DTOs.Users;
 using SmartRide.Application.Queries.Users;
 using SmartRide.Domain.Entities.Base;
@@ -16,9 +15,7 @@ public class GetUserByEmailQueryHandler(IRepository<User> userRepository, IMappe
     public override async Task<GetUserResponseDTO> Handle(GetUserByEmailQuery query, CancellationToken cancellationToken)
     {
         var user = await _userRepository
-            .Query(cancellationToken)
-            .Include(u => u.Roles)
-            .FirstOrDefaultAsync(u => u.Email == query.Email, cancellationToken);
+            .Query(filter: u => u.Email == query.Email, includes: [u => u.Roles], cancellationToken);
 
         return _mapper.Map<GetUserResponseDTO>(user);
     }

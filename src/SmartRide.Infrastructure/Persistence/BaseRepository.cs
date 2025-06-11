@@ -10,9 +10,17 @@ public class BaseRepository<T>(SmartRideDbContext dbContext) : IRepository<T> wh
 {
     private readonly DbSet<T> _dbSet = dbContext.Set<T>();
 
-    public IQueryable<T> Query(CancellationToken cancellationToken = default)
+    public async Task<T?> Query(Expression<Func<T, bool>>? filter = null, IEnumerable<Expression<Func<T, object>>>? includes = null, CancellationToken cancellationToken = default)
     {
-        return _dbSet.AsQueryable();
+        var query = _dbSet.AsQueryable();
+
+        if (filter != null)
+            query = query.Where(filter);
+
+        if (includes != null)
+            query = includes.Aggregate(query, (current, include) => current.Include(include));
+
+        return await query.FirstOrDefaultAsync(cancellationToken);
     }
 
     public async Task<int> CountAsync(CancellationToken cancellationToken = default)

@@ -5,7 +5,7 @@ namespace SmartRide.Domain.Interfaces;
 
 public interface IRepository<T> where T : BaseEntity
 {
-    IQueryable<T> Query(CancellationToken cancellationToken = default);
+    Task<T?> Query(Expression<Func<T, bool>>? filter = null, IEnumerable<Expression<Func<T, object>>>? includes = null, CancellationToken cancellationToken = default);
     Task<int> CountAsync(CancellationToken cancellationToken = default);
     Task<bool> ExistsAsync(Guid id, CancellationToken cancellationToken = default);
     Task<T> CreateAsync(T entity, CancellationToken cancellationToken = default);

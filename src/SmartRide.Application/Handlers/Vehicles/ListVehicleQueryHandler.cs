@@ -1,5 +1,4 @@
 using AutoMapper;
-using Humanizer;
 using SmartRide.Application.DTOs.Vehicles;
 using SmartRide.Application.Interfaces;
 using SmartRide.Application.Queries.Vehicles;
@@ -8,7 +7,6 @@ using SmartRide.Common.Helpers;
 using SmartRide.Domain.Entities.Base;
 using SmartRide.Domain.Interfaces;
 using System.Linq.Expressions;
-using System.Reflection;
 
 namespace SmartRide.Application.Handlers.Vehicles;
 

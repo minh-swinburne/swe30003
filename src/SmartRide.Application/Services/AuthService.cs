@@ -53,7 +53,7 @@ public class AuthService(IMediator mediator, IPasswordHasher<User> passwordHashe
                     Info = new ResponseInfo { Code = "USER_NOT_FOUND", Message = "User not found." }
                 };
 
-            var result = _passwordHasher.VerifyHashedPassword(null!, user.Password!, request.Password);
+            var result = _passwordHasher.VerifyHashedPassword(null!, user.Password, request.Password);
 
             if (result != PasswordVerificationResult.Success)
                 return new ResponseDTO<AuthResponseDTO>
@@ -92,7 +92,7 @@ public class AuthService(IMediator mediator, IPasswordHasher<User> passwordHashe
             return await LoginAsync(new LoginRequestDTO
             {
                 Email = command.Email,
-                Password = command.Password!
+                Password = command.Password
             });
         }
         catch (Exception ex)

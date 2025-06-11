@@ -1,5 +1,4 @@
 using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using SmartRide.Application.DTOs.Vehicles;
 using SmartRide.Application.Queries.Vehicles;
 using SmartRide.Domain.Entities.Base;
@@ -15,8 +14,7 @@ public class GetVehicleByVinQueryHandler(IRepository<Vehicle> vehicleRepository,
 
     public override async Task<GetVehicleResponseDTO> Handle(GetVehicleByVinQuery query, CancellationToken cancellationToken)
     {
-        var vehicle = await _vehicleRepository.Query(cancellationToken)
-            .FirstOrDefaultAsync(v => v.Vin == query.Vin, cancellationToken);
+        var vehicle = await _vehicleRepository.Query(filter: v => v.Vin == query.Vin, includes: [v => v.VehicleType], cancellationToken);
 
         return _mapper.Map<GetVehicleResponseDTO>(vehicle);
     }

@@ -46,19 +46,18 @@ public class User : BaseEntity
     public ICollection<UserRole> UserRoles { get; set; } = [];
     public ICollection<Location> Locations { get; set; } = [];
 
-    private ICollection<Vehicle>? _vehicles { get; set; } = [];
+    private ICollection<Vehicle> _vehicles = [];
+    private ICollection<License> _licenses = [];
 
-    private ICollection<License>? _licenses { get; set; } = [];
-
-    public ICollection<Vehicle>? Vehicles
+    public ICollection<Vehicle> Vehicles
     {
-        get => IsDriver() ? _vehicles : null;
+        get => IsDriver() ? _vehicles : [];
         private set => _vehicles = value;
     }
 
-    public ICollection<License>? Licenses
+    public ICollection<License> Licenses
     {
-        get => IsDriver() ? _licenses : null;
+        get => IsDriver() ? _licenses : [];
         private set => _licenses = value;
     }
 
